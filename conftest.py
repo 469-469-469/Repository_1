@@ -138,7 +138,7 @@ def authorized_user(api_manager_auth, registered_user):
 
 @pytest.fixture(autouse=True)
 def logout_before_test(api_manager_auth):
-    """Автоматический logout перед каждым тестом, только если пользователь залогинен."""
+    """Автоматический logout перед кажым тестом, только если пользователь залогинен."""
     auth_headers = api_manager_auth.auth_api.headers
     session_headers = getattr(api_manager_auth.session, "headers", {})
 
