@@ -1,7 +1,7 @@
 from typing import Union
 
 import pytest
-from tests.api.api_manager import ApiManagerAuth
+from utils.api.api_manager import ApiManagerAuth
 import logging
 
 logger = logging.getLogger(__name__)

@@ -1,4 +1,4 @@
-from tests.api.api_manager import ApiManagerPayment, ApiManagerAuth
+from utils.api.api_manager import ApiManagerPayment, ApiManagerAuth
 from faker import Faker
 import logging
 

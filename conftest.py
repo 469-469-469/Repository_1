@@ -9,7 +9,7 @@ from requests import Session
 
 from constants import REGISTER_ENDPOINT, BASE_URL_AUTH, BASE_URL_MOVIES, MOVIE_ENDPOINT
 from custom_requester.custom_requester import CustomRequester
-from tests.api.api_manager import ApiManagerAuth, ApiManagerMovies, ApiManagerPayment
+from utils.api.api_manager import ApiManagerAuth, ApiManagerMovies, ApiManagerPayment
 from utils.data_generator import DataGenerator
 
 
