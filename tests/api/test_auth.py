@@ -1,3 +1,5 @@
+from typing import Union
+
 import pytest
 from tests.api.api_manager import ApiManagerAuth
 import logging
@@ -8,7 +10,7 @@ MISSING = object()
 
 class TestAuthAPIHappyPath:
 
-    def test_register_and_login_user(self, api_manager_auth: ApiManagerAuth, registered_user):
+    def test_register_and_login_user(self, api_manager_auth: ApiManagerAuth, registered_user: dict):
         # Регистрация и авторизация пользователя
         logger.info("Позитивный тест на регистрацию и авторизацию пользователя")
         login_data = {
@@ -23,7 +25,7 @@ class TestAuthAPIHappyPath:
         assert "accessToken" in response_data, "Токен доступа отсутствует в ответе"
         assert response_data["user"]["email"] == registered_user["email"], "Email не совпадает"
 
-    def test_change_user(self, admin_api, registered_user):
+    def test_change_user(self, admin_api: ApiManagerAuth, registered_user: dict):
         # Изменение пользователя
         logger.info("Позитивный теста. Изменение пользователя")
         user_id = registered_user["id"]
@@ -46,7 +48,8 @@ class TestAuthNegative:
         ("fullName", ""),         # пустая строка
         ("password", MISSING)     # ключ есть, но значение None
     ])
-    def test_negative_register(self, api_manager_auth: ApiManagerAuth, test_user, field_register, value_register):
+    def test_negative_register(self, api_manager_auth: ApiManagerAuth, test_user: dict, field_register: str,
+                               value_register: Union[str, None, object]):
         # Регистрация пользователя
         logger.info(f"Негативный тест. Регистрация пользователя. Проверка поля {field_register}={value_register}")
 
@@ -65,7 +68,8 @@ class TestAuthNegative:
         ("password", "1"), # неверный пароль
         ("password", "")   # пустая строка
     ])
-    def test_negative_auth(self, api_manager_auth: ApiManagerAuth, registered_user, field_auth, value_auth):
+    def test_negative_auth(self, api_manager_auth: ApiManagerAuth, registered_user: dict, field_auth: str,
+                           value_auth: Union[str, None, object]):
         # Авторизация пользователя
         logger.info(f"Негативный тест. Авторизация пользователя. Проверка поля {field_auth}={value_auth}")
 
@@ -83,7 +87,8 @@ class TestAuthNegative:
 
         api_manager_auth.auth_api.login_user(login_data, expected_status)
 
-    def test_negative_change_user(self, api_manager_auth, authorized_user, registered_user):
+    def test_negative_change_user(self, api_manager_auth: ApiManagerAuth, authorized_user: dict,
+                                  registered_user: dict):
         # Попытка изменения пользователя без соответствующих прав
         logger.info("Негативный тест. Попытка изменения пользователя без соответствующих прав")
 

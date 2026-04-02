@@ -5,6 +5,8 @@ import random
 from faker import Faker
 import pytest
 import requests
+from requests import Session
+
 from constants import REGISTER_ENDPOINT, BASE_URL_AUTH, BASE_URL_MOVIES, MOVIE_ENDPOINT
 from custom_requester.custom_requester import CustomRequester
 from tests.api.api_manager import ApiManagerAuth, ApiManagerMovies, ApiManagerPayment
@@ -29,25 +31,25 @@ def session():
 
 
 @pytest.fixture(scope="session")
-def requester(session:requests.Session):
+def requester(session:Session):
     """Фикстура для создания экземпляра CustomRequester."""
     return CustomRequester(session)
 
 
 @pytest.fixture(scope="session")
-def api_manager_auth(session:requests.Session):
+def api_manager_auth(session:Session):
     """Фикстура для создания экземпляра ApiManagerAuth."""
     return ApiManagerAuth(session)
 
 
 @pytest.fixture(scope="session")
-def api_manager_movies(session:requests.Session):
+def api_manager_movies(session:Session):
     """Фикстура для создания экземпляра ApiManagerMovies."""
     return ApiManagerMovies(session)
 
 
 @pytest.fixture(scope="session")
-def api_manager_payment(session:requests.Session):
+def api_manager_payment(session:Session):
     """Фикстура для создания экземпляра ApiManagerPayment."""
     return ApiManagerPayment(session)
 
@@ -100,7 +102,7 @@ def test_poster():
 
 
 @pytest.fixture()
-def movie(admin_api, requester, test_movie):
+def movie(admin_api: ApiManagerAuth, requester: CustomRequester, test_movie: dict):
     """Создание фильма для использования в тесте."""
     response = requester.send_request(
         method="POST",
@@ -114,11 +116,12 @@ def movie(admin_api, requester, test_movie):
     movie_created["id"] = response_data["id"]
 
     yield movie_created
-    if movie_created.get("id"):
+    if movie_created.get("id"):  # Удаляем тестовый фильм
         delete_resource(requester, del_res=movie_created, url_for_delete=BASE_URL_MOVIES, endpoint_for_delete="/movies")
 
 
-def delete_resource(requester, del_res, url_for_delete, endpoint_for_delete):
+def delete_resource(requester: CustomRequester, del_res: dict, url_for_delete: str,
+                    endpoint_for_delete: str):
     try:  # Удаление тестового ресурса после отработки теста, но тест не падает, если не удастся удалить
         requester.send_request(
             method="DELETE",
@@ -135,7 +138,7 @@ def delete_resource(requester, del_res, url_for_delete, endpoint_for_delete):
 # ----------------------------
 
 @pytest.fixture()
-def admin_api(api_manager_auth):
+def admin_api(api_manager_auth: ApiManagerAuth):
     """Аутентификация под админом для тестов с правами администратора."""
     api_manager_auth.auth_api.authenticate(os.getenv("SUPER_ADMIN_EMAIL"),
     os.getenv("SUPER_ADMIN_PASSWORD"))
@@ -143,7 +146,7 @@ def admin_api(api_manager_auth):
 
 
 @pytest.fixture()
-def authorized_user(api_manager_auth, registered_user):
+def authorized_user(api_manager_auth: ApiManagerAuth, registered_user: dict):
     """Аутентификация зарегистрированного пользователя."""
     api_manager_auth.auth_api.authenticate(
         registered_user["email"],
@@ -153,7 +156,7 @@ def authorized_user(api_manager_auth, registered_user):
 
 
 @pytest.fixture(autouse=True)
-def logout_before_test(api_manager_auth):
+def logout_before_test(api_manager_auth: ApiManagerAuth):
     """Автоматический logout перед каждым тестом, только если пользователь залогинен."""
     auth_headers = api_manager_auth.auth_api.headers
     session_headers = getattr(api_manager_auth.session, "headers", {})
@@ -166,7 +169,7 @@ def logout_before_test(api_manager_auth):
 # ----------------------------
 
 @pytest.fixture()
-def registered_user(requester, test_user):
+def registered_user(requester: CustomRequester, test_user: dict):
     """Фикстура для регистрации и получения данных зарегистрированного пользователя."""
     response = requester.send_request(
         method="POST",
@@ -180,5 +183,5 @@ def registered_user(requester, test_user):
     registered["id"] = response_data["id"]
 
     yield registered
-    if registered.get("id"):
+    if registered.get("id"):  # Удаляем тестового пользователя
         delete_resource(requester, del_res=registered, url_for_delete=BASE_URL_MOVIES, endpoint_for_delete="/user")

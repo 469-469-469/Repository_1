@@ -15,7 +15,7 @@ class AuthAPI(CustomRequester):
     def __init__(self, session:requests.Session):
         super().__init__(session=session)
 
-    def register_user(self, user_data, expected_status=201):
+    def register_user(self, user_data: dict, expected_status: int = 201):
         """
         Регистрация нового пользователя.
         :param user_data: Данные пользователя.
@@ -29,7 +29,7 @@ class AuthAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def login_user(self, login_data, expected_status=200):
+    def login_user(self, login_data: dict, expected_status: int = 200):
         """
         Авторизация пользователя.
         :param login_data: Данные для логина.
@@ -43,7 +43,7 @@ class AuthAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def authenticate(self, email, password):
+    def authenticate(self, email: str, password: str):
         login_data = {
             "email": email,
             "password": password

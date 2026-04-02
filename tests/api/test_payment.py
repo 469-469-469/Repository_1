@@ -1,4 +1,4 @@
-from tests.api.api_manager import ApiManagerPayment
+from tests.api.api_manager import ApiManagerPayment, ApiManagerAuth
 from faker import Faker
 import logging
 
@@ -7,7 +7,8 @@ logger = logging.getLogger(__name__)
 
 class TestPaymentAPIHappyPath:
 
-    def test_get_user_payment(self, admin_api, registered_user, api_manager_payment:ApiManagerPayment):
+    def test_get_user_payment(self, admin_api: ApiManagerAuth, registered_user: dict,
+                              api_manager_payment:ApiManagerPayment):
         # Получение платежей пользователя
         logger.info("Позитивный тест. Получение платежей пользователя")
 

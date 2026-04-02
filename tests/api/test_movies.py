@@ -1,5 +1,7 @@
+from typing import Union
+
 import pytest
-from tests.api.api_manager import ApiManagerMovies
+from tests.api.api_manager import ApiManagerMovies, ApiManagerAuth
 from faker import Faker
 import logging
 
@@ -10,7 +12,8 @@ MISSING = object()
 
 class TestMoviesAPIHappyPath:
 
-    def test_create_movie(self, admin_api, test_movie, api_manager_movies):
+    def test_create_movie(self, admin_api: ApiManagerAuth, test_movie: dict,
+                          api_manager_movies: ApiManagerMovies):
         # Создание фильма
         logger.info("Позитивный тест. Создание фильма")
 
@@ -22,7 +25,7 @@ class TestMoviesAPIHappyPath:
         assert "price" in response_created
         assert "description" in response_created
 
-    def test_get_one_movie(self, api_manager_movies, movie):
+    def test_get_one_movie(self, api_manager_movies: ApiManagerMovies, movie: dict):
         # Получение фильма
         logger.info("Позитивный тест. Получение фильма")
 
@@ -33,7 +36,7 @@ class TestMoviesAPIHappyPath:
         assert "price" in response_got
         assert "description" in response_got
 
-    def test_change_movie(self, admin_api, api_manager_movies, movie):
+    def test_change_movie(self, admin_api:ApiManagerAuth,api_manager_movies: ApiManagerMovies,movie: dict):
         # Редактирование фильма
         logger.info("Позитивный тест. Редактирование фильма")
 
@@ -48,7 +51,7 @@ class TestMoviesAPIHappyPath:
         assert response_changed["name"] == data["name"]
         assert response_changed["description"] == data["description"]
 
-    def test_delete_movie(self, admin_api, api_manager_movies, movie):
+    def test_delete_movie(self,admin_api: ApiManagerAuth,api_manager_movies: ApiManagerMovies,movie: dict):
         # Удаление фильма
         logger.info("Позитивный тест. Удаление фильма")
         api_manager_movies.movies_api.delete_movie(movie["id"])
@@ -63,7 +66,8 @@ class TestMoviesAPIHappyPath:
         ("maxPrice", 2),    # Граничное значение
         ("genreId", 1)      # Граничное значение
     ])
-    def test_get_poster(self, api_manager_movies: ApiManagerMovies, test_poster, field_get, value_get):
+    def test_get_poster(self, api_manager_movies: ApiManagerMovies, test_poster: dict, field_get: str,
+                        value_get: Union[str, None, object]):
         # Получение афиши с фильмами
         logger.info(f"Позитивный тест. Получение афиши. Проверка поля {field_get}={value_get}")
 
@@ -104,7 +108,8 @@ class TestMoviesAPINegative:
         ("name", ""),
         ("name", MISSING)
     ])
-    def test_create_movie(self, admin_api, test_movie, api_manager_movies, field_create_negative,value_create_negative):
+    def test_create_movie(self, admin_api: ApiManagerAuth, test_movie: dict, api_manager_movies: ApiManagerMovies,
+                          field_create_negative: str, value_create_negative: Union[str, None, object]):
         # Создание фильма
         logger.info(f"Негативный тест. Создание фильма. Проверка поля {field_create_negative}={value_create_negative}")
 
@@ -136,8 +141,8 @@ class TestMoviesAPINegative:
         ("maxPrice", "abc"),# Невалидные значения
         ("genreId", "abc")  # Невалидные значения
     ])
-    def test_get_poster_negative(self, api_manager_movies: ApiManagerMovies, test_poster,
-                                 field_negative, value_negative):
+    def test_get_poster_negative(self, api_manager_movies: ApiManagerMovies, test_poster: dict, field_negative: "str",
+                                 value_negative: Union[str, None, object]):
         # Получение афиши с фильмами
         logger.info(f"Негативный тест. Получение афиши с фильмами. Проверка поля {field_negative}={value_negative}")
 

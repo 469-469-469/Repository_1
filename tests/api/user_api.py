@@ -12,7 +12,7 @@ class UserAPI(CustomRequester):
         super().__init__(session=session)
         self.session = session
 
-    def get_user_info(self, user_id, expected_status=200):
+    def get_user_info(self, user_id: int, expected_status: int = 200):
         """
         Получение информации о пользователе.
         :param user_id: ID пользователя.
@@ -25,7 +25,7 @@ class UserAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def change_user(self, user_id, new_data = None, expected_status=200):
+    def change_user(self, user_id: int, new_data: dict = None, expected_status: int = 200):
         """
         Получение информации о пользователе.
         :param user_id: ID пользователя.
@@ -40,7 +40,7 @@ class UserAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def delete_user(self, user_id, expected_status=204):
+    def delete_user(self, user_id: int, expected_status: int = 204):
         """
         Удаление пользователя.
         :param user_id: ID пользователя.
