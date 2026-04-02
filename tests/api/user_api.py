@@ -1,3 +1,5 @@
+import requests
+
 from constants import BASE_URL_AUTH
 from custom_requester.custom_requester import CustomRequester
 
@@ -6,7 +8,7 @@ class UserAPI(CustomRequester):
 
     """Класс для работы с API пользователей."""
 
-    def __init__(self, session):
+    def __init__(self, session:requests.Session):
         super().__init__(session=session)
         self.session = session
 

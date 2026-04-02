@@ -5,12 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# ----------------------------
-# Позитивные тесты
-# ----------------------------
-
-
-class TestPaymentAPI:
+class TestPaymentAPIHappyPath:
 
     def test_get_user_payment(self, admin_api, registered_user, api_manager_payment:ApiManagerPayment):
         # Получение платежей пользователя

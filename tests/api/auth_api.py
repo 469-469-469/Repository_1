@@ -12,7 +12,7 @@ class AuthAPI(CustomRequester):
       Класс для работы с аутентификацией.
     """
 
-    def __init__(self, session):
+    def __init__(self, session:requests.Session):
         super().__init__(session=session)
 
     def register_user(self, user_data, expected_status=201):

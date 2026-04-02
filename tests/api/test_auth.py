@@ -6,12 +6,7 @@ logger = logging.getLogger(__name__)
 MISSING = object()
 
 
-# ----------------------------
-# Позитивные тесты
-# ----------------------------
-
-
-class TestAuthAPI:
+class TestAuthAPIHappyPath:
 
     def test_register_and_login_user(self, api_manager_auth: ApiManagerAuth, registered_user):
         # Регистрация и авторизация пользователя
@@ -42,11 +37,6 @@ class TestAuthAPI:
         # Проверки
         assert response_data["verified"] is new_verified, "Статус верификации не изменился"
         assert response_data["banned"] is new_banned, "Статус banned не изменился"
-
-
-# ----------------------------
-# Негативные тесты
-# ----------------------------
 
 
 class TestAuthNegative:

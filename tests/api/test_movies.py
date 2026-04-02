@@ -8,12 +8,7 @@ fake = Faker("ru_RU")
 MISSING = object()
 
 
-# ----------------------------
-# Позитивные тесты
-# ----------------------------
-
-
-class TestMoviesAPI:
+class TestMoviesAPIHappyPath:
 
     def test_create_movie(self, admin_api, test_movie, api_manager_movies):
         # Создание фильма
@@ -72,11 +67,11 @@ class TestMoviesAPI:
         # Получение афиши с фильмами
         logger.info(f"Позитивный тест. Получение афиши. Проверка поля {field_get}={value_get}")
 
-        if field_get == "Default":
+        if field_get == "Default": # Передаем пустой словарь, тест значений по умолчанию,
             data = {}
         else:
             data = test_poster.copy()
-            if value_get is MISSING:
+            if value_get is MISSING: # Отправляем словарь без одного ключа, тест значения по умолчанию
                 data.pop(field_get, None)
             else:
                 data[field_get] = value_get
@@ -100,11 +95,6 @@ class TestMoviesAPI:
             assert "id" in response_data["movies"][0]
         else:
             logger.info("Список фильмов пуст на этой странице")
-
-
-# ----------------------------
-# Негативные тесты
-# ----------------------------
 
 
 class TestMoviesAPINegative:
