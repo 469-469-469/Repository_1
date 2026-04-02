@@ -1,7 +1,7 @@
 from typing import Union
 
 import pytest
-from tests.api.api_manager import ApiManagerMovies, ApiManagerAuth
+from utils.api.api_manager import ApiManagerMovies, ApiManagerAuth
 from faker import Faker
 import logging
 

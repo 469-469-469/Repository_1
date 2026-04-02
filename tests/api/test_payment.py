@@ -1,5 +1,4 @@
-from tests.api.api_manager import ApiManagerPayment, ApiManagerAuth
-from faker import Faker
+from utils.api.api_manager import ApiManagerPayment, ApiManagerAuth
 import logging
 
 logger = logging.getLogger(__name__)

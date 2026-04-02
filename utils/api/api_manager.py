@@ -1,9 +1,9 @@
 from requests import Session
 
-from tests.api.auth_api import AuthAPI
-from tests.api.payment_api import PaymentAPI
-from tests.api.user_api import UserAPI
-from tests.api.movies_api import MoviesAPI
+from utils.api.auth_api import AuthAPI
+from utils.api.payment_api import PaymentAPI
+from utils.api.user_api import UserAPI
+from utils.api.movies_api import MoviesAPI
 
 
 class ApiManagerAuth:
