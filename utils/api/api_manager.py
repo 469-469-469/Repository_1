@@ -8,7 +8,7 @@ from utils.api.movies_api import MoviesAPI
 
 class ApiManagerAuth:
 
-    """Класс для управления API-классами с единой HTTP-сессией."""
+    """Класс для упрfавления API-классами с единой HTTP-сессией."""
 
     def __init__(self, session:Session):
         """
