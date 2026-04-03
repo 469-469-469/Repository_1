@@ -55,7 +55,7 @@ class TestMoviesAPIHappyPath:
         # Удаление фильма
         logger.info("Позитивный тест. Удаление фильма")
         api_manager_movies.movies_api.delete_movie(movie["id"])
-        api_manager_movies.movies_api.get_movie(movie["id"], 404)
+        api_manager_movies.movies_api.get_movie(movie["id"], (404,))
 
 
     @pytest.mark.parametrize("field_get, value_get", [
@@ -119,10 +119,10 @@ class TestMoviesAPINegative:
         else:
             data[field_create_negative] = value_create_negative
 
-        expected_status = 400
+        expected_status = (400,)
         if field_create_negative == "not_access":
             api_manager_movies.auth_api.logout()
-            expected_status = 401
+            expected_status = (401,)
 
         api_manager_movies.movies_api.create_movie(data, expected_status)
 
@@ -149,5 +149,5 @@ class TestMoviesAPINegative:
         data = test_poster.copy()
         data[field_negative] = value_negative
 
-        expected_status = 400
+        expected_status = (400,)
         api_manager_movies.movies_api.get_poster_movie(data, expected_status)

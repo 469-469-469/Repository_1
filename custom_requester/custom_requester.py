@@ -1,7 +1,15 @@
 import json
 import logging
 import os
+from typing import Dict, Iterable
+from typing_extensions import Unpack
+
 import requests
+from typing_extensions import TypedDict
+
+
+class HeadersKwargs(TypedDict, total=False):
+    headers: Dict[str, str]
 
 
 class CustomRequester:
@@ -13,40 +21,50 @@ class CustomRequester:
         "Accept": "application/json"
     }
 
-    def __init__(self, session:requests.Session):
+    def __init__(self, session: requests.Session, timeout: float = 10):
         self.session = session
+        self.timeout = timeout
         self.headers = self.base_headers.copy()
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
 
-    def send_request(self, method, base_url, endpoint, data=None, params=None, expected_status=200, need_logging=True):
-        """
-        Универсальный метод для отправки запросов.
-        :param method: HTTP метод (GET, POST, PUT, DELETE и т.д.).
-        :param base_url: Base url.
-        :param endpoint: Эндпоинт (например, "/login").
-        :param data: Тело запроса (JSON-данные).
-        :param params: Параметры query запроса.
-        :param expected_status: Ожидаемый статус-код (по умолчанию 200).
-        :param need_logging: Флаг для логирования (по умолчанию True).
-        :return: Объект ответа requests. Response.
-        """
+    def send_request(
+            self,
+            method: str,
+            base_url: str,
+            endpoint: str,
+            data: Dict | None = None,
+            params: Dict | None = None,
+            expected_status: Iterable[int] = (200,),
+            need_logging: bool = True
+    ) -> requests.Response:
+
         url = f"{base_url}{endpoint}"
-        request_kwargs = {
+
+        request_kwargs: Dict = {
             "headers": self.headers
         }
-        if method.upper() == "GET":
-            # GET: передаем данные как query params
+
+        if params:
             request_kwargs["params"] = params
-        response = self.session.request(method, url, json=data, **request_kwargs)
+
+        if data and method.upper() != "GET":
+            request_kwargs["json"] = data
+
+        response = self.session.request(method, url, **request_kwargs)
+
         if need_logging:
             self.log_request_and_response(response)
-        if response.status_code != expected_status:
-            raise ValueError(f"Unexpected status code: {response.status_code}. Expected: {expected_status}")
+
+        if response.status_code not in expected_status:
+            raise ValueError(
+                f"Unexpected status code: {response.status_code}. Expected: {expected_status}"
+            )
+
         return response
 
 
-    def log_request_and_response(self, response):
+    def log_request_and_response(self, response: requests.Response):
         try:
             request = response.request
             green = '\033[32m'
@@ -90,12 +108,13 @@ class CustomRequester:
         except Exception as e:
             self.logger.error(f"\nLogging failed: {type(e)} - {e}")
 
-    def _update_session_headers(self, **kwargs):
+    def _update_session_headers(self, **kwargs: Unpack[HeadersKwargs]):
         """
         Обновление заголовков сессии.
         :param session: Объект requests. Session, предоставленный API-классом.
         :param kwargs: Дополнительные заголовки.
         """
-        self.headers.update(kwargs)  # Обновляем базовые заголовки
-        self.session.headers.update(self.headers)  # Обновляем заголовки в текущей сессии
+        if "headers" in kwargs:
+            self.headers.update(kwargs["headers"]) # Обновляем базовые заголовки
+            self.session.headers.update(self.headers) # Обновляем заголовки в текущей сессии
 

@@ -33,7 +33,7 @@ class TestAuthAPIHappyPath:
         new_banned = False
         new_data = {"verified": new_verified, "banned": new_banned}
 
-        response = admin_api.user_api.change_user(user_id, new_data, expected_status=200)
+        response = admin_api.user_api.change_user(user_id, new_data, expected_status=(200,))
         response_data = response.json()
 
         # Проверки
@@ -59,7 +59,7 @@ class TestAuthNegative:
         else:
             data[field_register] = value_register
 
-        expected_status = 400
+        expected_status = (400,)
         api_manager_auth.auth_api.register_user(data, expected_status)
 
     @pytest.mark.parametrize("field_auth, value_auth", [
@@ -83,7 +83,7 @@ class TestAuthNegative:
         else:
             login_data[field_auth] = value_auth
 
-        expected_status = 401
+        expected_status = (401,)
 
         api_manager_auth.auth_api.login_user(login_data, expected_status)
 
@@ -94,4 +94,4 @@ class TestAuthNegative:
 
         user_id = registered_user["id"]
         new_data = {"verified": True, "banned": False}
-        api_manager_auth.user_api.change_user(user_id, new_data, expected_status=403)
+        api_manager_auth.user_api.change_user(user_id, new_data, expected_status=(403,))

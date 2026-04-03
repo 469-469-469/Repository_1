@@ -109,15 +109,15 @@ def movie(admin_api: ApiManagerAuth, requester: CustomRequester, test_movie: dic
         base_url=BASE_URL_MOVIES,
         endpoint=MOVIE_ENDPOINT,
         data=test_movie,
-        expected_status=201 # Падение теста, если пользователь не создан
+        expected_status=(201,) # Падение теста, если пользователь не создан
     )
     response_data = response.json()
     movie_created = test_movie.copy()
     movie_created["id"] = response_data["id"]
 
     yield movie_created
-    if movie_created.get("id"):  # Удаляем тестовый фильм
-        delete_resource(requester, del_res=movie_created, url_for_delete=BASE_URL_MOVIES, endpoint_for_delete="/movies")
+    # Удаляем тестовый фильм
+    delete_resource(requester, del_res=movie_created, url_for_delete=BASE_URL_MOVIES, endpoint_for_delete="/movies")
 
 
 def delete_resource(requester: CustomRequester, del_res: dict, url_for_delete: str,
@@ -127,7 +127,7 @@ def delete_resource(requester: CustomRequester, del_res: dict, url_for_delete: s
             method="DELETE",
             base_url=url_for_delete,
             endpoint=f"{endpoint_for_delete}/{del_res['id']}",
-            expected_status=200
+            expected_status=(200,)
         )
     except Exception as e:
         logging.warning(f"Не удалось удалить тестовый ресурс: {e}")
@@ -176,12 +176,12 @@ def registered_user(requester: CustomRequester, test_user: dict):
         base_url=BASE_URL_AUTH,
         endpoint=REGISTER_ENDPOINT,
         data=test_user,
-        expected_status=201 # Падение теста если пользователь не создан
+        expected_status=(201,) # Падение теста если пользователь не создан
     )
     response_data = response.json()
     registered = test_user.copy()
     registered["id"] = response_data["id"]
 
     yield registered
-    if registered.get("id"):  # Удаляем тестового пользователя
-        delete_resource(requester, del_res=registered, url_for_delete=BASE_URL_MOVIES, endpoint_for_delete="/user")
+    # Удаляем тестового пользователя
+    delete_resource(requester, del_res=registered, url_for_delete=BASE_URL_MOVIES, endpoint_for_delete="/user")

@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from custom_requester.custom_requester import CustomRequester
 from constants import LOGIN_ENDPOINT, REGISTER_ENDPOINT, BASE_URL_AUTH, LOGOUT_ENDPOINT
 import requests
@@ -15,7 +17,7 @@ class AuthAPI(CustomRequester):
     def __init__(self, session:requests.Session):
         super().__init__(session=session)
 
-    def register_user(self, user_data: dict, expected_status: int = 201):
+    def register_user(self, user_data: dict, expected_status:  Iterable[int] = (201,)):
         """
         Регистрация нового пользователя.
         :param user_data: Данные пользователя.
@@ -29,7 +31,7 @@ class AuthAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def login_user(self, login_data: dict, expected_status: int = 200):
+    def login_user(self, login_data: dict, expected_status:  Iterable[int] = (200,)):
         """
         Авторизация пользователя.
         :param login_data: Данные для логина.
@@ -55,7 +57,7 @@ class AuthAPI(CustomRequester):
             raise AssertionError("No accessToken in login response")
 
         token = response["accessToken"]
-        self._update_session_headers(authorization=f"Bearer {token}")
+        self._update_session_headers(headers={"Authorization": f"Bearer {token}"})
         return token
 
     def logout(self):
