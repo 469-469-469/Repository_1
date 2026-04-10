@@ -1,0 +1,18 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPIHappyPath::test_get_poster[Default-True][0m
+curl -X GET 'https://api.dev-cinescope.coconutqa.ru/movies' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJiZDQ1MmFhLTc0MWEtNDI1Yi04OWNhLTc3ZTU3ZjFiMGE1MyIsImVtYWlsIjoia2VremphZGc1M2VAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDA3LCJleHAiOjE3NzU3NTAyMDd9.9oVaW85lRLBB1lD_bfmwqmFx-Pi5YAHYK0F0djKqLEk' \
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPIHappyPath::test_get_poster[Default-True][0m
+curl -X GET 'https://auth.dev-cinescope.coconutqa.ru/logout' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=7c49a141-2a26-4bdb-b8a1-e3ac002ff6f0' \

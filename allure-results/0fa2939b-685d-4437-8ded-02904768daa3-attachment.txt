@@ -1,0 +1,10 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPIHappyPath::test_create_movie[0m
+curl -X POST 'https://api.dev-cinescope.coconutqa.ru/movies' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTY1LCJleHAiOjE3NzU3NDk5NjV9.Ywz4s3adZxIJqeiSgynDYRMAq51yCjP0GdMei1J31kU' \
+-H 'Content-Length: 1027' \
+-d '{"name": "\u041f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u044b\u0439 \u043f\u0440\u0435\u043b\u0435\u0441\u0442\u044c \u043a\u043e\u0441\u043c\u043e\u0441 \u043f\u0440\u0438\u043c\u0435\u043d\u044f\u0442\u044c\u0441\u044f.", "imageUrl": "https://ao.com/image/a1e86aeb-02a6-474a-900e-6a4a23374f1c", "price": 200, "description": "\u0414\u043e\u043c\u0430\u0448\u043d\u0438\u0439 \u0437\u0430\u043f\u0440\u0435\u0442\u0438\u0442\u044c \u043c\u0435\u0442\u0430\u043b\u043b \u0445\u0443\u0434\u043e\u0436\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u043d\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u043e\u0441\u0432\u043e\u0431\u043e\u0434\u0438\u0442\u044c \u043f\u043e\u043d\u044f\u0442\u043d\u044b\u0439 \u0435\u0432\u0440\u0435\u0439\u0441\u043a\u0438\u0439 \u043e\u0441\u0432\u043e\u0431\u043e\u0434\u0438\u0442\u044c \u0441\u043f\u043e\u0440\u0442 \u0432\u0441\u043a\u0438\u043d\u0443\u0442\u044c \u043f\u0440\u043e\u0432\u0430\u043b \u0438\u0434\u0435\u044f.", "location": "SPB", "published": true, "genreId": 3}'

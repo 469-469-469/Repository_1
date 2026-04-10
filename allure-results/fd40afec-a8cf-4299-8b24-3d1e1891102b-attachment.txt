@@ -1,0 +1,40 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_get_user_by_locator (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/register' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NTYxLCJleHAiOjE3NzU3NTAzNjF9.rnlJ5u3EjqT9MYcx1iaf2c9vy80OsVAm7l5b18Pi-As' \
+-H 'Cookie: refresh_token=fbc962fb-d8aa-4bbe-82d2-a214bfbda27e' \
+-H 'Content-Length: 185' \
+-d '{"email": "kek4wiizma2@gmail.com", "fullName": "Katherine Watts", "password": "X%Cexct5U2ayvF", "passwordRepeat": "X%Cexct5U2ayvF", "roles": ["USER"], "verified": true, "banned": false}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_get_user_by_locator[0m
+curl -X GET 'https://auth.dev-cinescope.coconutqa.ru/user/0a20fedd-d412-49de-9858-2790201931ab' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NTYxLCJleHAiOjE3NzU3NTAzNjF9.rnlJ5u3EjqT9MYcx1iaf2c9vy80OsVAm7l5b18Pi-As' \
+-H 'Cookie: refresh_token=fbc962fb-d8aa-4bbe-82d2-a214bfbda27e' \
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_get_user_by_locator[0m
+curl -X GET 'https://auth.dev-cinescope.coconutqa.ru/user/kek4wiizma2@gmail.com' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NTYxLCJleHAiOjE3NzU3NTAzNjF9.rnlJ5u3EjqT9MYcx1iaf2c9vy80OsVAm7l5b18Pi-As' \
+-H 'Cookie: refresh_token=fbc962fb-d8aa-4bbe-82d2-a214bfbda27e' \
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_get_user_by_locator (teardown)[0m
+curl -X DELETE 'https://auth.dev-cinescope.coconutqa.ru/user/0a20fedd-d412-49de-9858-2790201931ab' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NTYxLCJleHAiOjE3NzU3NTAzNjF9.rnlJ5u3EjqT9MYcx1iaf2c9vy80OsVAm7l5b18Pi-As' \
+-H 'Cookie: refresh_token=fbc962fb-d8aa-4bbe-82d2-a214bfbda27e' \
+-H 'Content-Length: 0' \

@@ -1,3 +1,4 @@
+import datetime
 import random
 import string
 from faker import Faker
@@ -29,7 +30,7 @@ class DataGenerator:
         upper = random.choice(string.ascii_uppercase)
         lower = random.choice(string.ascii_lowercase)
         digit = random.choice(string.digits)
-        special = random.choice("!@#$%^&*")
+        special = random.choice("@#$%^&*")
 
         other = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
 
@@ -38,3 +39,24 @@ class DataGenerator:
         random.shuffle(password)
 
         return ''.join(password)
+
+    @staticmethod
+    def generate_user_data() -> dict:
+        """Генерирует данные для тестового пользователя"""
+        from uuid import uuid4
+
+        return {
+            'id': f'{uuid4()}',  # генерируем UUID как строку
+            'email': DataGenerator.generate_random_email(),
+            'full_name': DataGenerator.generate_random_name(),
+            'password': DataGenerator.generate_random_password(),
+            'created_at': datetime.datetime.now(),
+            'updated_at': datetime.datetime.now(),
+            'verified': False,
+            'banned': False,
+            'roles': '{USER}'
+        }
+
+    @staticmethod
+    def generate_random_int(min_int: int, max_int: int) -> int:
+        return random.randint(min_int, max_int)

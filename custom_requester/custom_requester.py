@@ -2,10 +2,14 @@ import json
 import logging
 import os
 from typing import Dict, Iterable
+
+from pydantic import BaseModel
 from typing_extensions import Unpack
 
 import requests
 from typing_extensions import TypedDict
+
+from constants.constants import GREEN, RESET, RED
 
 
 class HeadersKwargs(TypedDict, total=False):
@@ -21,17 +25,21 @@ class CustomRequester:
         "Accept": "application/json"
     }
 
-    def __init__(self, session: requests.Session, timeout: float = 10):
+    def __init__(self, session: requests.Session, base_url: str, timeout: float = 10):
         self.session = session
         self.timeout = timeout
         self.headers = self.base_headers.copy()
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
+        self.base_url = base_url.rstrip("/")  # чтобы не было двойных слэшей
+
+    def set_auth_token(self, token: str):
+        """Устанавливаем токен авторизации для всех последующих запросов."""
+        self._update_session_headers(headers={"Authorization": f"Bearer {token}"})
 
     def send_request(
             self,
             method: str,
-            base_url: str,
             endpoint: str,
             data: Dict | None = None,
             params: Dict | None = None,
@@ -39,7 +47,11 @@ class CustomRequester:
             need_logging: bool = True
     ) -> requests.Response:
 
-        url = f"{base_url}{endpoint}"
+        url = f"{self.base_url}/{endpoint.lstrip('/')}"
+
+        # Если это модель pydantic, то мы ее переводим в json
+        if isinstance(data, BaseModel):
+            data = json.loads(data.model_dump_json(exclude_unset=True))
 
         request_kwargs: Dict = {
             "headers": self.headers
@@ -65,11 +77,14 @@ class CustomRequester:
 
 
     def log_request_and_response(self, response: requests.Response):
+        """
+        Логирование запросов и ответов. Настройки логирования описаны в pytest.ini
+        Преобразует вывод в curl-like (-H хедеры), (-d тело)
+
+        :param response: Объект response получаемый из метода "send_request"
+        """
         try:
             request = response.request
-            green = '\033[32m'
-            red = '\033[31m'
-            reset = '\033[0m'
             headers = " \\\n".join([f"-H '{header}: {value}'" for header, value in request.headers.items()])
             full_test_name = f"pytest {os.environ.get('PYTEST_CURRENT_TEST', '').replace(' (call)', '')}"
 
@@ -77,36 +92,26 @@ class CustomRequester:
             if hasattr(request, 'body') and request.body is not None:
                 if isinstance(request.body, bytes):
                     body = request.body.decode('utf-8')
+                elif isinstance(request.body, str):
+                    body = request.body
                 body = f"-d '{body}' \n" if body != '{}' else ''
 
-            self.logger.info(f"\n{'=' * 40} REQUEST {'=' * 40}")
             self.logger.info(
-                f"{green}{full_test_name}{reset}\n"
+                f"{GREEN}{full_test_name}{RESET}\n"
                 f"curl -X {request.method} '{request.url}' \\\n"
                 f"{headers} \\\n"
                 f"{body}"
             )
 
+            response_status = response.status_code
+            is_success = response.ok
             response_data = response.text
-            try:
-                response_data = json.dumps(json.loads(response.text), indent=4, ensure_ascii=False)
-            except json.JSONDecodeError:
-                pass
-
-            self.logger.info(f"\n{'=' * 40} RESPONSE {'=' * 40}")
-            if not response.ok:
-                self.logger.info(
-                    f"\tSTATUS_CODE: {red}{response.status_code}{reset}\n"
-                    f"\tDATA: {red}{response_data}{reset}"
-                )
-            else:
-                self.logger.info(
-                    f"\tSTATUS_CODE: {green}{response.status_code}{reset}\n"
-                    f"\tDATA:\n{response_data}"
-                )
-            self.logger.info(f"{'=' * 80}\n")
+            if not is_success:
+                self.logger.info(f"\tRESPONSE:"
+                                 f"\nSTATUS_CODE: {RED}{response_status}{RESET}"
+                                 f"\nDATA: {RED}{response_data}{RESET}")
         except Exception as e:
-            self.logger.error(f"\nLogging failed: {type(e)} - {e}")
+            self.logger.info(f"\nLogging went wrong: {type(e)} - {e}")
 
     def _update_session_headers(self, **kwargs: Unpack[HeadersKwargs]):
         """

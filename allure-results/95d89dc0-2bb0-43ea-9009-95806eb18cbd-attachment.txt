@@ -1,0 +1,32 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_register_and_login_user (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/register' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=80129b24-10a1-46a4-9dfc-ed8c2d1bd9c7' \
+-H 'Content-Length: 180' \
+-d '{"email": "kekr4jlxs9j@gmail.com", "fullName": "Cody Casey", "password": "mSjxI$bSV7r0dn", "passwordRepeat": "mSjxI$bSV7r0dn", "roles": ["USER"], "verified": true, "banned": false}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_register_and_login_user[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/login' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=80129b24-10a1-46a4-9dfc-ed8c2d1bd9c7' \
+-H 'Content-Length: 64' \
+-d '{"email": "kekr4jlxs9j@gmail.com", "password": "mSjxI$bSV7r0dn"}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_register_and_login_user (teardown)[0m
+curl -X DELETE 'https://auth.dev-cinescope.coconutqa.ru/user/be569c9d-9006-4dc1-a9d3-53b13239eeba' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=3a9ee9b9-3c35-4a95-ac6d-b07513fad117' \
+-H 'Content-Length: 0' \

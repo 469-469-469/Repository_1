@@ -19,4 +19,9 @@ requests==2.32.5
 tomli==2.4.0
 typing_extensions==4.15.0
 urllib3==2.6.3
+pydantic==2.12.5
 Faker==23.3.0
+gradio
+sqlalchemy
+allure-python-commons
+pytest-check
