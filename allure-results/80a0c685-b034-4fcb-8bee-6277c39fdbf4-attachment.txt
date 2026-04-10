@@ -1,0 +1,33 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPINegative::test_create_movie[not_access-True-expected_status_cr_neg0] (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/login' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTY1LCJleHAiOjE3NzU3NDk5NjV9.Ywz4s3adZxIJqeiSgynDYRMAq51yCjP0GdMei1J31kU' \
+-H 'Content-Length: 53' \
+-d '{"email": "api1@gmail.com", "password": "asdqwe123Q"}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPINegative::test_create_movie[not_access-True-expected_status_cr_neg0][0m
+curl -X GET 'https://auth.dev-cinescope.coconutqa.ru/logout' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTY1LCJleHAiOjE3NzU3NDk5NjV9.Ywz4s3adZxIJqeiSgynDYRMAq51yCjP0GdMei1J31kU' \
+-H 'Cookie: refresh_token=00f32002-db3d-40e1-9458-8ba0e128526b' \
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPINegative::test_create_movie[not_access-True-expected_status_cr_neg0][0m
+curl -X POST 'https://api.dev-cinescope.coconutqa.ru/movies' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Content-Length: 468' \
+-d '{"name": "\u041f\u0440\u0438\u0437\u044b\u0432 \u0433\u043e\u0441\u043f\u043e\u0434\u044c.", "imageUrl": "https://zao.info/image/d7140cf5-aa89-4dbe-869b-3a0c5816c1da", "price": 117, "description": "\u041f\u043e\u0442\u043e\u043c \u043f\u043e\u0442\u0440\u044f\u0441\u0442\u0438 \u043f\u043e\u0442\u0440\u044f\u0441\u0442\u0438 \u0443\u043f\u043e\u0440\u043d\u043e \u043c\u0435\u0440\u0430 \u043f\u043b\u043e\u0434.", "location": "SPB", "published": true, "genreId": 2}' 
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:110 	RESPONSE:
+STATUS_CODE: [31m401[0m
+DATA: [31m{"message":"Unauthorized","statusCode":401}[0m

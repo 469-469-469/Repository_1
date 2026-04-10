@@ -1,0 +1,25 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPINegative::test_create_movie[name-value_create_negative2-expected_status_cr_neg2] (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/login' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=e2995150-df8c-4eb3-ab66-588ff3ad8bea' \
+-H 'Content-Length: 53' \
+-d '{"email": "api1@gmail.com", "password": "asdqwe123Q"}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPINegative::test_create_movie[name-value_create_negative2-expected_status_cr_neg2][0m
+curl -X POST 'https://api.dev-cinescope.coconutqa.ru/movies' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDExLCJleHAiOjE3NzU3NTAyMTF9.NTT2wH4oieU8riprYziLd_6tZA9dbCD1gnIr5S-LXuc' \
+-H 'Content-Length: 539' \
+-d '{"imageUrl": "https://ooo.net/image/14975fbd-e2d4-4a77-81bc-d7aac02d6960", "price": 162, "description": "\u0413\u043e\u0441\u043f\u043e\u0436\u0430 \u0437\u0430\u0434\u0435\u0440\u0436\u0430\u0442\u044c \u0434\u044b\u0445\u0430\u043d\u0438\u0435 \u0441\u043f\u043e\u0440\u0442 \u043e\u0441\u0432\u043e\u0431\u043e\u0436\u0434\u0435\u043d\u0438\u0435 \u043f\u044f\u0442\u0435\u0440\u043e \u043c\u0435\u0434\u0438\u0446\u0438\u043d\u0430 \u0434\u0440\u043e\u0433\u043d\u0443\u0442\u044c.", "location": "SPB", "published": true, "genreId": 1}' 
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:110 	RESPONSE:
+STATUS_CODE: [31m400[0m
+DATA: [31m{"message":["name should not be empty","Поле name должно быть строкой"],"error":"Bad Request","statusCode":400}[0m

@@ -1,0 +1,32 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_change_user (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/register' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTY1LCJleHAiOjE3NzU3NDk5NjV9.Ywz4s3adZxIJqeiSgynDYRMAq51yCjP0GdMei1J31kU' \
+-H 'Cookie: refresh_token=06cd5676-669e-4c7e-9621-9c1f1ff89bbc' \
+-H 'Content-Length: 184' \
+-d '{"email": "kekp302w2ir@gmail.com", "fullName": "Theresa Willis", "password": "6lkqjEHz*BY6nw", "passwordRepeat": "6lkqjEHz*BY6nw", "roles": ["USER"], "verified": true, "banned": false}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_change_user[0m
+curl -X PATCH 'https://auth.dev-cinescope.coconutqa.ru/user/77c5f5e4-f696-43f0-b146-435332fed37b' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTY1LCJleHAiOjE3NzU3NDk5NjV9.Ywz4s3adZxIJqeiSgynDYRMAq51yCjP0GdMei1J31kU' \
+-H 'Cookie: refresh_token=06cd5676-669e-4c7e-9621-9c1f1ff89bbc' \
+-H 'Content-Length: 35' \
+-d '{"verified": true, "banned": false}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthAPIHappyPath::test_change_user (teardown)[0m
+curl -X DELETE 'https://auth.dev-cinescope.coconutqa.ru/user/77c5f5e4-f696-43f0-b146-435332fed37b' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTY1LCJleHAiOjE3NzU3NDk5NjV9.Ywz4s3adZxIJqeiSgynDYRMAq51yCjP0GdMei1J31kU' \
+-H 'Cookie: refresh_token=06cd5676-669e-4c7e-9621-9c1f1ff89bbc' \
+-H 'Content-Length: 0' \

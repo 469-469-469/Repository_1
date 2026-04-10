@@ -1,0 +1,36 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthNegative::test_negative_auth[email-] (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/register' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=3a9ee9b9-3c35-4a95-ac6d-b07513fad117' \
+-H 'Content-Length: 192' \
+-d '{"email": "kek1xcwklgu@gmail.com", "fullName": "Christopher Montgomery", "password": "rumFWC0rPcX46*", "passwordRepeat": "rumFWC0rPcX46*", "roles": ["USER"], "verified": true, "banned": false}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthNegative::test_negative_auth[email-][0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/login' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=3a9ee9b9-3c35-4a95-ac6d-b07513fad117' \
+-H 'Content-Length: 43' \
+-d '{"email": "", "password": "rumFWC0rPcX46*"}' 
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:110 	RESPONSE:
+STATUS_CODE: [31m401[0m
+DATA: [31m{"message":"Неверный логин или пароль","error":"Unauthorized","statusCode":401}[0m
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthNegative::test_negative_auth[email-] (teardown)[0m
+curl -X DELETE 'https://auth.dev-cinescope.coconutqa.ru/user/70abe095-21a7-460f-b11f-20a2cfdb6a2a' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NDAwLCJleHAiOjE3NzU3NTAyMDB9.sxmcV3ubE2JXaWcu4nHXnTG06wDevLirlIcS6N0iN7Y' \
+-H 'Cookie: refresh_token=3a9ee9b9-3c35-4a95-ac6d-b07513fad117' \
+-H 'Content-Length: 0' \

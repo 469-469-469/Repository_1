@@ -1,0 +1,12 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_movies.py::TestMoviesAPINegative::test_get_poster_negative[minPrice-10000][0m
+curl -X GET 'https://api.dev-cinescope.coconutqa.ru/movies?pageSize=4&page=3&minPrice=10000&maxPrice=440&locations=MSK&published=True&genreId=4' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTc3LCJleHAiOjE3NzU3NDk5Nzd9.626EMBG7EAHLAVB82CpGH1YIEAomqBJiel_-dqIBaXY' \
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:110 	RESPONSE:
+STATUS_CODE: [31m400[0m
+DATA: [31m{"message":"minPrice must be less than maxPrice","error":"Bad Request","statusCode":400}[0m

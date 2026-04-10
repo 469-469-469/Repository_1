@@ -1,0 +1,29 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_payment.py::TestPaymentAPIHappyPath::test_get_user_payment (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/register' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTc3LCJleHAiOjE3NzU3NDk5Nzd9.626EMBG7EAHLAVB82CpGH1YIEAomqBJiel_-dqIBaXY' \
+-H 'Cookie: refresh_token=b162ff6a-292b-4df5-8a87-a6c4281cfb84' \
+-H 'Content-Length: 187' \
+-d '{"email": "kekbdh0qumh@gmail.com", "fullName": "Nicole Hutchinson", "password": "uWi^Klp4tMwPh9", "passwordRepeat": "uWi^Klp4tMwPh9", "roles": ["USER"], "verified": true, "banned": false}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_payment.py::TestPaymentAPIHappyPath::test_get_user_payment[0m
+curl -X GET 'https://payment.dev-cinescope.coconutqa.ru/user/3ac95f22-6681-401b-8c82-131107040a2a' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTc3LCJleHAiOjE3NzU3NDk5Nzd9.626EMBG7EAHLAVB82CpGH1YIEAomqBJiel_-dqIBaXY' \
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_payment.py::TestPaymentAPIHappyPath::test_get_user_payment (teardown)[0m
+curl -X DELETE 'https://auth.dev-cinescope.coconutqa.ru/user/3ac95f22-6681-401b-8c82-131107040a2a' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4MTc3LCJleHAiOjE3NzU3NDk5Nzd9.626EMBG7EAHLAVB82CpGH1YIEAomqBJiel_-dqIBaXY' \
+-H 'Cookie: refresh_token=b162ff6a-292b-4df5-8a87-a6c4281cfb84' \
+-H 'Content-Length: 0' \

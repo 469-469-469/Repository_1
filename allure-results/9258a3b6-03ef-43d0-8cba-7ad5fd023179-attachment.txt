@@ -1,0 +1,36 @@
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthNegative::test_get_user_by_id_common_user (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/user' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNDk2NGVjLTRkNmEtNDc4OS04MzlmLTc1Nzk3MTQxZTczZSIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NTYxLCJleHAiOjE3NzU3NTAzNjF9.rnlJ5u3EjqT9MYcx1iaf2c9vy80OsVAm7l5b18Pi-As' \
+-H 'Cookie: refresh_token=088b3b7a-8d72-4ba9-b05e-360dfa8575f3' \
+-H 'Content-Length: 182' \
+-d '{"email": "kek2rihsdot@gmail.com", "fullName": "Joseph Riley", "password": "lQACso8D3Mo7*F", "passwordRepeat": "lQACso8D3Mo7*F", "roles": ["USER"], "verified": true, "banned": false}' 
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthNegative::test_get_user_by_id_common_user (setup)[0m
+curl -X POST 'https://auth.dev-cinescope.coconutqa.ru/login' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4ZTcwMTQ3LWNlMWItNDg0ZC1hYTc5LWU0NzM5OGRmOWE4OSIsImVtYWlsIjoia2VrN3BsYXdwaWVAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NTY4LCJleHAiOjE3NzU3NTAzNjh9.Jk-C3wWpZUny22pA2a52srmx71KzAu75Td4j7vXcAuM' \
+-H 'Cookie: refresh_token=088b3b7a-8d72-4ba9-b05e-360dfa8575f3' \
+-H 'Content-Length: 64' \
+-d '{"email": "kek2rihsdot@gmail.com", "password": "lQACso8D3Mo7*F"}'
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:99 [32mpytest tests/api/test_auth.py::TestAuthNegative::test_get_user_by_id_common_user[0m
+curl -X GET 'https://auth.dev-cinescope.coconutqa.ru/user/kek2rihsdot@gmail.com' \
+-H 'User-Agent: python-requests/2.32.5' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Accept: application/json' \
+-H 'Connection: keep-alive' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRkM2NlYThmLTE0YzYtNDcxNi1iNGUxLTM4YWIxYjQwZjUwMyIsImVtYWlsIjoia2VrMnJpaHNkb3RAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzc1NzQ4NTY5LCJleHAiOjE3NzU3NTAzNjl9.5dFpLg7LtIxnJLHihoR7upVBg6mdkURGbKNmkDNVE1Y' \
+-H 'Cookie: refresh_token=41ef3b56-c255-4f50-9ccf-4e12361da2d6' \
+
+[32mINFO    [0m custom_requester.custom_requester:custom_requester.py:110 	RESPONSE:
+STATUS_CODE: [31m403[0m
+DATA: [31m{"message":"Forbidden resource","error":"Forbidden","statusCode":403}[0m
