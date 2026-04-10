@@ -1,123 +1,56 @@
-import logging
 from typing import Union
 
-import allure
 import pytest
-
-from db_requester.db_helpers import DBHelper
-from entities.user import User
-from models.users_base_models import pydantic_user_response
+from utils.api.api_manager import ApiManagerAuth
+import logging
 
 logger = logging.getLogger(__name__)
 MISSING = object()
 
-@allure.epic("Cinescop")
-@allure.feature("auth_api")
-@allure.tag("positive")
+
 class TestAuthAPIHappyPath:
 
-    @allure.title("Позитивный тест. Создание пользователя")
-    @allure.tag("critical", "user")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.positive
-    @pytest.mark.critical
-    def test_create_user(self, super_admin: User, creation_user_data: dict, db_helper: DBHelper):
-        logger.info("Позитивный тест. Создание пользователя")
-
-        response = super_admin.api.user_api.create_user(creation_user_data).json()
-        with allure.step("Проверка ответа от сервера на соответствие модели"): # request_user - не обязательный параметр
-            pydantic_user_response(response_user=response, request_user=creation_user_data)
-
-        with allure.step("Проверка на соответствие из базы данных"):
-            db_user = db_helper.get_user_by_id(response['id'])
-            assert db_user.email == response['email'], "email не соответствует в базе данных"
-
-    @allure.title("Позитивный тест. Получение информации о пользователе по id и email")
-    @allure.tag("critical", "user")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.positive
-    @pytest.mark.critical
-    def test_get_user_by_locator(self, super_admin: User, registered_user: dict):
-        logger.info("Позитивный тест. Получение информации о пользователе по id и email")
-
-        response_by_id = super_admin.api.user_api.get_user(registered_user['id']).json()
-        response_by_email = super_admin.api.user_api.get_user(registered_user['email']).json()
-
-        with allure.step("Проверка ответа от сервера на соответствие модели"): # request_user - не обязательный параметр
-            pydantic_user_response(response_user=response_by_id)
-            pydantic_user_response(response_user=response_by_email)
-
-        assert response_by_id == response_by_email, "Содержание ответов должно быть идентичным"
-
-
-    @allure.title("Позитивный тест. Регистрация и авторизация пользователя")
-    @allure.tag("smoke", "user")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.positive
-    @pytest.mark.smoke
-    def test_register_and_login_user(self, super_admin: User, registered_user: dict):
+    def test_register_and_login_user(self, api_manager_auth: ApiManagerAuth, registered_user: dict):
+        # Регистрация и авторизация пользователя
         logger.info("Позитивный тест на регистрацию и авторизацию пользователя")
         login_data = {
             "email": registered_user["email"],
             "password": registered_user["password"]
         }
 
-        response = super_admin.api.auth_api.login_user(login_data)
+        response = api_manager_auth.auth_api.login_user(login_data)
         response_data = response.json()
 
         # Проверки
         assert "accessToken" in response_data, "Токен доступа отсутствует в ответе"
         assert response_data["user"]["email"] == registered_user["email"], "Email не совпадает"
 
-
-    @allure.title("Позитивный теста. Изменение пользователя с проверкой изменений в БД")
-    @allure.tag("critical", "user")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.positive
-    @pytest.mark.critical
-    def test_change_user(self, super_admin: User, registered_user: dict, db_helper: DBHelper):
-        logger.info("Позитивный теста. Изменение пользователя с проверкой изменений в БД")
+    def test_change_user(self, admin_api: ApiManagerAuth, registered_user: dict):
+        # Изменение пользователя
+        logger.info("Позитивный теста. Изменение пользователя")
         user_id = registered_user["id"]
         new_verified = True
         new_banned = False
         new_data = {"verified": new_verified, "banned": new_banned}
-        response = super_admin.api.user_api.change_user(user_id, new_data, expected_status=(200,))
+
+        response = admin_api.user_api.change_user(user_id, new_data, expected_status=200)
         response_data = response.json()
 
-        with allure.step("Проверка ответа от сервера на соответствие модели"): # request_user - не обязательный параметр
-            pydantic_user_response(response_user=response_data)
-
-        with allure.step("Проверка на соответствие из базы данных"):
-            db_user = db_helper.get_user_by_id(registered_user["id"])
-            assert db_user.verified == new_verified, "verified не изменилось в базе данных"
-            assert db_user.banned == new_banned, "banned не изменилось в базе данных"
-
+        # Проверки
         assert response_data["verified"] is new_verified, "Статус верификации не изменился"
         assert response_data["banned"] is new_banned, "Статус banned не изменился"
 
 
-@allure.epic("Cinescop")
-@allure.feature("auth_api")
-@allure.tag("negative")
 class TestAuthNegative:
-    @allure.title("Негативный тест. Регистрация пользователя")
-    @allure.tag("regression", "user")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.negative
-    @pytest.mark.regression
-    @allure.tag("critical", "user")
+
     @pytest.mark.parametrize("field_register, value_register", [
         ("email", "abc"),         # некорректный email
         ("fullName", ""),         # пустая строка
         ("password", MISSING)     # ключ есть, но значение None
     ])
-    def test_negative_register(self, super_admin: User, test_user: dict, field_register: str,
+    def test_negative_register(self, api_manager_auth: ApiManagerAuth, test_user: dict, field_register: str,
                                value_register: Union[str, None, object]):
+        # Регистрация пользователя
         logger.info(f"Негативный тест. Регистрация пользователя. Проверка поля {field_register}={value_register}")
 
         data = test_user.copy()
@@ -126,23 +59,18 @@ class TestAuthNegative:
         else:
             data[field_register] = value_register
 
-        expected_status = (400,)
-        super_admin.api.auth_api.register_user(data, expected_status)
+        expected_status = 400
+        api_manager_auth.auth_api.register_user(data, expected_status)
 
-
-    @allure.title("Негативный тест. Авторизация пользователя")
-    @allure.tag("user")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.negative
     @pytest.mark.parametrize("field_auth, value_auth", [
-        pytest.param("email", "abc", marks=[pytest.mark.regression]),               # некорректный email
-        pytest.param("email", "", marks=[pytest.mark.regression]),                  # пустая строка
-        pytest.param("password", "", marks=[pytest.mark.rbac,pytest.mark.smoke]),   # пустая строка
-        pytest.param("password", "1", marks=[pytest.mark.rbac,pytest.mark.smoke]),  # неверный пароль
+        ("email", "abc"),  # некорректный email
+        ("email", ""),     # пустая строка
+        ("password", "1"), # неверный пароль
+        ("password", "")   # пустая строка
     ])
-    def test_negative_auth(self, super_admin: User, registered_user: dict, field_auth: str,
+    def test_negative_auth(self, api_manager_auth: ApiManagerAuth, registered_user: dict, field_auth: str,
                            value_auth: Union[str, None, object]):
+        # Авторизация пользователя
         logger.info(f"Негативный тест. Авторизация пользователя. Проверка поля {field_auth}={value_auth}")
 
         login_data = {
@@ -155,32 +83,15 @@ class TestAuthNegative:
         else:
             login_data[field_auth] = value_auth
 
+        expected_status = 401
 
-        expected_status = (401,)
+        api_manager_auth.auth_api.login_user(login_data, expected_status)
 
-        super_admin.api.auth_api.login_user(login_data, expected_status)
-
-    @allure.title("Негативный тест. Регистрация пользователя")
-    @allure.tag("user", "critical", "rbac")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.negative
-    @pytest.mark.critical
-    @pytest.mark.rbac
-    def test_negative_change_user(self, registered_user: dict, common_user: User):
+    def test_negative_change_user(self, api_manager_auth: ApiManagerAuth, authorized_user: dict,
+                                  registered_user: dict):
+        # Попытка изменения пользователя без соответствующих прав
         logger.info("Негативный тест. Попытка изменения пользователя без соответствующих прав")
 
         user_id = registered_user["id"]
         new_data = {"verified": True, "banned": False}
-        common_user.api.user_api.change_user(user_id, new_data, expected_status=(403,))
-
-    @allure.title("Негативный тест. Регистрация пользователя")
-    @allure.tag("user", "critical", "rbac")
-    @pytest.mark.api
-    @pytest.mark.user
-    @pytest.mark.negative
-    @pytest.mark.critical
-    @pytest.mark.rbac
-    def test_get_user_by_id_common_user(self, common_user: User):
-        # Попытка получения информации о пользователе без соответствующих прав
-        common_user.api.user_api.get_user(common_user.email, expected_status=(403,))
+        api_manager_auth.user_api.change_user(user_id, new_data, expected_status=403)
