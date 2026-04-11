@@ -1,63 +1,99 @@
-from typing import Union
+from typing import Union, Iterable
 
+import allure
 import pytest
-from utils.api.api_manager import ApiManagerMovies, ApiManagerAuth
+
+from db_requester.db_helpers import DBHelper
+from entities.user import User
 from faker import Faker
 import logging
+
+from models.movies_base_models import pydantic_movie_response
 
 logger = logging.getLogger(__name__)
 fake = Faker("ru_RU")
 MISSING = object()
 
-
+@allure.epic("Cinescop")
+@allure.feature("movies_api")
+@allure.tag("positive")
 class TestMoviesAPIHappyPath:
 
-    def test_create_movie(self, admin_api: ApiManagerAuth, test_movie: dict,
-                          api_manager_movies: ApiManagerMovies):
-        # Создание фильма
+    @allure.title("Позитивный тест. Создание фильма")
+    @allure.tag("critical", "movies")
+    @pytest.mark.api
+    @pytest.mark.movies
+    @pytest.mark.positive
+    @pytest.mark.critical
+    def test_create_movie(self, super_admin: User, test_movie: dict):
         logger.info("Позитивный тест. Создание фильма")
 
         data = test_movie
-        response = api_manager_movies.movies_api.create_movie(data)
+        response = super_admin.api.movies_api.create_movie(data)
         response_created = response.json()
-        assert "id" in response_created
-        assert "name" in response_created
-        assert "price" in response_created
-        assert "description" in response_created
 
-    def test_get_one_movie(self, api_manager_movies: ApiManagerMovies, movie: dict):
-        # Получение фильма
+        with allure.step("Проверка ответа от сервера на соответствие модели"):# request_movie - не обязательный параметр
+            pydantic_movie_response(response_movie=response_created, request_movie=test_movie)
+
+
+    @allure.title("Позитивный тест. Получение фильма")
+    @allure.tag("critical", "movies")
+    @pytest.mark.api
+    @pytest.mark.movies
+    @pytest.mark.positive
+    @pytest.mark.critical
+    def test_get_one_movie(self, super_admin: User, movie: dict):
         logger.info("Позитивный тест. Получение фильма")
 
-        response = api_manager_movies.movies_api.get_movie(movie["id"])
+        response = super_admin.api.movies_api.get_movie(movie["id"])
         response_got = response.json()
-        assert "id" in response_got
-        assert "name" in response_got
-        assert "price" in response_got
-        assert "description" in response_got
 
-    def test_change_movie(self, admin_api:ApiManagerAuth,api_manager_movies: ApiManagerMovies,movie: dict):
-        # Редактирование фильма
-        logger.info("Позитивный тест. Редактирование фильма")
+        with allure.step("Проверка ответа от сервера на соответствие модели"):# request_movie - не обязательный параметр
+            pydantic_movie_response(response_movie=response_got)
+
+
+    @allure.title("Позитивный тест. Редактирование фильма с проверкой изменений в БД")
+    @allure.tag("critical", "movies")
+    @pytest.mark.api
+    @pytest.mark.movies
+    @pytest.mark.positive
+    @pytest.mark.critical
+    def test_change_movie(self, super_admin: User, movie: dict, db_helper: DBHelper):
+        logger.info("Позитивный тест. Редактирование фильма с проверкой изменений в БД")
 
         data = movie.copy()
         data["name"] = fake.sentence(nb_words=3)
         data["description"] = fake.sentence(nb_words=8)
-        response = api_manager_movies.movies_api.change_movie(movie["id"], data)
+        response = super_admin.api.movies_api.change_movie(movie["id"], data)
         response_changed = response.json()
 
-        assert "id" in response_changed
-        assert "price" in response_changed
-        assert response_changed["name"] == data["name"]
-        assert response_changed["description"] == data["description"]
+        with allure.step("Проверка ответа от сервера на соответствие модели"):# request_movie - не обязательный параметр
+            pydantic_movie_response(response_movie=response_changed, request_movie=data)
 
-    def test_delete_movie(self,admin_api: ApiManagerAuth,api_manager_movies: ApiManagerMovies,movie: dict):
-        # Удаление фильма
+        with allure.step("Проверка на соответствие из базы данных"):
+            db_movie = db_helper.get_movie_by_id(movie["id"])
+            assert db_movie.name == data["name"], "Название фильма не изменилось в базе данных"
+            assert db_movie.description == data["description"], "Описание фильма не изменилось в базе данных"
+
+
+    @allure.title("Позитивный тест. Удаление фильма")
+    @allure.tag("critical", "movies")
+    @pytest.mark.api
+    @pytest.mark.movies
+    @pytest.mark.positive
+    @pytest.mark.critical
+    def test_delete_movie(self, super_admin: User, movie: dict):
         logger.info("Позитивный тест. Удаление фильма")
-        api_manager_movies.movies_api.delete_movie(movie["id"])
-        api_manager_movies.movies_api.get_movie(movie["id"], (404,))
+        super_admin.api.movies_api.delete_movie(movie["id"])
+        super_admin.api.movies_api.get_movie(movie["id"], (404,))
 
 
+    @allure.title("Позитивный тест. Получение афиши")
+    @allure.tag("regression", "movies")
+    @pytest.mark.api
+    @pytest.mark.movies
+    @pytest.mark.positive
+    @pytest.mark.regression
     @pytest.mark.parametrize("field_get, value_get", [
         ("Default", True),  # Не отправляем ничего
         ("page", MISSING),  # Не отправляем page
@@ -66,9 +102,8 @@ class TestMoviesAPIHappyPath:
         ("maxPrice", 2),    # Граничное значение
         ("genreId", 1)      # Граничное значение
     ])
-    def test_get_poster(self, api_manager_movies: ApiManagerMovies, test_poster: dict, field_get: str,
+    def test_get_poster(self, super_admin: User, test_poster: dict, field_get: str,
                         value_get: Union[str, None, object]):
-        # Получение афиши с фильмами
         logger.info(f"Позитивный тест. Получение афиши. Проверка поля {field_get}={value_get}")
 
         if field_get == "Default": # Передаем пустой словарь, тест значений по умолчанию,
@@ -80,11 +115,12 @@ class TestMoviesAPIHappyPath:
             else:
                 data[field_get] = value_get
 
-            if data.get("minPrice", 0) > data.get("maxPrice", 0):
-                data["minPrice"] = data["maxPrice"] - 1
+            if data.get("maxPrice", 0) <= data.get("minPrice", 0):
+                data["maxPrice"] = data["minPrice"] + 1
 
-        response = api_manager_movies.movies_api.get_poster_movie(data)
+        response = super_admin.api.movies_api.get_poster_movie(data)
         response_data = response.json()
+
 
         # Проверки
         assert "movies" in response_data
@@ -93,7 +129,7 @@ class TestMoviesAPIHappyPath:
         assert "page" in response_data
         assert "pageSize" in response_data
 
-        api_manager_movies.auth_api.logout()
+        super_admin.api.auth_api.logout()
 
         if response_data["movies"]:
             assert "id" in response_data["movies"][0]
@@ -101,32 +137,53 @@ class TestMoviesAPIHappyPath:
             logger.info("Список фильмов пуст на этой странице")
 
 
+@allure.epic("Cinescop")
+@allure.feature("movies_api")
+@allure.tag("negative")
 class TestMoviesAPINegative:
 
-    @pytest.mark.parametrize("field_create_negative, value_create_negative", [
-        ("not_access", True),
-        ("name", ""),
-        ("name", MISSING)
+    @allure.title("Негативный тест. Создание фильма")
+    @allure.tag("movies")
+    @pytest.mark.api
+    @pytest.mark.movies
+    @pytest.mark.negative
+    @pytest.mark.parametrize("field_create_negative, value_create_negative, expected_status_cr_neg", [
+        pytest.param("not_access",True,(401,),marks=[pytest.mark.rbac,pytest.mark.critical]), # тест без доступа
+        pytest.param("name", "", (400,), marks=pytest.mark.regression),  # пустое поле name
+        pytest.param("name", MISSING, (400,), marks=pytest.mark.regression)  # отсутствующее поле name
     ])
-    def test_create_movie(self, admin_api: ApiManagerAuth, test_movie: dict, api_manager_movies: ApiManagerMovies,
-                          field_create_negative: str, value_create_negative: Union[str, None, object]):
-        # Создание фильма
+    def test_create_movie(
+            self,
+            logged_in_super_admin: User,
+            test_movie: dict,
+            field_create_negative: str,
+            value_create_negative: Union[str, None, object],
+            expected_status_cr_neg: Iterable[int]
+    ):
         logger.info(f"Негативный тест. Создание фильма. Проверка поля {field_create_negative}={value_create_negative}")
 
         data = test_movie.copy()
-        if value_create_negative is MISSING:
-            data.pop(field_create_negative, None)
-        else:
-            data[field_create_negative] = value_create_negative
 
-        expected_status = (400,)
+        # Случай отсутствия доступа
         if field_create_negative == "not_access":
-            api_manager_movies.auth_api.logout()
-            expected_status = (401,)
+            logged_in_super_admin.api.auth_api.logout()
+            logged_in_super_admin.clear_tokens()
+        else:
+            # Подготавливаем данные для проверки поля
+            if value_create_negative is MISSING:
+                data.pop(field_create_negative, None)
+            else:
+                data[field_create_negative] = value_create_negative
 
-        api_manager_movies.movies_api.create_movie(data, expected_status)
+        logged_in_super_admin.api.movies_api.create_movie(data, expected_status_cr_neg)
 
 
+    @allure.title("Негативный тест. Получение афиши с фильмами")
+    @allure.tag("regression", "movies")
+    @pytest.mark.api
+    @pytest.mark.movies
+    @pytest.mark.negative
+    @pytest.mark.regression
     @pytest.mark.parametrize("field_negative, value_negative", [
         ("page", 0),        # Невалидные граничные значения
         ("page", 0),        # Невалидные граничные значения
@@ -141,13 +198,12 @@ class TestMoviesAPINegative:
         ("maxPrice", "abc"),# Невалидные значения
         ("genreId", "abc")  # Невалидные значения
     ])
-    def test_get_poster_negative(self, api_manager_movies: ApiManagerMovies, test_poster: dict, field_negative: "str",
+    def test_get_poster_negative(self, super_admin: User, test_poster: dict, field_negative: str,
                                  value_negative: Union[str, None, object]):
-        # Получение афиши с фильмами
         logger.info(f"Негативный тест. Получение афиши с фильмами. Проверка поля {field_negative}={value_negative}")
 
         data = test_poster.copy()
         data[field_negative] = value_negative
 
         expected_status = (400,)
-        api_manager_movies.movies_api.get_poster_movie(data, expected_status)
+        super_admin.api.movies_api.get_poster_movie(data, expected_status)
