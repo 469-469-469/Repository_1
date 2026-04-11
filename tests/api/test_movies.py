@@ -115,8 +115,8 @@ class TestMoviesAPIHappyPath:
             else:
                 data[field_get] = value_get
 
-            if data.get("minPrice", 0) > data.get("maxPrice", 0):
-                data["minPrice"] = data["maxPrice"] - 1
+            if data.get("maxPrice", 0) <= data.get("minPrice", 0):
+                data["maxPrice"] = data["minPrice"] + 1
 
         response = super_admin.api.movies_api.get_poster_movie(data)
         response_data = response.json()

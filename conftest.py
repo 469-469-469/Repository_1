@@ -3,6 +3,7 @@ import random
 from typing import Any, Generator, Callable
 
 from faker import Faker
+from uuid import uuid4
 import pytest
 import requests
 from sqlalchemy.orm import Session
@@ -34,40 +35,6 @@ def session():
     yield http_session
     http_session.close()
 
-
-@pytest.fixture
-def movies_requester(session: Session):
-    """Для API фильмов."""
-    return CustomRequester(session, base_url=BASE_URL_MOVIES)
-
-@pytest.fixture
-def payment_requester(session: Session):
-    """Для Payment API"""
-    return CustomRequester(session, base_url=BASE_URL_PAYMENT)
-
-@pytest.fixture
-def auth_requester(session: Session):
-    """Для Auth API."""
-    return CustomRequester(session, base_url=BASE_URL_AUTH)
-
-
-@pytest.fixture(scope="session")
-def api_manager_auth(session: Session):
-    """Фикстура для создания экземпляра ApiManagerAuth."""
-    return ApiManager(session)
-
-
-@pytest.fixture(scope="session")
-def api_manager_movies(session: Session):
-    """Фикстура для создания экземпляра ApiManagerMovies."""
-    return ApiManager(session)
-
-
-@pytest.fixture(scope="session")
-def api_manager_payment(session: Session):
-    """Фикстура для создания экземпляра ApiManagerPayment."""
-    return ApiManager(session)
-
 @pytest.fixture(scope="session")
 def user_session(session: Session):
     """Фабрика сессий пользователей."""
@@ -83,9 +50,11 @@ def user_session(session: Session):
     for user in user_pool:
         user.close_session()
 
+
 # ----------------------------
 # Данные для тестов
 # ----------------------------
+
 
 @pytest.fixture
 def test_user():
@@ -129,7 +98,7 @@ def registration_user_data():
 def test_movie():
     """Генерация случайных параметров для создания фильма."""
     data_movie = {
-        "name": fake_ru.sentence(nb_words=3),
+        "name": f"{fake_ru.sentence(nb_words=3)}_{uuid4()}",
         "imageUrl": f"https://{fake_ru.domain_name()}/image/{fake_ru.uuid4()}",
         "price": random.randint(100, 400),
         "description": fake_ru.sentence(nb_words=10),
@@ -174,6 +143,7 @@ def movie(test_movie: dict, super_admin: User):
 # ----------------------------
 # Аутентификация
 # ----------------------------
+
 
 @pytest.fixture(scope="session")
 def super_admin(user_session: Callable[..., ApiManager]):
@@ -230,6 +200,7 @@ def common_user(user_session: Callable[..., ApiManager], super_admin: User, crea
     common_user.api.auth_api.authenticate(common_user.creds)
     return common_user
 
+
 @pytest.fixture(scope="session")
 def authorized_user(super_admin: User, registered_user: dict):
     """Аутентификация зарегистрированного пользователя."""
@@ -246,14 +217,10 @@ def authorized_user(super_admin: User, registered_user: dict):
 
 
 @pytest.fixture()
-def registered_user(auth_requester: CustomRequester, creation_user_data: dict, super_admin: User):
+def registered_user(creation_user_data: dict, super_admin: User):
     """Фикстура для регистрации и получения данных зарегистрированного пользователя."""
-    response = auth_requester.send_request(
-        method="POST",
-        endpoint=REGISTER_ENDPOINT,
-        data=creation_user_data,
-        expected_status=(201,) # Падение теста если пользователь не создан
-    )
+
+    response = super_admin.api.auth_api.register_user(creation_user_data)
     response_data = response.json()
     registered = creation_user_data.copy()
     registered["id"] = response_data["id"]
