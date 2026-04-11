@@ -8,7 +8,7 @@ playwright = sync_playwright().start()
 browser = playwright.chromium.launch(headless=False, slow_mo=50)
 page = browser.new_page()
 page.goto('https://demoqa.com/')
-time.sleep(10)  # Сделаем sleep иначе браузер сразу закроется перейдя к следующим строкам
+time.sleep(10)  # Сделаем sleep иначе   браузер сразу закроется перейдя к следующим строкам
 
 # После выполнения необходимых действий, следует явно закрыть браузер
 browser.close()
