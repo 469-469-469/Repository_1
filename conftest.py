@@ -1,6 +1,7 @@
 import pytest
 
 from constants import DEFAULT_UI_TIMEOUT
+from utils.my_trace import Tools
 
 
 @pytest.fixture(scope="session")  # Браузер запускается один раз для всей сессии
@@ -13,10 +14,13 @@ def browser(playwright):
 @pytest.fixture(scope="function")  # Контекст создается для каждого теста
 def context(browser):
     context = browser.new_context()
-    context.tracing.start(screenshots=True, snapshots=True, sources=True)  # Трассировка для отладки
-    context.set_default_timeout(DEFAULT_UI_TIMEOUT)  # Установка таймаута по умолчанию
-    yield context  # yield возвращает значение фикстуры, выполнение теста продолжится после yield
-    context.close()  # Контекст закрывается после завершения теста
+    context.tracing.start(screenshots=True, snapshots=True, sources=True)
+    context.set_default_timeout(DEFAULT_UI_TIMEOUT)
+    yield context
+    log_name = f"trace_{Tools.get_timestamp()}.zip"
+    trace_path = Tools.files_dir('playwright_trace', log_name)
+    context.tracing.stop(path=trace_path)
+    context.close()
 
 
 @pytest.fixture(scope="function")  # Страница создается для каждого теста

@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5d123bb9-1780-419b-8e07-218a34a6d8e6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ui/test_playwright.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ui/test_playwright.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ui/common/my_trace.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/my_trace.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,18 +42,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python tests.Python tests in test_playwright.py.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test_playwright.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Test-module6&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python tests.Python tests in test_playwright.py.executor": "Run",
+    "Python.my_trace.executor": "Run",
+    "Python.test_playwright.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Test-module6"
   }
-}</component>
-  <component name="RunManager" selected="Python.my_trace">
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\PythonProject\UI\utils" />
+      <recent name="C:\PythonProject\UI\utils\common" />
+      <recent name="C:\PythonProject\UI\tests\ui" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python tests.Python tests in test_playwright.py">
     <configuration name="my_trace" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="UI" />
       <option name="ENV_FILES" value="" />
@@ -118,8 +126,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.my_trace" />
         <item itemvalue="Python tests.Python tests in test_playwright.py" />
+        <item itemvalue="Python.my_trace" />
         <item itemvalue="Python.test_playwright" />
       </list>
     </recent_temporary>
