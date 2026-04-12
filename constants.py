@@ -1,0 +1,1 @@
+DEFAULT_UI_TIMEOUT = 30000  # 30 секунд

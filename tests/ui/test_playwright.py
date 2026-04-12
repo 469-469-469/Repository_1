@@ -1,41 +1,22 @@
-from playwright.sync_api import sync_playwright
 import time
+from pathlib import Path
+from datetime import datetime
+from playwright.sync_api import Page, expect
 
-def test_multiple_browsers():
-    with sync_playwright() as p:
-        # Запускаем браузер
-        browser1 = p.chromium.launch(headless=False)
 
-        # создаем 2 контекста
-        context1_1 = browser1.new_context()
-        context1_2 = browser1.new_context()
+def test_example(page: Page) -> None:
+    page.goto("https://demoqa.com/text-box")
+    page.get_by_role("textbox", name="Full Name").click()
+    page.get_by_role("textbox", name="Full Name").fill("reterterstrft")
+    page.get_by_role("textbox", name="name@example.com").click()
+    page.get_by_role("textbox", name="name@example.com").fill("ioledasz@mail.ru")
+    page.get_by_role("textbox", name="Current Address").click()
+    page.get_by_role("textbox", name="Current Address").fill("hmkfdsfcdf")
+    page.locator("#permanentAddress").click()
+    page.locator("#permanentAddress").fill("nsrthyagfzdgg")
+    page.get_by_role("button", name="Submit").click()
+    expect(page.locator("#name")).to_contain_text("Name:reterterstrft")
+    expect(page.locator("#email")).to_contain_text("Email:ioledasz@mail.ru")
 
-        # В каждом контексте создаем по 2 пейджи
-        page1_1_1 = context1_1.new_page()
-        page1_1_2 = context1_1.new_page()
-        page1_2_1 = context1_2.new_page()
-        page1_2_2 = context1_2.new_page()
+    time.sleep(10)
 
-        # переходим на разные сайты
-        page1_1_1.goto("https://www.example.com")
-        page1_1_2.goto("https://www.google.com")
-        page1_2_1.goto("https://www.wikipedia.org")
-        page1_2_2.goto("https://www.yandex.ru")
-
-        # немного ждем чтобы осмотреться
-        time.sleep(10)
-
-        # Закрываем пейджи
-        page1_1_1.close()
-        page1_1_2.close()
-        page1_2_1.close()
-        page1_2_2.close()
-
-        # Закрываем контексты
-        context1_1.close()
-        context1_2.close()
-
-        # Закрываем браузер
-        browser1.close()
-if __name__ == "__main__":
-    test_multiple_browsers()
