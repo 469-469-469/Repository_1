@@ -4,11 +4,11 @@
 .DS_Store
 /venv/
 __pycache__/
+/allure-results
+files/
 *.db
 *.xlsx
 *.log
 *.csv
 .token
 .env
-/allure-results
-**/files/
