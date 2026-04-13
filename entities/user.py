@@ -1,3 +1,4 @@
+from models.creds_base_models import CredsModel, pydantic_user_creds
 from utils.api.api_manager import ApiManager
 
 class User:
@@ -9,8 +10,8 @@ class User:
         self.token = None  # <-- сюда сохраним JWT после логина
 
     @property
-    def creds(self) -> dict:
-        return {"email": self.email, "password": self.password}
+    def creds(self) -> CredsModel:
+        return pydantic_user_creds({"email": self.email, "password": self.password})
 
     def clear_tokens(self):
         self.token = None

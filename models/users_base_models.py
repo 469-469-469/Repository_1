@@ -12,7 +12,7 @@ class Roles(str, Enum):
 
 
 class RequestTestUser(BaseModel):
-    email: str = EmailStr
+    email: EmailStr
     fullName: str
     password: str
     passwordRepeat: str = Field(..., min_length=1, max_length=20, description="Пароли должны совпадать")
@@ -40,7 +40,7 @@ def pydantic_user_request(creation_user_data: dict) -> RequestTestUser:
 
 class ResponseTestUser(BaseModel):
     id: Optional[str] = None
-    email: str = EmailStr
+    email: EmailStr
     fullName: str
     password: Optional[str] = None
     roles: list[Roles] = [Roles.USER]
@@ -54,12 +54,11 @@ class ResponseTestUser(BaseModel):
             raise ValueError("В эмейл нет символа '@'")
         return self
 
-# Проверки данных пользователя из ответа от сервера
+
 def pydantic_user_response(response_user: dict) -> ResponseTestUser:
     pydantic_user = ResponseTestUser(**response_user)
     log_json = pydantic_user.model_dump_json()
     logger.info(f"Логируем Pydantic {log_json}")
 
-    pydantic_user = pydantic_user
-
     return pydantic_user
+
