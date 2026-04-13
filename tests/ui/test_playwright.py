@@ -17,6 +17,6 @@ def test_example(page: Page) -> None:
     page.get_by_role("button", name="Submit").click()
     expect(page.locator("#name")).to_contain_text("Name:reterterstrft")
     expect(page.locator("#email")).to_contain_text("Email:ioledasz@mail.ru")
-
+#
     time.sleep(10)
 
