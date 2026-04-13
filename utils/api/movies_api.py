@@ -1,8 +1,11 @@
 from typing import Iterable
 
+import requests
 from requests import Session
 from constants.constants import MOVIE_ENDPOINT, BASE_URL_MOVIES
 from custom_requester.custom_requester import CustomRequester
+from models.movies_base_models import RequestTestMovie
+from models.posters_base_models import RequestTestPoster
 
 
 class MoviesAPI(CustomRequester):
@@ -13,7 +16,8 @@ class MoviesAPI(CustomRequester):
         super().__init__(session=session, base_url=BASE_URL_MOVIES)
         self.requester = CustomRequester(session, base_url=BASE_URL_MOVIES)
 
-    def get_poster_movie(self, data_poster: dict, expected_status: Iterable[int] = (200,)):
+    def get_poster_movie(self, data_poster: RequestTestPoster,
+                         expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Получение афиш фильмов.
         :param data_poster: Данные афиши.
@@ -26,7 +30,8 @@ class MoviesAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def create_movie(self, data_movie: dict, expected_status: Iterable[int] = (201,)):
+    def create_movie(self, data_movie: RequestTestMovie,
+                     expected_status: Iterable[int] = (201,)) -> requests.Response:
         """
         Создание нового фильма.
         :param data_movie: Данные фильма.
@@ -39,7 +44,8 @@ class MoviesAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def get_movie(self, id_movie: int, expected_status: Iterable[int] = (200,)):
+    def get_movie(self, id_movie: int,
+                  expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Получение данных фильма.
         :param id_movie:  Id фильма.
@@ -51,7 +57,8 @@ class MoviesAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def change_movie(self, id_movie: int, data_movie: dict, expected_status: Iterable[int] = (200,)):
+    def change_movie(self, id_movie: int, data_movie: RequestTestMovie,
+                     expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Редактирование фильма.
         :param id_movie:  Id фильма.
@@ -65,7 +72,8 @@ class MoviesAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def delete_movie(self, id_movie: int, expected_status: Iterable[int] = (200,)):
+    def delete_movie(self, id_movie: int,
+                     expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Удаление фильма.
         :param id_movie:  Id фильма.

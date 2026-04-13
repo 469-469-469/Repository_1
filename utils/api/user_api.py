@@ -2,10 +2,11 @@ from typing import Iterable
 from constants import BASE_URL_AUTH
 
 import requests
-
 from custom_requester.custom_requester import CustomRequester
+from utils.auto_step_class import auto_step_class
 
 
+@auto_step_class
 class UserAPI(CustomRequester):
 
     """Класс для работы с API пользователей."""
@@ -15,7 +16,8 @@ class UserAPI(CustomRequester):
         super().__init__(session=session, base_url=BASE_URL_AUTH)
         self.requester = CustomRequester(session, base_url=BASE_URL_AUTH)
 
-    def get_user(self, user_id: int, expected_status: Iterable[int] = (200,)):
+    def get_user(self, user_id: int,
+                 expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Получение информации о пользователе.
         :param user_id: ID пользователя.
@@ -27,7 +29,8 @@ class UserAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def create_user(self, user_data, expected_status: Iterable[int] = (201,)):
+    def create_user(self, user_data,
+                    expected_status: Iterable[int] = (201,)) -> requests.Response:
         return self.requester.send_request(
             method="POST",
             endpoint="user",
@@ -35,7 +38,8 @@ class UserAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def change_user(self, user_id: int, new_data: dict = None, expected_status: Iterable[int] = (200,)):
+    def change_user(self, user_id: int, new_data: dict = None,
+                    expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Получение информации о пользователе.
         :param user_id: ID пользователя.
@@ -49,7 +53,8 @@ class UserAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def delete_user(self, user_id: str, expected_status: Iterable[int] = (204,)):
+    def delete_user(self, user_id: str,
+                    expected_status: Iterable[int] = (204,)) -> requests.Response:
         """
         Удаление пользователя.
         :param user_id: ID пользователя.

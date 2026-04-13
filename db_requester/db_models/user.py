@@ -1,22 +1,22 @@
-from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy import Column, String, Boolean, DateTime, Integer
 from sqlalchemy.orm import declarative_base
 from typing import Dict, Any
 
 Base = declarative_base()
 
 
-class UserDBModel(Base):
+class UserDBSheme(Base):
     __tablename__ = 'users'
 
-    id = Column(String, primary_key=True)  # text в БД
-    email = Column(String)  # text в БД
-    full_name = Column(String)  # text в БД
-    password = Column(String)  # text в БД
-    created_at = Column(DateTime)  # timestamp в БД
-    updated_at = Column(DateTime)  # timestamp в БД
-    verified = Column(Boolean)  # bool в БД
-    banned = Column(Boolean)  # bool в БД
-    roles = Column(String)  # text в БД (Role enum)
+    id = Column(Integer, primary_key=True)
+    email = Column(String)
+    full_name = Column(String)
+    password = Column(String)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+    verified = Column(Boolean)
+    banned = Column(Boolean)
+    roles = Column(String)
 
     def to_dict(self) -> Dict[str, Any]:
         """Преобразование в словарь"""
@@ -32,21 +32,5 @@ class UserDBModel(Base):
             'roles': self.roles
         }
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<User(id='{self.id}', email='{self.email}')>"
-
-
-# # 1. Получение сессии (из db_client.py)
-# session = get_db_session()
-#
-# # 2. Создание объекта модели (из user.py)
-# user = UserDBModel(email="test@test.com")
-#
-# # 3. Выполнение операции через ORM
-# session.add(user)
-# session.commit()
-#
-# # 4. Запрос данных
-# user = session.query(UserDBModel).filter(
-#     UserDBModel.email == "test@test.com"
-# ).first()

@@ -1,10 +1,11 @@
 import logging
-from typing import Iterable
+from typing import Iterable, Optional
 
 import requests
 
 from constants.constants import LOGIN_ENDPOINT, REGISTER_ENDPOINT, LOGOUT_ENDPOINT, BASE_URL_AUTH
 from custom_requester.custom_requester import CustomRequester
+from models.users_base_models import RequestTestUser
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,8 @@ class AuthAPI(CustomRequester):
     def __init__(self, session:requests.Session):
         super().__init__(session=session, base_url=BASE_URL_AUTH)
 
-    def register_user(self, user_data: dict, expected_status: Iterable[int] = (201,)):
+    def register_user(self, user_data: RequestTestUser,
+                      expected_status: Iterable[int] = (201,)) -> requests.Response:
         """
         Регистрация нового пользователя.
         :param user_data: Данные пользователя.
@@ -31,7 +33,8 @@ class AuthAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def login_user(self, login_data: dict, expected_status: Iterable[int] = (200,)):
+    def login_user(self, login_data: RequestTestUser,
+                   expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Авторизация пользователя.
         :param login_data: Данные для логина.
@@ -44,7 +47,7 @@ class AuthAPI(CustomRequester):
             expected_status=expected_status
         )
 
-    def authenticate(self, login_data: dict):
+    def authenticate(self, login_data: RequestTestUser) -> str:
         response = self.login_user(login_data).json()
 
         if "accessToken" not in response:
@@ -61,7 +64,7 @@ class AuthAPI(CustomRequester):
 
         return token
 
-    def logout(self):
+    def logout(self) -> Optional[requests.Response]:
         """
         Выход из аккаунта и очистка токена
         """

@@ -9,7 +9,7 @@ class User:
         self.token = None  # <-- сюда сохраним JWT после логина
 
     @property
-    def creds(self):
+    def creds(self) -> dict:
         return {"email": self.email, "password": self.password}
 
     def clear_tokens(self):

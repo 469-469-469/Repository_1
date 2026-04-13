@@ -1,6 +1,9 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
-from db_requester.db_models.user import UserDBModel
-from db_requester.db_models.movie import MovieDBModel
+from db_requester.db_models.user import UserDBSheme
+from db_requester.db_models.movie import MovieDBSheme
+from models.users_base_models import RequestTestUser
 
 
 class DBHelper:
@@ -9,35 +12,36 @@ class DBHelper:
 
     """Класс с методами для работы с БД в тестах"""
 
-    def create_test_user(self, user_data: dict) -> UserDBModel:
+    def create_test_user(self, user_data: RequestTestUser) -> UserDBSheme:
         """Создает тестового пользователя"""
-        user = UserDBModel(**user_data)
+        user_data = user_data.model_dump()
+        user = UserDBSheme(**user_data)
         self.db_session.add(user)
         self.db_session.commit()
         self.db_session.refresh(user)
         return user
 
-    def get_user_by_id(self, user_id: str):
+    def get_user_by_id(self, user_id: str) -> Optional[UserDBSheme]:
         """Получает пользователя по ID"""
-        return self.db_session.query(UserDBModel).filter(UserDBModel.id == user_id).first()
+        return self.db_session.query(UserDBSheme).filter(UserDBSheme.id == user_id).first()
 
-    def get_user_by_email(self, email: str):
+    def get_user_by_email(self, email: str) -> Optional[UserDBSheme]:
         """Получает пользователя по email"""
-        return self.db_session.query(UserDBModel).filter(UserDBModel.email == email).first()
+        return self.db_session.query(UserDBSheme).filter(UserDBSheme.email == email).first()
 
-    def get_movie_by_name(self, name: str):
+    def get_movie_by_name(self, name: str) -> Optional[MovieDBSheme]:
         """Получает фильм по названию"""
-        return self.db_session.query(MovieDBModel).filter(MovieDBModel.name == name).first()
+        return self.db_session.query(MovieDBSheme).filter(MovieDBSheme.name == name).first()
 
-    def get_movie_by_id(self, movie_id: str):
+    def get_movie_by_id(self, movie_id: int) -> Optional[MovieDBSheme]:
         """Получает фильм по ID"""
-        return self.db_session.query(MovieDBModel).filter(MovieDBModel.id == movie_id).first()
+        return self.db_session.query(MovieDBSheme).filter(MovieDBSheme.id == str(movie_id)).first()
 
     def user_exists_by_email(self, email: str) -> bool:
         """Проверяет существование пользователя по email"""
-        return self.db_session.query(UserDBModel).filter(UserDBModel.email == email).count() > 0
+        return self.db_session.query(UserDBSheme).filter(UserDBSheme.email == email).count() > 0
 
-    def delete_user(self, user: UserDBModel):
+    def delete_user(self, user: UserDBSheme):
         """Удаляет пользователя"""
         self.db_session.delete(user)
         self.db_session.commit()
@@ -54,5 +58,5 @@ class DBHelper:
 Пример хелпера для movies
 def get_movie_by_id(self, movie_id: str):
     """Получает фильм по ID"""
-    return self.db_session.query(MovieDBModel).filter(MovieDBModel.id == movie_id).first()
+    return self.db_session.query(MovieDBSheme).filter(MovieDBSheme.id == movie_id).first()
 '''

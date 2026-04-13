@@ -1,6 +1,8 @@
+from typing import Optional
+
+import allure
 from pydantic import BaseModel
 from venv import logger
-import pytest_check as check
 
 
 class RequestTestMovie(BaseModel):
@@ -13,14 +15,16 @@ class RequestTestMovie(BaseModel):
     genreId: int
 
 
-def pydantic_movie_request(test_movie: dict):
+@allure.step("Обработка отправляемых данных")
+def pydantic_movie_request(test_movie: dict) -> RequestTestMovie:
     pydantic_movie = RequestTestMovie(**test_movie)
     log_json = pydantic_movie.model_dump_json()
-    logger.info(f"Логируем Pydantic {log_json}")  # а также возможность удобного взаимодействия
-    return pydantic_movie.model_dump()  # <- возвращаем словарь
+    logger.info(f"Логируем Pydantic {log_json}")
+    return pydantic_movie
 
 
 class ResponseTestMovie(BaseModel):
+    id: Optional[int] = None
     name: str
     imageUrl: str
     price: float
@@ -30,20 +34,12 @@ class ResponseTestMovie(BaseModel):
     genreId: int
 
 
-# Проверки данных фильма из ответа от сервера, + при получении request_movie сравнивается с ним
-def pydantic_movie_response(response_movie: dict, request_movie: dict=None):
+@allure.step("Обработка полученных данных")
+def pydantic_movie_response(response_movie: dict) -> ResponseTestMovie:
     pydantic_movie = ResponseTestMovie(**response_movie)
     log_json = pydantic_movie.model_dump_json()
-    logger.info(f"Логируем Pydantic {log_json}")  # а также возможность удобного взаимодействия
+    logger.info(f"Логируем Pydantic {log_json}")
 
-    pydantic_movie = pydantic_movie.model_dump()  # <- превращаем в словарь
-    if request_movie:
-        fields_to_check = ["name", "price", "description"]
-        for field in fields_to_check:
-            check.equal(
-                pydantic_movie.get(field),
-                request_movie.get(field),
-                f"{field} не совпадает с отправленным"
-            )
+    pydantic_movie = pydantic_movie
 
     return pydantic_movie

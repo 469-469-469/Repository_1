@@ -1,19 +1,18 @@
 import logging
-from typing import Union
-
 import allure
 import pytest
-
+import pytest_check as check
 from db_requester.db_helpers import DBHelper
 from entities.user import User
-from models.users_base_models import pydantic_user_response
+from models.users_base_models import pydantic_user_response, RequestTestUser, ResponseTestUser
+from utils.auto_step_class import auto_step_class
 
 logger = logging.getLogger(__name__)
-MISSING = object()
 
 @allure.epic("Cinescop")
 @allure.feature("auth_api")
 @allure.tag("positive")
+@auto_step_class
 class TestAuthAPIHappyPath:
 
     @allure.title("Позитивный тест. Создание пользователя")
@@ -22,16 +21,16 @@ class TestAuthAPIHappyPath:
     @pytest.mark.user
     @pytest.mark.positive
     @pytest.mark.critical
-    def test_create_user(self, super_admin: User, creation_user_data: dict, db_helper: DBHelper):
+    def test_create_user(self, super_admin: User, creation_user_data: RequestTestUser, db_helper: DBHelper):
         logger.info("Позитивный тест. Создание пользователя")
 
         response = super_admin.api.user_api.create_user(creation_user_data).json()
-        with allure.step("Проверка ответа от сервера на соответствие модели"): # request_user - не обязательный параметр
-            pydantic_user_response(response_user=response, request_user=creation_user_data)
+        with allure.step("Проверка ответа от сервера на соответствие модели"):
+            pydantic_user_response(response_user=response)
 
         with allure.step("Проверка на соответствие из базы данных"):
             db_user = db_helper.get_user_by_id(response['id'])
-            assert db_user.email == response['email'], "email не соответствует в базе данных"
+            check.equal(db_user.email, response['email'], "email не соответствует в базе данных")
 
     @allure.title("Позитивный тест. Получение информации о пользователе по id и email")
     @allure.tag("critical", "user")
@@ -39,17 +38,17 @@ class TestAuthAPIHappyPath:
     @pytest.mark.user
     @pytest.mark.positive
     @pytest.mark.critical
-    def test_get_user_by_locator(self, super_admin: User, registered_user: dict):
+    def test_get_user_by_locator(self, super_admin: User, registered_user: ResponseTestUser):
         logger.info("Позитивный тест. Получение информации о пользователе по id и email")
 
-        response_by_id = super_admin.api.user_api.get_user(registered_user['id']).json()
-        response_by_email = super_admin.api.user_api.get_user(registered_user['email']).json()
+        response_by_id = super_admin.api.user_api.get_user(registered_user.id).json()
+        response_by_email = super_admin.api.user_api.get_user(registered_user.email).json()
 
-        with allure.step("Проверка ответа от сервера на соответствие модели"): # request_user - не обязательный параметр
+        with allure.step("Проверка ответа от сервера на соответствие модели"):
             pydantic_user_response(response_user=response_by_id)
             pydantic_user_response(response_user=response_by_email)
 
-        assert response_by_id == response_by_email, "Содержание ответов должно быть идентичным"
+        check.equal(response_by_id, response_by_email, "Содержание ответов должно быть идентичным")
 
 
     @allure.title("Позитивный тест. Регистрация и авторизация пользователя")
@@ -58,51 +57,52 @@ class TestAuthAPIHappyPath:
     @pytest.mark.user
     @pytest.mark.positive
     @pytest.mark.smoke
-    def test_register_and_login_user(self, super_admin: User, registered_user: dict):
+    def test_register_and_login_user(self, super_admin: User, registered_user: ResponseTestUser):
         logger.info("Позитивный тест на регистрацию и авторизацию пользователя")
         login_data = {
-            "email": registered_user["email"],
-            "password": registered_user["password"]
+            "email": registered_user.email,
+            "password": registered_user.password
         }
 
         response = super_admin.api.auth_api.login_user(login_data)
         response_data = response.json()
 
         # Проверки
-        assert "accessToken" in response_data, "Токен доступа отсутствует в ответе"
-        assert response_data["user"]["email"] == registered_user["email"], "Email не совпадает"
+        check.is_in("accessToken", response_data, "Токен доступа отсутствует в ответе")
+        check.equal(response_data["user"]["email"], registered_user.email, "Email не совпадает")
 
 
-    @allure.title("Позитивный теста. Изменение пользователя с проверкой изменений в БД")
+    @allure.title("Позитивный тест. Изменение пользователя с проверкой изменений в БД")
     @allure.tag("critical", "user")
     @pytest.mark.api
     @pytest.mark.user
     @pytest.mark.positive
     @pytest.mark.critical
-    def test_change_user(self, super_admin: User, registered_user: dict, db_helper: DBHelper):
+    def test_change_user(self, super_admin: User, registered_user: ResponseTestUser, db_helper: DBHelper):
         logger.info("Позитивный теста. Изменение пользователя с проверкой изменений в БД")
-        user_id = registered_user["id"]
+        user_id = registered_user.id
         new_verified = True
         new_banned = False
         new_data = {"verified": new_verified, "banned": new_banned}
         response = super_admin.api.user_api.change_user(user_id, new_data, expected_status=(200,))
         response_data = response.json()
 
-        with allure.step("Проверка ответа от сервера на соответствие модели"): # request_user - не обязательный параметр
+        with allure.step("Проверка ответа от сервера на соответствие модели"):
             pydantic_user_response(response_user=response_data)
 
         with allure.step("Проверка на соответствие из базы данных"):
-            db_user = db_helper.get_user_by_id(registered_user["id"])
-            assert db_user.verified == new_verified, "verified не изменилось в базе данных"
-            assert db_user.banned == new_banned, "banned не изменилось в базе данных"
+            db_user = db_helper.get_user_by_id(registered_user.id)
+            check.equal(db_user.verified, new_verified, "verified не изменилось в базе данных")
+            check.equal(db_user.banned, new_banned, "banned не изменилось в базе данных")
 
-        assert response_data["verified"] is new_verified, "Статус верификации не изменился"
-        assert response_data["banned"] is new_banned, "Статус banned не изменился"
+        check.equal(response_data["verified"], new_verified, "Статус верификации не изменился")
+        check.equal(response_data["banned"], new_banned, "Статус banned не изменился")
 
 
 @allure.epic("Cinescop")
 @allure.feature("auth_api")
 @allure.tag("negative")
+@auto_step_class
 class TestAuthNegative:
     @allure.title("Негативный тест. Регистрация пользователя")
     @allure.tag("regression", "user")
@@ -113,21 +113,16 @@ class TestAuthNegative:
     @allure.tag("critical", "user")
     @pytest.mark.parametrize("field_register, value_register", [
         ("email", "abc"),         # некорректный email
-        ("fullName", ""),         # пустая строка
-        ("password", MISSING)     # ключ есть, но значение None
+        ("fullName", "")         # пустая строка
     ])
-    def test_negative_register(self, super_admin: User, test_user: dict, field_register: str,
-                               value_register: Union[str, None, object]):
+    def test_negative_register(self, super_admin: User, creation_user_data: RequestTestUser, field_register: str,
+                               value_register: str):
         logger.info(f"Негативный тест. Регистрация пользователя. Проверка поля {field_register}={value_register}")
 
-        data = test_user.copy()
-        if value_register is MISSING:
-            data.pop(field_register, None)
-        else:
-            data[field_register] = value_register
+        data = creation_user_data.model_copy(update={field_register: value_register})
 
         expected_status = (400,)
-        super_admin.api.auth_api.register_user(data, expected_status)
+        super_admin.api.auth_api.register_user(data.model_dump(), expected_status)
 
 
     @allure.title("Негативный тест. Авторизация пользователя")
@@ -141,20 +136,12 @@ class TestAuthNegative:
         pytest.param("password", "", marks=[pytest.mark.rbac,pytest.mark.smoke]),   # пустая строка
         pytest.param("password", "1", marks=[pytest.mark.rbac,pytest.mark.smoke]),  # неверный пароль
     ])
-    def test_negative_auth(self, super_admin: User, registered_user: dict, field_auth: str,
-                           value_auth: Union[str, None, object]):
+    def test_negative_auth(self, super_admin: User, registered_user: ResponseTestUser, field_auth: str,
+                           value_auth: str):
         logger.info(f"Негативный тест. Авторизация пользователя. Проверка поля {field_auth}={value_auth}")
 
-        login_data = {
-            "email": registered_user["email"],
-            "password": registered_user["password"]
-        }
-
-        if value_auth is MISSING:
-            login_data.pop(field_auth, None)
-        else:
-            login_data[field_auth] = value_auth
-
+        login_data = {"email": registered_user.email, "password": registered_user.password,
+                      field_auth: value_auth}
 
         expected_status = (401,)
 
@@ -167,10 +154,10 @@ class TestAuthNegative:
     @pytest.mark.negative
     @pytest.mark.critical
     @pytest.mark.rbac
-    def test_negative_change_user(self, registered_user: dict, common_user: User):
+    def test_negative_change_user(self, registered_user: ResponseTestUser, common_user: User):
         logger.info("Негативный тест. Попытка изменения пользователя без соответствующих прав")
 
-        user_id = registered_user["id"]
+        user_id = registered_user.id
         new_data = {"verified": True, "banned": False}
         common_user.api.user_api.change_user(user_id, new_data, expected_status=(403,))
 

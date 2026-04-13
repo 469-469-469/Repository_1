@@ -5,6 +5,7 @@ from utils.api.payment_api import PaymentAPI
 from utils.api.user_api import UserAPI
 from utils.api.movies_api import MoviesAPI
 
+
 class ApiManager:
     def __init__(self, session: Session):
         self.auth_api = AuthAPI(session)

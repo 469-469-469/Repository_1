@@ -1,5 +1,6 @@
 from typing import Iterable
 
+import requests
 from requests import Session
 
 from constants.constants import BASE_URL_PAYMENT
@@ -14,7 +15,8 @@ class PaymentAPI(CustomRequester):
         super().__init__(session=session, base_url=BASE_URL_PAYMENT)
         self.requester = CustomRequester(session, base_url=BASE_URL_PAYMENT)
 
-    def get_user_id_payment(self, user_id: int, expected_status: Iterable[int] = (200,)):
+    def get_user_id_payment(self, user_id: int,
+                            expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Создание оплаты.
         :param user_id: Id пользователя.

@@ -3,14 +3,15 @@ import allure
 from entities.user import User
 import logging
 import pytest_check as check
+from utils.auto_step_class import auto_step_class
+from models.users_base_models import ResponseTestUser
 
 logger = logging.getLogger(__name__)
 
 @allure.epic("Cinescop")
 @allure.feature("payment_api")
-
-
 @allure.tag("positive")
+@auto_step_class
 class TestPaymentAPIHappyPath:
 
     @allure.title("Получение платежей пользователя")
@@ -19,10 +20,10 @@ class TestPaymentAPIHappyPath:
     @pytest.mark.payment
     @pytest.mark.positive
     @pytest.mark.smoke
-    def test_get_user_payment(self, super_admin: User, registered_user: dict):
+    def test_get_user_payment(self, super_admin: User, registered_user: ResponseTestUser):
         logger.info("Позитивный тест. Получение платежей пользователя")
 
-        user_id = registered_user["id"]
+        user_id = registered_user.id
         response = super_admin.api.payment_api.get_user_id_payment(user_id)
         response_data = response.json()
 

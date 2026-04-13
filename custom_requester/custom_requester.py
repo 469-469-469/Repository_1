@@ -15,7 +15,10 @@ from constants.constants import GREEN, RESET, RED
 class HeadersKwargs(TypedDict, total=False):
     headers: Dict[str, str]
 
+from utils.auto_step_class import auto_step_class
 
+
+@auto_step_class
 class CustomRequester:
 
     """Кастомный реквестер для стандартизации и упрощения отправки HTTP-запросов."""
@@ -41,7 +44,7 @@ class CustomRequester:
             self,
             method: str,
             endpoint: str,
-            data: Dict | None = None,
+            data: Dict | BaseModel | None = None,
             params: Dict | None = None,
             expected_status: Iterable[int] = (200,),
             need_logging: bool = True
