@@ -2,7 +2,6 @@ from typing import Iterable
 
 import allure
 import pytest
-import pytest_check as check
 from db_requester.db_helpers import DBHelper
 from entities.user import User
 from faker import Faker
@@ -10,6 +9,7 @@ import logging
 
 from models.movies_base_models import pydantic_movie_response, RequestTestMovie, ResponseTestMovie
 from models.posters_base_models import RequestTestPoster
+from utils.assertions import assert_equal, assert_in
 
 logger = logging.getLogger(__name__)
 fake = Faker("ru_RU")
@@ -72,8 +72,17 @@ class TestMoviesAPIHappyPath:
 
         with allure.step("Проверка на соответствие из базы данных"):
             db_movie = db_helper.get_movie_by_id(movie.id)
-            check.equal(db_movie.name, data.name, "Название фильма не изменилось в базе данных")
-            check.equal(db_movie.description, data.description, "Описание фильма не изменилось в базе данных")
+            assert_equal(
+                db_movie.name,
+                data.name,
+                name="Проверка соответствия названия фильма в базе данных"
+            )
+            db_movie = db_helper.get_movie_by_id(movie.id)
+            assert_equal(
+                db_movie.description,
+                data.description,
+                name="Проверка соответствия описания фильма в базе данных"
+            )
 
 
     @allure.title("Позитивный тест. Удаление фильма")
@@ -131,8 +140,7 @@ class TestMoviesAPIHappyPath:
             logger.info("Список фильмов пуст на этой странице")
             return
         for field in required_fields:
-            check.is_in(field, response_data, f"В ответе нет поля '{field}'")
-
+            assert_in(field, response_data, f"Проверка присутствия поля '{field}' в ответе")
 
 
 @allure.epic("Cinescop")

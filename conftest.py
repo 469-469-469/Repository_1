@@ -16,7 +16,7 @@ from entities.user import User
 from models.movies_base_models import pydantic_movie_request, RequestTestMovie, pydantic_movie_response, \
     ResponseTestMovie
 from models.posters_base_models import RequestTestPoster, pydantic_poster_request
-from models.users_base_models import pydantic_user_request, RequestTestUser, pydantic_user_response, ResponseTestUser
+from models.users_base_models import pydantic_user_request, RequestTestUser, pydantic_user_response
 from resources.user_creds import SuperAdminCreds
 from utils.api.api_manager import ApiManager
 from utils.data_generator import DataGenerator
@@ -197,8 +197,8 @@ def authorized_user(super_admin: User, registered_user: RequestTestUser) -> Requ
     """Аутентификация зарегистрированного пользователя."""
     with allure.step("Аутентификация зарегистрированного пользователя"):
         super_admin.api.auth_api.authenticate(
-            registered_user["email"],
-            registered_user["password"]
+            registered_user.email,
+            registered_user.password
         )
     return registered_user
 

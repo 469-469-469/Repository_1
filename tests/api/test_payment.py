@@ -4,6 +4,7 @@ from entities.user import User
 import logging
 import pytest_check as check
 from models.users_base_models import ResponseTestUser
+from utils.assertions import assert_in
 
 logger = logging.getLogger(__name__)
 
@@ -39,4 +40,4 @@ class TestPaymentAPIHappyPath:
             logger.info("Оплат не найдено")
             return
         for field in required_fields:
-            check.is_in(field, response_data[0], f"В ответе нет поля '{field}'")
+            assert_in(field, response_data[0], f"Проверка присутствия поля '{field}' в ответе")

@@ -64,8 +64,26 @@ class CustomRequester:
         if data and method.upper() != "GET":
             request_kwargs["json"] = data
 
-        with allure.step("Отправка HTTP запроса через CustomRequester"):
+        with allure.step(f"HTTP {method} {url}"):
             response = self.session.request(method, url, **request_kwargs)
+
+            allure.attach(
+                str(response.request.body),
+                name="REQUEST",
+                attachment_type=allure.attachment_type.TEXT
+            )
+
+            allure.attach(
+                str(response.status_code),
+                name="STATUS",
+                attachment_type=allure.attachment_type.TEXT
+            )
+
+            allure.attach(
+                response.text,
+                name="RESPONSE",
+                attachment_type=allure.attachment_type.JSON
+            )
 
         if need_logging:
             self.log_request_and_response(response)

@@ -1,10 +1,10 @@
 import logging
 import allure
 import pytest
-import pytest_check as check
 from db_requester.db_helpers import DBHelper
 from entities.user import User
 from models.users_base_models import pydantic_user_response, RequestTestUser, ResponseTestUser
+from utils.assertions import assert_equal, assert_in
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,11 @@ class TestAuthAPIHappyPath:
 
         with allure.step("Проверка на соответствие из базы данных"):
             db_user = db_helper.get_user_by_id(response['id'])
-            check.equal(db_user.email, response['email'], "email не соответствует в базе данных")
+            assert_equal(
+                db_user.email,
+                response['email'],
+                name="Проверка соответствия email в базе данных"
+            )
 
     @allure.title("Позитивный тест. Получение информации о пользователе по id и email")
     @allure.tag("critical", "user")
@@ -47,7 +51,11 @@ class TestAuthAPIHappyPath:
             pydantic_user_response(response_user=response_by_id)
             pydantic_user_response(response_user=response_by_email)
 
-        check.equal(response_by_id, response_by_email, "Содержание ответов должно быть идентичным")
+        assert_equal(
+            response_by_id,
+            response_by_email,
+            name="Содержание ответов должно быть идентичным"
+        )
 
 
     @allure.title("Позитивный тест. Регистрация и авторизация пользователя")
@@ -67,8 +75,12 @@ class TestAuthAPIHappyPath:
         response_data = response.json()
 
         # Проверки
-        check.is_in("accessToken", response_data, "Токен доступа отсутствует в ответе")
-        check.equal(response_data["user"]["email"], registered_user.email, "Email не совпадает")
+        assert_in("accessToken", response_data, "Проверка присутствия токена доступа в ответе")
+        assert_equal(
+            response_data["user"]["email"],
+            registered_user.email,
+            name="Сравнение Email в HTTP запросе и ответе от сервера"
+        )
 
 
     @allure.title("Позитивный тест. Изменение пользователя с проверкой изменений в БД")
@@ -91,11 +103,28 @@ class TestAuthAPIHappyPath:
 
         with allure.step("Проверка на соответствие из базы данных"):
             db_user = db_helper.get_user_by_id(registered_user.id)
-            check.equal(db_user.verified, new_verified, "verified не изменилось в базе данных")
-            check.equal(db_user.banned, new_banned, "banned не изменилось в базе данных")
 
-        check.equal(response_data["verified"], new_verified, "Статус верификации не изменился")
-        check.equal(response_data["banned"], new_banned, "Статус banned не изменился")
+            assert_equal(
+                db_user.verified,
+                new_verified,
+                name="Проверка соответствия статуса verified в базе данных"
+            )
+            assert_equal(
+                db_user.banned,
+                new_banned,
+                name="Проверка соответствия статуса banned в базе данных"
+            )
+
+        assert_equal(
+            response_data["verified"],
+            new_verified,
+            name="Проверка, изменился ли статус верификации"
+        )
+        assert_equal(
+            response_data["banned"],
+            new_banned,
+            name="Проверка, изменился ли статус banned"
+        )
 
 
 @allure.epic("Cinescop")
