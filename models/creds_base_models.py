@@ -1,3 +1,4 @@
+import allure
 from pydantic import EmailStr
 from pydantic import BaseModel,  model_validator
 from venv import logger
@@ -16,6 +17,7 @@ class CredsModel(BaseModel):
         return self
 
 
+@allure.step("Валидация данных кредов")
 def pydantic_user_creds(creds: dict) -> CredsModel:
     pydantic_creds = CredsModel(**creds)
     log_json = pydantic_creds.model_dump_json()

@@ -3,6 +3,7 @@ import logging
 import os
 from typing import Dict, Iterable
 
+import allure
 from pydantic import BaseModel
 from typing_extensions import Unpack
 
@@ -15,10 +16,7 @@ from constants.constants import GREEN, RESET, RED
 class HeadersKwargs(TypedDict, total=False):
     headers: Dict[str, str]
 
-from utils.auto_step_class import auto_step_class
 
-
-@auto_step_class
 class CustomRequester:
 
     """Кастомный реквестер для стандартизации и упрощения отправки HTTP-запросов."""
@@ -66,7 +64,8 @@ class CustomRequester:
         if data and method.upper() != "GET":
             request_kwargs["json"] = data
 
-        response = self.session.request(method, url, **request_kwargs)
+        with allure.step("Отправка HTTP запроса через CustomRequester"):
+            response = self.session.request(method, url, **request_kwargs)
 
         if need_logging:
             self.log_request_and_response(response)

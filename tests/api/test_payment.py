@@ -3,15 +3,14 @@ import allure
 from entities.user import User
 import logging
 import pytest_check as check
-from utils.auto_step_class import auto_step_class
 from models.users_base_models import ResponseTestUser
 
 logger = logging.getLogger(__name__)
 
+
 @allure.epic("Cinescop")
 @allure.feature("payment_api")
 @allure.tag("positive")
-@auto_step_class
 class TestPaymentAPIHappyPath:
 
     @allure.title("Получение платежей пользователя")

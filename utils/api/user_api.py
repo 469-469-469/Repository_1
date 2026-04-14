@@ -3,10 +3,8 @@ from constants import BASE_URL_AUTH
 
 import requests
 from custom_requester.custom_requester import CustomRequester
-from utils.auto_step_class import auto_step_class
 
 
-@auto_step_class
 class UserAPI(CustomRequester):
 
     """Класс для работы с API пользователей."""

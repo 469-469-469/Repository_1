@@ -34,7 +34,6 @@ class ResponseTestMovie(BaseModel):
     genreId: int
 
 
-@allure.step("Обработка полученных данных")
 def pydantic_movie_response(response_movie: dict) -> ResponseTestMovie:
     pydantic_movie = ResponseTestMovie(**response_movie)
     log_json = pydantic_movie.model_dump_json()

@@ -7,7 +7,6 @@ from db_requester.db_helpers import DBHelper
 from entities.user import User
 from faker import Faker
 import logging
-from utils.auto_step_class import auto_step_class
 
 from models.movies_base_models import pydantic_movie_response, RequestTestMovie, ResponseTestMovie
 from models.posters_base_models import RequestTestPoster
@@ -18,7 +17,6 @@ fake = Faker("ru_RU")
 @allure.epic("Cinescop")
 @allure.feature("movies_api")
 @allure.tag("positive")
-@auto_step_class
 class TestMoviesAPIHappyPath:
 
     @allure.title("Позитивный тест. Создание фильма")
@@ -140,7 +138,6 @@ class TestMoviesAPIHappyPath:
 @allure.epic("Cinescop")
 @allure.feature("movies_api")
 @allure.tag("negative")
-@auto_step_class
 class TestMoviesAPINegative:
 
     @allure.title("Негативный тест. Создание фильма")

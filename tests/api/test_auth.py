@@ -5,14 +5,13 @@ import pytest_check as check
 from db_requester.db_helpers import DBHelper
 from entities.user import User
 from models.users_base_models import pydantic_user_response, RequestTestUser, ResponseTestUser
-from utils.auto_step_class import auto_step_class
 
 logger = logging.getLogger(__name__)
+
 
 @allure.epic("Cinescop")
 @allure.feature("auth_api")
 @allure.tag("positive")
-@auto_step_class
 class TestAuthAPIHappyPath:
 
     @allure.title("Позитивный тест. Создание пользователя")
@@ -102,7 +101,6 @@ class TestAuthAPIHappyPath:
 @allure.epic("Cinescop")
 @allure.feature("auth_api")
 @allure.tag("negative")
-@auto_step_class
 class TestAuthNegative:
     @allure.title("Негативный тест. Регистрация пользователя")
     @allure.tag("regression", "user")

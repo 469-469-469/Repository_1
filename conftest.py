@@ -25,31 +25,37 @@ from utils.data_generator import DataGenerator
 faker = Faker()
 fake_ru = Faker("ru_RU")
 
+
 # ----------------------------
 # Сессия и HTTP-клиенты
 # ----------------------------
 
+
 @pytest.fixture(scope="session")
 def session() -> Generator[requests.Session, None, None]:
     """Фикстура для создания HTTP-сессии."""
-    http_session = requests.Session()
+    with allure.step("Создание HTTP-сессии"):
+        http_session = requests.Session()
     yield http_session
-    http_session.close()
+    with allure.step("Закрытие HTTP-сессии"):
+        http_session.close()
+
 
 @pytest.fixture(scope="session")
-def user_session(session: Session):
+def user_session(session: requests.Session):
     """Фабрика сессий пользователей."""
-    user_pool = []
+    with allure.step("Инициализация фабрики API-клиентов пользователей"):
+        user_pool = []
 
-    def _create_user_session() -> ApiManager:
-        user_session = ApiManager(session)
-        user_pool.append(user_session)
-        return user_session
+        def _create_user_session() -> ApiManager:
+            user_session = ApiManager(session)
+            user_pool.append(user_session)
+            return user_session
 
     yield _create_user_session
-
-    for user in user_pool:
-        user.close_session()
+    with allure.step("Закрытие фабрики API-клиентов пользователей"):
+        for user in user_pool:
+            user.close_session()
 
 
 # ----------------------------
