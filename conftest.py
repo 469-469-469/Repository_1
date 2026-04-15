@@ -117,8 +117,9 @@ def test_poster() -> RequestTestPoster:
 @pytest.fixture()
 def movie(test_movie: RequestTestMovie, super_admin: User) -> Generator[ResponseTestMovie, Any, None]:
     """Создание фильма для использования в тесте."""
-    response = super_admin.api.movies_api.create_movie(test_movie)
-    response_data = response.json()
+    with allure.step("Создание тестового фильма"):
+        response = super_admin.api.movies_api.create_movie(test_movie)
+        response_data = response.json()
 
     yield pydantic_movie_response(response_data)
     with allure.step("Удаление тестового фильма"):

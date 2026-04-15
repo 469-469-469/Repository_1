@@ -1,7 +1,10 @@
 from typing import Iterable
+from uuid import uuid4
 
 import allure
 import pytest
+
+from conftest import fake_ru
 from db_requester.db_helpers import DBHelper
 from entities.user import User
 from faker import Faker
@@ -62,7 +65,7 @@ class TestMoviesAPIHappyPath:
         logger.info("Позитивный тест. Редактирование фильма с проверкой изменений в БД")
 
         data = movie.model_copy()
-        data.name = fake.sentence(nb_words=3)
+        data.name = f"{fake_ru.sentence(nb_words=3)}_{uuid4()}"
         data.description = fake.sentence(nb_words=8)
         response = super_admin.api.movies_api.change_movie(movie.id, data)
         response_changed = response.json()
@@ -155,7 +158,7 @@ class TestMoviesAPINegative:
     @pytest.mark.negative
     @pytest.mark.regression
     @pytest.mark.parametrize("field_create_negative, value_create_negative, expected_status_cr_neg", [
-        pytest.param("not_access",True,(401,),marks=[pytest.mark.rbac,pytest.mark.critical]), # тест без доступа
+        pytest.param("Unauthorized",True,(401,),marks=[pytest.mark.rbac,pytest.mark.critical]), # тест без доступа
         pytest.param("name", "", (400,), marks=pytest.mark.regression)  # пустое поле name
     ])
     def test_create_movie(
@@ -171,7 +174,7 @@ class TestMoviesAPINegative:
         data = test_movie.model_copy()
 
         # Случай отсутствия доступа
-        if field_create_negative == "not_access":
+        if field_create_negative == "Unauthorized":
             logged_in_super_admin.api.auth_api.logout()
             logged_in_super_admin.clear_tokens()
         else:
@@ -179,6 +182,7 @@ class TestMoviesAPINegative:
             data = data.model_copy(update={field_create_negative: value_create_negative})
 
         logged_in_super_admin.api.movies_api.create_movie(data, expected_status_cr_neg)
+
 
 
     @allure.title("Негативный тест. Получение афиши с фильмами")
@@ -208,4 +212,5 @@ class TestMoviesAPINegative:
         data = test_poster.model_copy(update={field_negative: value_negative})
 
         expected_status = (400,)
+
         super_admin.api.movies_api.get_poster_movie(data, expected_status)

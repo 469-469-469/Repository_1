@@ -68,17 +68,15 @@ class CustomRequester:
             response = self.session.request(method, url, **request_kwargs)
 
             allure.attach(
-                str(response.request.body),
+                str(request_kwargs),
                 name="REQUEST",
                 attachment_type=allure.attachment_type.TEXT
             )
-
             allure.attach(
                 str(response.status_code),
                 name="STATUS",
                 attachment_type=allure.attachment_type.TEXT
             )
-
             allure.attach(
                 response.text,
                 name="RESPONSE",
@@ -94,7 +92,6 @@ class CustomRequester:
             )
 
         return response
-
 
     def log_request_and_response(self, response: requests.Response):
         """

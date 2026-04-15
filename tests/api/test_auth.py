@@ -90,7 +90,7 @@ class TestAuthAPIHappyPath:
     @pytest.mark.positive
     @pytest.mark.critical
     def test_change_user(self, super_admin: User, registered_user: ResponseTestUser, db_helper: DBHelper):
-        logger.info("Позитивный теста. Изменение пользователя с проверкой изменений в БД")
+        logger.info("Позитивный тест. Изменение пользователя с проверкой изменений в БД")
         user_id = registered_user.id
         new_verified = True
         new_banned = False
@@ -173,6 +173,7 @@ class TestAuthNegative:
         expected_status = (401,)
 
         super_admin.api.auth_api.login_user(login_data, expected_status)
+
 
     @allure.title("Негативный тест. Регистрация пользователя")
     @allure.tag("user", "critical", "rbac")
