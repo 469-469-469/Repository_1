@@ -1,9 +1,11 @@
-from typing import Iterable
-
-from custom_requester.custom_requester import CustomRequester
-from constants import LOGIN_ENDPOINT, REGISTER_ENDPOINT, BASE_URL_AUTH, LOGOUT_ENDPOINT
-import requests
 import logging
+from typing import Iterable, Optional
+
+import requests
+
+from constants.constants import LOGIN_ENDPOINT, REGISTER_ENDPOINT, LOGOUT_ENDPOINT, BASE_URL_AUTH
+from custom_requester.custom_requester import CustomRequester
+from models.users_base_models import RequestTestUser
 
 logger = logging.getLogger(__name__)
 
@@ -15,9 +17,10 @@ class AuthAPI(CustomRequester):
     """
 
     def __init__(self, session:requests.Session):
-        super().__init__(session=session)
+        super().__init__(session=session, base_url=BASE_URL_AUTH)
 
-    def register_user(self, user_data: dict, expected_status:  Iterable[int] = (201,)):
+    def register_user(self, user_data: RequestTestUser,
+                      expected_status: Iterable[int] = (201,)) -> requests.Response:
         """
         Регистрация нового пользователя.
         :param user_data: Данные пользователя.
@@ -25,13 +28,13 @@ class AuthAPI(CustomRequester):
         """
         return self.send_request(
             method="POST",
-            base_url=BASE_URL_AUTH,
             endpoint=REGISTER_ENDPOINT,
             data=user_data,
             expected_status=expected_status
         )
 
-    def login_user(self, login_data: dict, expected_status:  Iterable[int] = (200,)):
+    def login_user(self, login_data: RequestTestUser,
+                   expected_status: Iterable[int] = (200,)) -> requests.Response:
         """
         Авторизация пользователя.
         :param login_data: Данные для логина.
@@ -39,28 +42,29 @@ class AuthAPI(CustomRequester):
         """
         return self.send_request(
             method="POST",
-            base_url=BASE_URL_AUTH,
             endpoint=LOGIN_ENDPOINT,
             data=login_data,
             expected_status=expected_status
         )
 
-    def authenticate(self, email: str, password: str):
-        login_data = {
-            "email": email,
-            "password": password
-        }
-
+    def authenticate(self, login_data: RequestTestUser) -> str:
         response = self.login_user(login_data).json()
 
         if "accessToken" not in response:
             raise AssertionError("No accessToken in login response")
 
         token = response["accessToken"]
+
+        # Сохраняем токен в User, если есть ссылка
+        if hasattr(self, 'user'):
+            self.user.token = token
+
+        # Устанавливаем токен в CustomRequester, чтобы все запросы использовали Authorization
         self._update_session_headers(headers={"Authorization": f"Bearer {token}"})
+
         return token
 
-    def logout(self):
+    def logout(self) -> Optional[requests.Response]:
         """
         Выход из аккаунта и очистка токена
         """
@@ -69,7 +73,6 @@ class AuthAPI(CustomRequester):
         try:
             response = self.send_request(
                 method="GET",
-                base_url=BASE_URL_AUTH,
                 endpoint=LOGOUT_ENDPOINT
             )
             # Убираем токен из заголовков после успешного выхода

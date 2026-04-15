@@ -1,22 +1,23 @@
 import random
 import string
 from faker import Faker
+
 faker = Faker()
 
 
 class DataGenerator:
     
     @staticmethod
-    def generate_random_email():
+    def generate_random_email() -> str:
         random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
         return f"kek{random_string}@gmail.com"
 
     @staticmethod
-    def generate_random_name():
+    def generate_random_name() -> str:
         return f"{faker.first_name()} {faker.last_name()}"
          
     @staticmethod
-    def generate_random_password():
+    def generate_random_password() -> str:
         """
         Генерация пароля, соответствующего требованиям:
         - Минимум 1 буква.
@@ -29,7 +30,7 @@ class DataGenerator:
         upper = random.choice(string.ascii_uppercase)
         lower = random.choice(string.ascii_lowercase)
         digit = random.choice(string.digits)
-        special = random.choice("!@#$%^&*")
+        special = random.choice("@#$%^&*")
 
         other = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
 
@@ -38,3 +39,7 @@ class DataGenerator:
         random.shuffle(password)
 
         return ''.join(password)
+
+    @staticmethod
+    def generate_random_int(min_int: int, max_int: int) -> int:
+        return random.randint(min_int, max_int)

@@ -1,29 +1,43 @@
-from utils.api.api_manager import ApiManagerPayment, ApiManagerAuth
+import pytest
+import allure
+from entities.user import User
 import logging
+import pytest_check as check
+from models.users_base_models import ResponseTestUser
+from utils.assertions import assert_in
 
 logger = logging.getLogger(__name__)
 
 
+@allure.epic("Cinescop")
+@allure.feature("payment_api")
+@allure.tag("positive")
 class TestPaymentAPIHappyPath:
 
-    def test_get_user_payment(self, admin_api: ApiManagerAuth, registered_user: dict,
-                              api_manager_payment:ApiManagerPayment):
-        # Получение платежей пользователя
+    @allure.title("Получение платежей пользователя")
+    @allure.tag("smoke", "payment")
+    @pytest.mark.api
+    @pytest.mark.payment
+    @pytest.mark.positive
+    @pytest.mark.smoke
+    def test_get_user_payment(self, super_admin: User, registered_user: ResponseTestUser):
         logger.info("Позитивный тест. Получение платежей пользователя")
 
-        user_id = registered_user["id"]
-        response = api_manager_payment.payment_api.get_user_id_payment(user_id)
+        user_id = registered_user.id
+        response = super_admin.api.payment_api.get_user_id_payment(user_id)
         response_data = response.json()
 
-        # Проверки
-        if response_data:
-            assert "id" in response_data[0]
-            assert "userId" in response_data[0]
-            assert "movieId" in response_data[0]
-            assert "status" in response_data[0]
-            assert "amount" in response_data[0]
-            assert "total" in response_data[0]
-            assert "createdAt" in response_data[0]
-        else:
+        required_fields = [
+            "amount",
+            "id",
+            "userId",
+            "movieId",
+            "status",
+            "total",
+            "createdAt",
+        ]
+        if not response_data:
             logger.info("Оплат не найдено")
-
+            return
+        for field in required_fields:
+            assert_in(field, response_data[0], f"Проверка присутствия поля '{field}' в ответе")
