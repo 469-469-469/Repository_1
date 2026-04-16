@@ -1,31 +1,34 @@
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 
 class Tools:
-    @staticmethod
-    def project_dir() -> Path:
-        """
-        Возвращает корневую директорию проекта.
-        Предполагается, что текущий файл находится в поддиректории `common`.
-        """
-        return Path(__file__).parent.parent
+    _project_dir: Optional[Path] = None
+
+    @classmethod
+    def project_dir(cls) -> Path:
+        if cls._project_dir is None:
+            cls._project_dir = Path(__file__).resolve().parents[1]
+        return cls._project_dir
 
     @staticmethod
-    def files_dir(nested_directory: Optional[str] = None,filename: Optional[str] = None) -> Path:
+    def files_dir(nested_directory: Optional[str] = None, filename: Optional[str] = None) -> Path:
         """
         Возвращает путь к директории `files` (или её поддиректории).
         Если директория не существует, она создается.
         Если указан `filename`, возвращает полный путь к файлу.
         """
         files_path = Tools.project_dir() / "files"
+
         if nested_directory:
             files_path = files_path / nested_directory
+
         files_path.mkdir(parents=True, exist_ok=True)
 
         if filename:
             return files_path / filename
+
         return files_path
 
     @staticmethod
@@ -33,4 +36,4 @@ class Tools:
         """
         Возвращает текущую временную метку в формате YYYY-MM-DD_HH-MM-SS.
         """
-        return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        return datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S_UTC")
