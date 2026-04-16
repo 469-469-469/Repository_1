@@ -1,10 +1,11 @@
 from pathlib import Path
 from datetime import datetime
+from typing import Optional
 
 
 class Tools:
     @staticmethod
-    def project_dir():
+    def project_dir() -> Path:
         """
         Возвращает корневую директорию проекта.
         Предполагается, что текущий файл находится в поддиректории `common`.
@@ -12,7 +13,7 @@ class Tools:
         return Path(__file__).parent.parent
 
     @staticmethod
-    def files_dir(nested_directory: str = None, filename: str = None):
+    def files_dir(nested_directory: Optional[str] = None,filename: Optional[str] = None) -> Path:
         """
         Возвращает путь к директории `files` (или её поддиректории).
         Если директория не существует, она создается.
@@ -28,7 +29,7 @@ class Tools:
         return files_path
 
     @staticmethod
-    def get_timestamp():
+    def get_timestamp() -> str:
         """
         Возвращает текущую временную метку в формате YYYY-MM-DD_HH-MM-SS.
         """
