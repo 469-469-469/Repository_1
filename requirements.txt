@@ -25,3 +25,4 @@ gradio
 sqlalchemy
 allure-python-commons
 pytest-check
+playwright
