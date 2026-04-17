@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 fake = Faker("ru_RU")
 
 @allure.epic("Cinescop")
-@allure.feature("movies_api")
+@allure.feature("auth_api")
 @allure.tag("positive")
 class TestMoviesAPIHappyPath:
 

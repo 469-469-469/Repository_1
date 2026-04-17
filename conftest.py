@@ -263,6 +263,10 @@ def db_helper(db_session: Session) -> DBHelper:
 
 @pytest.fixture(scope="session")
 def browser(playwright: Playwright) -> Generator[Browser, None, None]:
+    """
+    Фикстура, которая
+    :param playwright:
+    """
     browser = playwright.chromium.launch(headless=False)
     yield browser
     browser.close()
@@ -270,6 +274,10 @@ def browser(playwright: Playwright) -> Generator[Browser, None, None]:
 
 @pytest.fixture(scope="function")
 def context(browser: Browser) -> Generator[BrowserContext, None, None]:
+    """
+    Фикстура, которая
+    :type browser: Browser
+    """
     context = browser.new_context()
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
     context.set_default_timeout(DEFAULT_UI_TIMEOUT)
@@ -282,7 +290,10 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
 
 @pytest.fixture(scope="function")
 def page(context: BrowserContext) -> Generator[Page, None, None]:
+    """
+    Фикстура, которая
+    :param context:
+    """
     page = context.new_page()
     yield page
     page.close()
-

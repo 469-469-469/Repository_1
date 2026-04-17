@@ -4,13 +4,16 @@ from typing import Optional
 
 
 class Tools:
+
+    """Класс для ."""
+
     _project_dir: Optional[Path] = None
 
-    @classmethod
-    def project_dir(cls) -> Path:
-        if cls._project_dir is None:
-            cls._project_dir = Path(__file__).resolve().parents[1]
-        return cls._project_dir
+    @staticmethod
+    def project_dir(_project_dir=None) -> Path:
+        if _project_dir is None:
+            _project_dir = Path(__file__).resolve().parents[1]
+        return _project_dir
 
     @staticmethod
     def files_dir(nested_directory: Optional[str] = None, filename: Optional[str] = None) -> Path:

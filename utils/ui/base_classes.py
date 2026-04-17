@@ -5,8 +5,15 @@ from playwright.sync_api import expect, Page
 
 
 class PageAction:
+
+    """Класс для ."""
+
     def __init__(self, page: Page):
+        self.home_url = "https://dev-cinescope.coconutqa.ru/"
         self.page = page
+        self.url = None
+        self.success_pop_up = None
+        self.success_path = None
 
     @allure.step("Переход на страницу: {url}")
     def open_url(self, url: str):
@@ -46,13 +53,19 @@ class PageAction:
 
 
 class BasePage(PageAction): #Базовая логика допустимая для всех страниц на сайте
+
+    """Класс для ."""
+
     def __init__(self, page: Page):
         super().__init__(page)
-        self.home_url = "https://dev-cinescope.coconutqa.ru/"
 
         # Общие локаторы для всех страниц на сайте
         self.home_button = "a[href='/' and text()='Cinescope']"
         self.all_movies_button = "a[href='/movies' and text()='Все фильмы']"
+
+    @allure.step("Открытие страницы")
+    def open(self):
+        self.open_url(self.url)
 
     @allure.step("Переход на главную страницу из шапки сайта")
     def go_to_home_page(self):
@@ -63,3 +76,21 @@ class BasePage(PageAction): #Базовая логика допустимая д
     def go_to_all_movies(self):
         self.click_element(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
+
+    @allure.step("Проверка перехода на итоговую страницу")
+    def assert_was_redirect_to_final_page(self):
+        self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
+
+    @allure.step("Проверка текста попапа")
+    def assert_alert_was_pop_up(self):
+        self.check_pop_up_element_with_text(self.success_pop_up)
+
+    @allure.step("Контрольные действия")
+    def success_check(self, check_final_page: bool = False, need_screenshot: bool = False,
+                      check_pop_up: bool = False):
+        if check_final_page:
+            self.assert_was_redirect_to_final_page()
+        if need_screenshot:
+            self.make_screenshot_and_attach_to_allure()
+        if check_pop_up:
+            self.assert_alert_was_pop_up()
