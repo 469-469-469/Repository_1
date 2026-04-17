@@ -14,8 +14,8 @@ class RegisterPage(BasePage):
         self.email_input = "input[name='email']"
         self.password_input = "input[name='password']"
         self.repeat_password_input = "input[name='passwordRepeat']"
-
         self.sign_button = "form button:has-text('Зарегистрироваться')"
+
         self.open_url(self.url)
 
         # Локальные action методы
@@ -32,13 +32,13 @@ class LoginPage(BasePage):
         self.url = f"{self.home_url}login"
         self.success_pop_up = "Вы вошли в аккаунт"
         self.success_path = ""
+
         self.open_url(self.url)
 
         # Локаторы элементов
         self.email_input = "input[name='email']"
         self.password_input = "input[name='password']"
         self.login_button = "form button:has-text('Войти')"
-        self.register_button = "a[href='/register' and text()='Зарегистрироваться']"
 
     # Локальные action методы
     def login(self, email: str, password: str):

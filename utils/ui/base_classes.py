@@ -5,9 +5,6 @@ from playwright.sync_api import expect, Page
 
 
 class PageAction:
-
-    """Класс для ."""
-
     def __init__(self, page: Page):
         self.home_url = "https://dev-cinescope.coconutqa.ru/"
         self.page = page
@@ -53,13 +50,11 @@ class PageAction:
 
 
 class BasePage(PageAction): #Базовая логика допустимая для всех страниц на сайте
-
-    """Класс для ."""
-
     def __init__(self, page: Page):
         super().__init__(page)
 
         # Общие локаторы для всех страниц на сайте
+        self.login_button = None
         self.home_button = "a[href='/' and text()='Cinescope']"
         self.all_movies_button = "a[href='/movies' and text()='Все фильмы']"
 
@@ -77,7 +72,7 @@ class BasePage(PageAction): #Базовая логика допустимая д
         self.click_element(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
 
-    @allure.step("Контрольные проверки")
+    @allure.step("Контрольные проверки успешных действий")
     def success_check(self, check_final_page: bool = False, need_screenshot: bool = False,
                       check_pop_up: bool = False):
         if check_final_page:
@@ -86,3 +81,10 @@ class BasePage(PageAction): #Базовая логика допустимая д
             self.make_screenshot_and_attach_to_allure()
         if check_pop_up:
             self.check_pop_up_element_with_text(self.success_pop_up)
+
+    @allure.step("Контрольные проверки отказа")
+    def error_check(self, check_final_page: bool = False, need_screenshot: bool = False):
+        if check_final_page:
+            expect(self.page).to_have_url(f"{self.url}")
+        if need_screenshot:
+            self.make_screenshot_and_attach_to_allure()

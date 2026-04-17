@@ -4,9 +4,6 @@ from typing import Optional
 
 
 class Tools:
-
-    """Класс для ."""
-
     _project_dir: Optional[Path] = None
 
     @staticmethod
