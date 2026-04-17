@@ -77,20 +77,12 @@ class BasePage(PageAction): #Базовая логика допустимая д
         self.click_element(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
 
-    @allure.step("Проверка перехода на итоговую страницу")
-    def assert_was_redirect_to_final_page(self):
-        self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
-
-    @allure.step("Проверка текста попапа")
-    def assert_alert_was_pop_up(self):
-        self.check_pop_up_element_with_text(self.success_pop_up)
-
-    @allure.step("Контрольные действия")
+    @allure.step("Контрольные проверки")
     def success_check(self, check_final_page: bool = False, need_screenshot: bool = False,
                       check_pop_up: bool = False):
         if check_final_page:
-            self.assert_was_redirect_to_final_page()
+            self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
         if need_screenshot:
             self.make_screenshot_and_attach_to_allure()
         if check_pop_up:
-            self.assert_alert_was_pop_up()
+            self.check_pop_up_element_with_text(self.success_pop_up)

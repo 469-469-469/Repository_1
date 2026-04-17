@@ -15,8 +15,7 @@ class RegisterPage(BasePage):
         self.password_input = "input[name='password']"
         self.repeat_password_input = "input[name='passwordRepeat']"
 
-        self.register_button = page.get_by_role("button", name="Зарегистрироваться")
-        self.sign_button = "a[href='/login' and text()='Войти']"
+        self.sign_button = "form button:has-text('Зарегистрироваться')"
         self.open_url(self.url)
 
         # Локальные action методы
@@ -25,7 +24,7 @@ class RegisterPage(BasePage):
         self.enter_text_to_element(self.email_input, email)
         self.enter_text_to_element(self.password_input, password)
         self.enter_text_to_element(self.repeat_password_input, password)
-        self.register_button.click()
+        self.click_element(self.sign_button)
 
 class LoginPage(BasePage):
     def __init__(self, page: Page):
@@ -38,11 +37,11 @@ class LoginPage(BasePage):
         # Локаторы элементов
         self.email_input = "input[name='email']"
         self.password_input = "input[name='password']"
-        self.login_button = page.locator("form").get_by_role("button", name="Войти")
+        self.login_button = "form button:has-text('Войти')"
         self.register_button = "a[href='/register' and text()='Зарегистрироваться']"
 
     # Локальные action методы
     def login(self, email: str, password: str):
         self.enter_text_to_element(self.password_input, password)
         self.enter_text_to_element(self.email_input, email)
-        self.login_button.click()
+        self.click_element(self.login_button)
