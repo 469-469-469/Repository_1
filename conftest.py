@@ -22,7 +22,7 @@ from utils.api.api_manager import ApiManager
 from utils.data_generator import DataGenerator
 from constants.constants import DEFAULT_UI_TIMEOUT
 from utils.ui.my_trace import Tools
-from playwright.sync_api import Playwright, Browser, BrowserContext, Page
+from playwright.async_api import Playwright, Browser, BrowserContext, Page
 
 
 faker = Faker()

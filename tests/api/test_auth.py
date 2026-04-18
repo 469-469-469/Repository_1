@@ -172,7 +172,7 @@ class TestAuthNegative:
         login_data = {"email": registered_user.email, "password": registered_user.password,
                       field_auth: value_auth}
 
-        super_admin.api.auth_api.login_user(login_data)
+        super_admin.api.auth_api.login_user(login_data, expected_status=(401,))
 
 
     @allure.title("Негативный тест. Регистрация пользователя")

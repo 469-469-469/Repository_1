@@ -19,11 +19,11 @@ class RegisterPage(BasePage):
         self.open_url(self.url)
 
     def register(self, full_name: str, email: str, password: str):
-        self.enter_text_to_element(locator=self.full_name_input, text=full_name)
-        self.enter_text_to_element(placeholder=self.email_placeholder, text=email)
-        self.enter_text_to_element(locator=self.password_input, text=password)
-        self.enter_text_to_element(locator=self.repeat_password_input, text=password)
-        self.click_element(role=self.button_role, name=self.button_name)
+        self.fill(locator=self.full_name_input, text=full_name)
+        self.fill(placeholder=self.email_placeholder, text=email)
+        self.fill(locator=self.password_input, text=password)
+        self.fill(locator=self.repeat_password_input, text=password)
+        self.click(role=self.button_role, name=self.button_name)
 
 class LoginPage(BasePage):
     def __init__(self, page: Page):
@@ -40,6 +40,6 @@ class LoginPage(BasePage):
         self.button_name = "Войти"
 
     def login(self, email: str, password: str):
-        self.enter_text_to_element(locator=self.password_input, text=password)
-        self.enter_text_to_element(locator=self.email_input, text=email)
-        self.click_element(role=self.button_role, name=self.button_name)
+        self.fill(locator=self.password_input, text=password)
+        self.fill(locator=self.email_input, text=email)
+        self.click(role=self.button_role, name=self.button_name)

@@ -2,7 +2,6 @@ import pytest
 import allure
 from entities.user import User
 import logging
-import pytest_check as check
 from models.users_base_models import ResponseTestUser
 from utils.assertions import assert_in
 
