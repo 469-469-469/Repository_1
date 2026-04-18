@@ -1,5 +1,7 @@
-from playwright.async_api import Page
-from utils.ui.base_classes import BasePage
+from time import sleep
+
+from playwright.sync_api import Page
+from utils.ui.base_classes import BasePage, ElementLocator
 
 
 class RegisterPage(BasePage):
@@ -19,11 +21,12 @@ class RegisterPage(BasePage):
         self.open_url(self.url)
 
     def register(self, full_name: str, email: str, password: str):
-        self.fill(locator=self.full_name_input, text=full_name)
-        self.fill(placeholder=self.email_placeholder, text=email)
-        self.fill(locator=self.password_input, text=password)
-        self.fill(locator=self.repeat_password_input, text=password)
-        self.click(role=self.button_role, name=self.button_name)
+        self.fill(ElementLocator(locator=self.full_name_input),       text=full_name)
+        self.fill(ElementLocator(placeholder=self.email_placeholder), text=email)
+        self.fill(ElementLocator(locator=self.password_input),        text=password)
+        self.fill(ElementLocator(locator=self.repeat_password_input), text=password)
+        self.click(ElementLocator(role=self.button_role, name=self.button_name))
+
 
 class LoginPage(BasePage):
     def __init__(self, page: Page):
@@ -40,6 +43,6 @@ class LoginPage(BasePage):
         self.button_name = "Войти"
 
     def login(self, email: str, password: str):
-        self.fill(locator=self.password_input, text=password)
-        self.fill(locator=self.email_input, text=email)
-        self.click(role=self.button_role, name=self.button_name)
+        self.fill(ElementLocator(locator=self.password_input),  text=password)
+        self.fill(ElementLocator(locator=self.email_input),     text=email)
+        self.click(ElementLocator(role=self.button_role, name=self.button_name))
