@@ -9,22 +9,21 @@ class RegisterPage(BasePage):
         self.success_pop_up = "Подтвердите свою почту"
         self.success_path = "login"
 
-        # Локаторы элементов
         self.full_name_input = "input[name='fullName']"
         self.email_input = "input[name='email']"
         self.password_input = "input[name='password']"
         self.repeat_password_input = "input[name='passwordRepeat']"
-        self.sign_button = "form button:has-text('Зарегистрироваться')"
+        self.button_role = "button"
+        self.button_name = "Зарегистрироваться"
 
         self.open_url(self.url)
 
-        # Локальные action методы
     def register(self, full_name: str, email: str, password: str):
         self.enter_text_to_element(self.full_name_input, full_name)
         self.enter_text_to_element(self.email_input, email)
         self.enter_text_to_element(self.password_input, password)
         self.enter_text_to_element(self.repeat_password_input, password)
-        self.click_element(self.sign_button)
+        self.click_element(None, self.button_role, self.button_name)
 
 class LoginPage(BasePage):
     def __init__(self, page: Page):
@@ -35,13 +34,12 @@ class LoginPage(BasePage):
 
         self.open_url(self.url)
 
-        # Локаторы элементов
         self.email_input = "input[name='email']"
         self.password_input = "input[name='password']"
-        self.login_button = "form button:has-text('Войти')"
+        self.button_role = "button"
+        self.button_name = "Войти"
 
-    # Локальные action методы
     def login(self, email: str, password: str):
         self.enter_text_to_element(self.password_input, password)
         self.enter_text_to_element(self.email_input, email)
-        self.click_element(self.login_button)
+        self.click_element(None, self.button_role, self.button_name)

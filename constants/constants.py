@@ -24,3 +24,5 @@ RESET = '\033[0m'
 
 
 DEFAULT_UI_TIMEOUT = 30000  # 30 секунд
+
+NEED_SCREENSHOT = True

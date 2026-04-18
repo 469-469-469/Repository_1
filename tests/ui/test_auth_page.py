@@ -1,6 +1,6 @@
 import allure
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 import logging
 from models.users_base_models import RequestTestUser
 from utils.ui.page_object_models import LoginPage, RegisterPage
@@ -24,7 +24,7 @@ class TestAuthUIHappyPath:
          register_page = RegisterPage(page)
          register_page.register(creation_user_data.fullName,creation_user_data.email,
                                 creation_user_data.password)
-         register_page.success_check(True, True, True)
+         register_page.success_check()
 
      @allure.title("Позитивный тест. Авторизация пользователя")
      @allure.tag("smoke", "user")
@@ -37,7 +37,7 @@ class TestAuthUIHappyPath:
 
          login_page = LoginPage(page)
          login_page.login(registered_user.email, registered_user.password)
-         login_page.success_check(True, True, True)
+         login_page.success_check()
 
 
 @allure.epic("Cinescop")
@@ -62,14 +62,13 @@ class TestAuthUINegative:
 
         data = {"email": creation_user_data.email, "password": creation_user_data.password,
                       field_register: value_register}
-
         full_name = data.get("fullName", creation_user_data.fullName)
         email = data.get("email", creation_user_data.email)
         password = data.get("password", creation_user_data.password)
 
         register_page = RegisterPage(page)
         register_page.register(full_name, email, password)
-        register_page.error_check(True, True)
+        register_page.error_check()
 
 
     @allure.title("Негативный тест. Авторизация пользователя")
@@ -91,4 +90,4 @@ class TestAuthUINegative:
                       field_auth: value_auth}
         login_page = LoginPage(page)
         login_page.login(login_data["email"], login_data["password"])
-        login_page.error_check(True, True)
+        login_page.error_check()
