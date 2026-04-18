@@ -1,6 +1,6 @@
 from typing import Optional
 import allure
-from playwright.sync_api import expect, Page
+from playwright.sync_api import expect, Page, Locator
 from constants.constants import NEED_SCREENSHOT
 
 
@@ -17,34 +17,45 @@ class PageAction:
         self.success_pop_up = None
         self.success_path = None
 
+    @allure.step("Поиск элемента: locator={locator} role={role} name={name}")
+    def get_locator(self, locator: str|None, role: str|None, name: str|None,placeholder: str|None) -> Optional[Locator]:
+        if locator:
+            return self.page.locator(locator)
+        elif role and name:
+            return self.page.locator("form").get_by_role(role, name=name)
+        elif placeholder:
+            return self.page.locator("form").get_by_placeholder(placeholder)
+        else:
+            raise ValueError("Передай locator или role+name")
+
     @allure.step("Переход на страницу: {url}")
     def open_url(self, url: str):
         self.page.goto(url)
 
     @allure.step("Ввод текста '{text}' в поле '{locator}'")
-    def enter_text_to_element(self, locator: str, text: str):
-        self.page.fill(locator, text)
+    def enter_text_to_element(self, locator: str|None = None, name: str|None = None, role: str|None = None,
+                              placeholder: str|None = None,
+                              text: str|None = None):
+        self.get_locator(locator, role, name, placeholder).fill(text)
 
     @allure.step("Клик по элементу '{locator}'")
-    def click_element(self, locator=None, role=None, name=None):
-        if locator:
-            self.page.locator(locator).click()
-        elif role and name:
-            self.page.locator("form").get_by_role(role, name=name).click()
-        else:
-            raise ValueError("Передай locator или role+name")
+    def click_element(self, locator: str|None = None, role: str|None = None, name: str|None = None,
+                      placeholder: str|None = None):
+        self.get_locator(locator, role, name, placeholder).click()
 
     @allure.step("Ожидание загрузки страницы: {url}")
     def wait_redirect_for_url(self, url: str):
         expect(self.page).to_have_url(url)
 
     @allure.step("Получение текста элемента: {locator}")
-    def get_element_text(self, locator: str) -> Optional[str]:
-        return self.page.locator(locator).text_content()
+    def get_element_text(self, locator: str|None = None, name: str|None = None, role: str|None = None,
+                         placeholder: str|None = None) -> Optional[str]:
+        return self.get_locator(locator, role, name, placeholder).text_content()
 
     @allure.step("Ожидание появления или исчезновения элемента: {locator}, state = {state}")
-    def expect_visible(self, locator: str):
-        expect(self.page.locator(locator)).to_be_visible()
+    def expect_visible(self, locator:str|None = None, name: str|None = None, role: str|None = None,
+                       placeholder: str|None = None):
+        expect(self.get_locator(locator, role, name, placeholder)).to_be_visible()
 
     @allure.step("Скриншот текущей страницы")
     def make_screenshot_and_attach_to_allure(self):
@@ -52,12 +63,13 @@ class PageAction:
         allure.attach(screenshot, name="Screenshot", attachment_type=allure.attachment_type.PNG)
 
     @allure.step("Проверка наличия элемента с текстом: {text}")
-    def check_element_with_role(self, role: str, name: str):
-        locator = self.page.get_by_role(role, name=name)
+    def check_element(self, locator:str|None = None, role: str|None = None, name: str|None = None,
+                                placeholder: str|None = None):
+        locator = self.get_locator(locator, role, name, placeholder)
         expect(locator).to_be_visible()
 
     @allure.step("Проверка всплывающего сообщения c текстом: {text}")
-    def check_pop_up_element_with_text(self, text: str):
+    def check_element_with_text(self, text: str):
         locator = self.page.get_by_text(text)
         expect(locator).to_be_visible()
 
@@ -89,7 +101,7 @@ class BasePage(PageAction): #
         self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
         if NEED_SCREENSHOT:
             self.make_screenshot_and_attach_to_allure()
-        self.check_pop_up_element_with_text(self.success_pop_up)
+        self.check_element_with_text(self.success_pop_up)
 
     @allure.step("Контрольные проверки отказа")
     def error_check(self):

@@ -10,7 +10,7 @@ class RegisterPage(BasePage):
         self.success_path = "login"
 
         self.full_name_input = "input[name='fullName']"
-        self.email_input = "input[name='email']"
+        self.email_placeholder = "Email"
         self.password_input = "input[name='password']"
         self.repeat_password_input = "input[name='passwordRepeat']"
         self.button_role = "button"
@@ -19,11 +19,11 @@ class RegisterPage(BasePage):
         self.open_url(self.url)
 
     def register(self, full_name: str, email: str, password: str):
-        self.enter_text_to_element(self.full_name_input, full_name)
-        self.enter_text_to_element(self.email_input, email)
-        self.enter_text_to_element(self.password_input, password)
-        self.enter_text_to_element(self.repeat_password_input, password)
-        self.click_element(None, self.button_role, self.button_name)
+        self.enter_text_to_element(locator=self.full_name_input, text=full_name)
+        self.enter_text_to_element(placeholder=self.email_placeholder, text=email)
+        self.enter_text_to_element(locator=self.password_input, text=password)
+        self.enter_text_to_element(locator=self.repeat_password_input, text=password)
+        self.click_element(role=self.button_role, name=self.button_name)
 
 class LoginPage(BasePage):
     def __init__(self, page: Page):
@@ -40,6 +40,6 @@ class LoginPage(BasePage):
         self.button_name = "Войти"
 
     def login(self, email: str, password: str):
-        self.enter_text_to_element(self.password_input, password)
-        self.enter_text_to_element(self.email_input, email)
-        self.click_element(None, self.button_role, self.button_name)
+        self.enter_text_to_element(locator=self.password_input, text=password)
+        self.enter_text_to_element(locator=self.email_input, text=email)
+        self.click_element(role=self.button_role, name=self.button_name)
