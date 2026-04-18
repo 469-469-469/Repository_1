@@ -11,8 +11,8 @@ class RegisterPage(BasePage):
         self.success_pop_up = "Подтвердите свою почту"
         self.success_path = "login"
 
-        self.full_name_input = "input[name='fullName']"
-        self.email_placeholder = "Email"
+        self.full_name_input = ElementLocator(locator="input[name='fullName']")
+        self.email_placeholder = ElementLocator(placeholder="Email")
         self.password_input = "input[name='password']"
         self.repeat_password_input = "input[name='passwordRepeat']"
         self.button_role = "button"
@@ -21,8 +21,8 @@ class RegisterPage(BasePage):
         self.open_url(self.url)
 
     def register(self, full_name: str, email: str, password: str):
-        self.fill(ElementLocator(locator=self.full_name_input),       text=full_name)
-        self.fill(ElementLocator(placeholder=self.email_placeholder), text=email)
+        self.fill(self.full_name_input, text=full_name)
+        self.fill(self.email_placeholder, text=email)
         self.fill(ElementLocator(locator=self.password_input),        text=password)
         self.fill(ElementLocator(locator=self.repeat_password_input), text=password)
         self.click(ElementLocator(role=self.button_role, name=self.button_name))

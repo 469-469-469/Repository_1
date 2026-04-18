@@ -8,7 +8,9 @@ from constants.constants import NEED_SCREENSHOT
 
 @dataclasses.dataclass
 class ElementLocator:
-
+    """
+    Класс для хранения атрибутов поиска локатора
+    """
     locator: str | None = None
     role: str|None = None
     name: str|None = None
