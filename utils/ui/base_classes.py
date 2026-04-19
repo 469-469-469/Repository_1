@@ -28,6 +28,9 @@ class PageAction:
 
     @allure.step("Поиск элемента")
     def locator(self, elements: ElementLocator):
+        """
+        Универсальный метод-локатор
+        """
         locator = elements.locator
         role = elements.role
         name = elements.name
@@ -88,8 +91,8 @@ class BasePage(PageAction): #
         super().__init__(page)
 
         # Общие локаторы для всех страниц на сайте
-        self.home_button = "a[href='/' and text()='Cinescope']"
-        self.all_movies_button = "a[href='/movies' and text()='Все фильмы']"
+        self.home_button = ElementLocator(locator="xpath=//a[@href='/' and text()='Cinescope']")
+        self.all_movies_button = ElementLocator(locator="xpath=//a[@href='/movies' and text()='Все фильмы']")
 
 
     @allure.step("Переход на главную страницу из шапки сайта")

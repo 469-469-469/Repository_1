@@ -13,19 +13,20 @@ class RegisterPage(BasePage):
 
         self.full_name_input = ElementLocator(locator="input[name='fullName']")
         self.email_placeholder = ElementLocator(placeholder="Email")
-        self.password_input = "input[name='password']"
-        self.repeat_password_input = "input[name='passwordRepeat']"
+        self.password_input = ElementLocator(locator="input[name='password']")
+        self.repeat_password_input = ElementLocator(locator="input[name='passwordRepeat']")
         self.button_role = "button"
         self.button_name = "Зарегистрироваться"
+        self.button_get_by_role = ElementLocator(role=self.button_role, name=self.button_name)
 
         self.open_url(self.url)
 
     def register(self, full_name: str, email: str, password: str):
-        self.fill(self.full_name_input, text=full_name)
-        self.fill(self.email_placeholder, text=email)
-        self.fill(ElementLocator(locator=self.password_input),        text=password)
-        self.fill(ElementLocator(locator=self.repeat_password_input), text=password)
-        self.click(ElementLocator(role=self.button_role, name=self.button_name))
+        self.fill(self.full_name_input,       text=full_name)
+        self.fill(self.email_placeholder,     text=email)
+        self.fill(self.password_input,        text=password)
+        self.fill(self.repeat_password_input, text=password)
+        self.click(self.button_get_by_role)
 
 
 class LoginPage(BasePage):
@@ -37,12 +38,20 @@ class LoginPage(BasePage):
 
         self.open_url(self.url)
 
-        self.email_input = "input[name='email']"
-        self.password_input = "input[name='password']"
+        self.email_input = ElementLocator(locator="input[name='email']")
+        self.password_input = ElementLocator(locator="input[name='password']")
         self.button_role = "button"
         self.button_name = "Войти"
+        self.button_get_by_role = ElementLocator(role=self.button_role, name=self.button_name)
 
     def login(self, email: str, password: str):
-        self.fill(ElementLocator(locator=self.password_input),  text=password)
-        self.fill(ElementLocator(locator=self.email_input),     text=email)
-        self.click(ElementLocator(role=self.button_role, name=self.button_name))
+        self.fill(self.email_input,    text=email)
+        self.fill(self.password_input, text=password)
+        self.click(self.button_get_by_role)
+
+
+class Review(BasePage):
+    def __init__(self, page: Page):
+        super().__init__(page)
+
+        self.review_input = ElementLocator(role="textbox", name="Написать отзыв")
