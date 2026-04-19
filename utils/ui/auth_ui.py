@@ -19,9 +19,8 @@ class RegisterPage(BasePage):
         self.button_name = "Зарегистрироваться"
         self.button_get_by_role = ElementLocator(role=self.button_role, name=self.button_name)
 
-        self.open_url(self.url)
-
     def register(self, full_name: str, email: str, password: str):
+        self.open_url(self.url)
         self.fill(self.full_name_input,       text=full_name)
         self.fill(self.email_placeholder,     text=email)
         self.fill(self.password_input,        text=password)
@@ -36,8 +35,6 @@ class LoginPage(BasePage):
         self.success_pop_up = "Вы вошли в аккаунт"
         self.success_path = ""
 
-        self.open_url(self.url)
-
         self.email_input = ElementLocator(locator="input[name='email']")
         self.password_input = ElementLocator(locator="input[name='password']")
         self.button_role = "button"
@@ -45,6 +42,7 @@ class LoginPage(BasePage):
         self.button_get_by_role = ElementLocator(role=self.button_role, name=self.button_name)
 
     def login(self, email: str, password: str):
+        self.open_url(self.url)
         self.fill(self.email_input,    text=email)
         self.fill(self.password_input, text=password)
         self.click(self.button_get_by_role)

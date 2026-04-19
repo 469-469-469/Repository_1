@@ -1,15 +1,10 @@
 from time import sleep
-
 import allure
 import pytest
 import logging
-
 from entities.user import User
 from models.movies_base_models import ResponseTestMovie
-from models.users_base_models import ResponseTestUser
 from faker import Faker
-from playwright.sync_api import Page
-from utils.ui.review_ui import ReviewPage
 from utils.ui.ui_manager import UIManager
 
 faker = Faker()
@@ -27,7 +22,7 @@ class TestReviewUIHappyPath:
      @pytest.mark.review
      @pytest.mark.positive
      @pytest.mark.regression
-     def test_leaving_a_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
+     def test_leaving_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
          logger.info("Позитивный тест. Оставление отзыва")
 
          review = page.review_ui
@@ -35,15 +30,50 @@ class TestReviewUIHappyPath:
 
          login.login(registered_user.email, registered_user.password)
          login.success_check()
+
          link_to_movie = f"{review.home_url}movies/{movie.id}"
          text_review = fake_ru.sentence(nb_words=10)
          review.open_url(link_to_movie)
          review.wait_redirect_for_url(link_to_movie)
-         review.fill(review.review_input,    text=text_review)
-
+         review.fill(review.review_input, text=text_review)
          review.click(review.review_send_button)
-         sleep(3)
+
+     @allure.title("Позитивный тест. Удаление отзыва")
+     @allure.tag("regression", "review", "fluky")
+     @pytest.mark.ui
+     @pytest.mark.review
+     @pytest.mark.positive
+     @pytest.mark.regression
+     @pytest.mark.fluky
+     def test_delete_review_ui(self, super_admin: User, page: UIManager, movie_with_review: ResponseTestMovie):
+         logger.info("Позитивный тест. Удаление отзыва")
+
+         review = page.review_ui
+         login = page.login_ui
+
+         login.login(super_admin.email, super_admin.password)
+         login.success_check()
+
+         review.open_url(f"{review.home_url}movies/{movie_with_review.id}")
+         review.locator(review.button_option).wait_for(state="visible")
+         review.click(review.button_option)
+         review.locator(review.button_delete).wait_for(state="visible")
+         review.click(review.button_delete)
+         review.success_check(success_path=False, success_pop_up=True)
 
 
+@allure.epic("Cinescop")
+@allure.feature("review_ui")
+@allure.tag("negative")
 class TestReviewUINegative:
-    pass
+
+    @allure.title("Негативный тест. Удаление отзыва без аутентификации")
+    @allure.tag("regression", "review")
+    @pytest.mark.ui
+    @pytest.mark.review
+    @pytest.mark.negative
+    @pytest.mark.regression
+    def test_delete_review_ui(self, super_admin: User, page: UIManager, movie_with_review: ResponseTestMovie):
+        logger.info("Негативный тест. Удаление отзыва без аутентификации")
+        pass
+

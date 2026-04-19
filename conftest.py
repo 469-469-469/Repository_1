@@ -133,6 +133,16 @@ def movie(test_movie: RequestTestMovie, super_admin: User) -> Generator[Response
             logging.warning(f"Не удалось удалить тестовый фильм: {e}")
 
 
+@pytest.fixture()
+def movie_with_review(movie: ResponseTestMovie, super_admin: User, user_session: Callable[..., ApiManager]):
+    """Создание отзыва для использования в тесте."""
+    rating = random.randint(1, 5)
+    text = fake_ru.sentence(nb_words=10)
+
+    super_admin.api.movies_api.create_review(movie.id, rating, text)
+    return movie
+
+
 # ----------------------------
 # Аутентификация
 # ----------------------------

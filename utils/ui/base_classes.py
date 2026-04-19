@@ -73,8 +73,9 @@ class PageAction:
 
     @allure.step("Скриншот текущей страницы")
     def make_screenshot_and_attach_to_allure(self):
-        screenshot = self.page.screenshot(full_page=True)
-        allure.attach(screenshot, name="Screenshot", attachment_type=allure.attachment_type.PNG)
+        if NEED_SCREENSHOT:
+            screenshot = self.page.screenshot(full_page=True)
+            allure.attach(screenshot, name="Screenshot", attachment_type=allure.attachment_type.PNG)
 
     @allure.step("Ожидание появления элемента с текстом")
     def wait_element(self,elements: ElementLocator):
@@ -100,7 +101,6 @@ class BasePage(PageAction): #
         self.profile = ElementLocator(locator="button:has-text('Профиль')")
         self.exit = ElementLocator(locator="button:has-text('Выход')")
 
-
     @allure.step("Переход на главную страницу из шапки сайта")
     def go_to_home_page(self):
         self.click(self.home_button)
@@ -118,17 +118,16 @@ class BasePage(PageAction): #
         self.click(self.exit)
         self.wait_element(self.enter)
 
-
     @allure.step("Контрольные проверки успешных действий")
-    def success_check(self):
-        self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
-        if NEED_SCREENSHOT:
-            self.make_screenshot_and_attach_to_allure()
-        self.wait_element(elements=ElementLocator(find_text=self.success_pop_up))
+    def success_check(self, success_path: bool = True, success_pop_up: bool = True):
+        if success_path:
+            self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
+        self.make_screenshot_and_attach_to_allure()
+        if success_pop_up:
+            self.wait_element(elements=ElementLocator(find_text=self.success_pop_up))
 
     @allure.step("Контрольные проверки отказа")
     def error_check(self):
         with allure.step("Проверка нахождения на той же странице"):
             expect(self.page).to_have_url(f"{self.url}")
-        if NEED_SCREENSHOT:
-            self.make_screenshot_and_attach_to_allure()
+        self.make_screenshot_and_attach_to_allure()
