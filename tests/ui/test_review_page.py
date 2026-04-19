@@ -55,7 +55,7 @@ class TestReviewUIHappyPath:
          login.success_check()
 
          review.delete_review(movie_with_review.id)
-         review.success_check(success_path=False, success_pop_up=True)
+         review.success_check(success_path=False, success_popup=True)
 
 
 @allure.epic("Cinescop")
@@ -76,7 +76,7 @@ class TestReviewUINegative:
 
         review.delete_review(movie_with_review.id)
         sleep(3)
-        review.error_check(error_path=False, error_pop_up=True)
+        review.error_check(error_path=False, error_popup=True)
 
 
 

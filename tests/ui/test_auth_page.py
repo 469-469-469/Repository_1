@@ -22,7 +22,7 @@ class TestAuthUIHappyPath:
 
          page.register_ui.register(creation_user_data.fullName,creation_user_data.email,
                                 creation_user_data.password)
-         page.register_ui.success_check()
+         page.register_ui.success_check(success_path=True, success_popup=True)
 
      @allure.title("Позитивный тест. Авторизация пользователя")
      @allure.tag("smoke", "user")
@@ -34,7 +34,7 @@ class TestAuthUIHappyPath:
          logger.info("Позитивный тест. Авторизация пользователя")
 
          page.login_ui.login(registered_user.email, registered_user.password)
-         page.login_ui.success_check()
+         page.login_ui.success_check(success_path=True, success_popup=True)
 
 
 @allure.epic("Cinescop")
@@ -64,7 +64,7 @@ class TestAuthUINegative:
         password = data.get("password", creation_user_data.password)
 
         page.register_ui.register(full_name, email, password)
-        page.register_ui.error_check()
+        page.register_ui.error_check(error_path=True, error_popup=False)
 
 
     @allure.title("Негативный тест. Авторизация пользователя")
@@ -84,4 +84,4 @@ class TestAuthUINegative:
 
         login_data = {"email": registered_user.email, "password": registered_user.password, field_auth: value_auth}
         page.login_ui.login(login_data["email"], login_data["password"])
-        page.login_ui.error_check()
+        page.login_ui.error_check(error_path=True, error_popup=False)

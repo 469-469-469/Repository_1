@@ -8,8 +8,8 @@ class RegisterPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.url = f"{self.home_url}register"
-        self.success_pop_up = "Подтвердите свою почту"
-        self.success_path = "login"
+        self.success_popup = "Подтвердите свою почту"
+        self.check_success_path = "login"
 
         self.full_name_input = ElementLocator(locator="input[name='fullName']")
         self.email_placeholder = ElementLocator(placeholder="Email")
@@ -32,8 +32,8 @@ class LoginPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.url = f"{self.home_url}login"
-        self.success_pop_up = "Вы вошли в аккаунт"
-        self.success_path = ""
+        self.success_popup = "Вы вошли в аккаунт"
+        self.check_success_path = ""
 
         self.email_input = ElementLocator(locator="input[name='email']")
         self.password_input = ElementLocator(locator="input[name='password']")
