@@ -8,7 +8,15 @@ class ReviewPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.success_pop_up = "Отзыв успешно удален"
+        self.error_pop_up = "Произошла ошибка"
         self.review_input = ElementLocator(role="textbox", name="Написать отзыв")
         self.review_send_button = ElementLocator(role="button", name="Отправить")
         self.button_option = ElementLocator(locator="div:has(h4:has-text('Жмышенко Валерий Альбертович')) button")
         self.button_delete = ElementLocator(locator="[role='menuitem']:has-text('Удалить')")
+
+    def delete_review(self, movie_id: int):
+        self.open_url(f"{self.home_url}movies/{movie_id}")
+        self.locator(self.button_option).wait_for(state="visible")
+        self.click(self.button_option)
+        self.locator(self.button_delete).wait_for(state="visible")
+        self.click(self.button_delete)

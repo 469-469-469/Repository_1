@@ -121,13 +121,19 @@ class BasePage(PageAction): #
     @allure.step("Контрольные проверки успешных действий")
     def success_check(self, success_path: bool = True, success_pop_up: bool = True):
         if success_path:
-            self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
+            with allure.step("Проверка перехода на страницу после успешных действий"):
+                self.wait_redirect_for_url(f"{self.home_url}{self.success_path}")
         self.make_screenshot_and_attach_to_allure()
         if success_pop_up:
-            self.wait_element(elements=ElementLocator(find_text=self.success_pop_up))
+            with allure.step("Проверка появления сообщения об успешном действии"):
+                self.wait_element(elements=ElementLocator(find_text=self.success_pop_up))
 
     @allure.step("Контрольные проверки отказа")
-    def error_check(self):
-        with allure.step("Проверка нахождения на той же странице"):
-            expect(self.page).to_have_url(f"{self.url}")
+    def error_check(self, error_path: bool = True, error_pop_up: bool = True):
+        if error_path:
+            with allure.step("Проверка нахождения на той же странице"):
+                expect(self.page).to_have_url(f"{self.url}")
         self.make_screenshot_and_attach_to_allure()
+        if error_pop_up:
+            with allure.step("Проверка появления сообщения об ошибке"):
+                self.wait_element(elements=ElementLocator(find_text=self.error_pop_up))

@@ -54,11 +54,7 @@ class TestReviewUIHappyPath:
          login.login(super_admin.email, super_admin.password)
          login.success_check()
 
-         review.open_url(f"{review.home_url}movies/{movie_with_review.id}")
-         review.locator(review.button_option).wait_for(state="visible")
-         review.click(review.button_option)
-         review.locator(review.button_delete).wait_for(state="visible")
-         review.click(review.button_delete)
+         review.delete_review(movie_with_review.id)
          review.success_check(success_path=False, success_pop_up=True)
 
 
@@ -75,5 +71,12 @@ class TestReviewUINegative:
     @pytest.mark.regression
     def test_delete_review_ui(self, super_admin: User, page: UIManager, movie_with_review: ResponseTestMovie):
         logger.info("Негативный тест. Удаление отзыва без аутентификации")
-        pass
+
+        review = page.review_ui
+
+        review.delete_review(movie_with_review.id)
+        sleep(3)
+        review.error_check(error_path=False, error_pop_up=True)
+
+
 
