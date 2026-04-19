@@ -50,8 +50,3 @@ class LoginPage(BasePage):
         self.click(self.button_get_by_role)
 
 
-class Review(BasePage):
-    def __init__(self, page: Page):
-        super().__init__(page)
-
-        self.review_input = ElementLocator(role="textbox", name="Написать отзыв")
