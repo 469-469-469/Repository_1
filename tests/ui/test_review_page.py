@@ -31,11 +31,11 @@ class TestReviewUIHappyPath:
          login = page.login_ui
 
          login.login(registered_user.email, registered_user.password)
-         login.success_check(success_path=login.success_path, success_locator=login.success_locator)
+         login.success_check(path=login.success_path, locator=login.success_locator)
 
          text_review = fake_ru.sentence(nb_words=10)
          review.leaving_review(movie.id, text_review)
-         review.success_check(success_locator=review.leaved_locator)
+         review.success_check(locator=review.leaved_locator)
 
      @allure.title("Позитивный тест. Удаление отзыва")
      @allure.tag("regression", "review", "fluky")
@@ -51,10 +51,10 @@ class TestReviewUIHappyPath:
          login = page.login_ui
 
          login.login(super_admin.email, super_admin.password)
-         login.success_check(success_path=login.success_path, success_locator=login.success_locator)
+         login.success_check(path=login.success_path, locator=login.success_locator)
 
          review.delete_review(movie_with_review.id)
-         review.success_check(success_locator=review.deleted_locator)
+         review.success_check(locator=review.deleted_locator)
 
 
 @allure.epic("Cinescop")
@@ -76,11 +76,11 @@ class TestReviewUINegative:
         login =  page.login_ui
 
         login.login(registered_user.email, registered_user.password)
-        login.success_check(success_path=login.success_path, success_locator=login.success_locator)
+        login.success_check(path=login.success_path, locator=login.success_locator)
 
         text_review = ""
         review.leaving_review(movie.id, text_review)
-        review.error_check(error_locator=error_locator)
+        review.error_check(locator=error_locator)
 
 
     @allure.title("Негативный тест. Удаление отзыва без аутентификации")
@@ -95,7 +95,7 @@ class TestReviewUINegative:
         error_locator = ElementLocator(find_text="Произошла ошибка")
         review = page.review_ui
         review.delete_review(movie_with_review.id)
-        review.error_check(error_locator=error_locator)
+        review.error_check(locator=error_locator)
 
 
 

@@ -1,7 +1,7 @@
 import dataclasses
 from typing import Optional
 import allure
-from playwright.sync_api import expect, Page, Locator
+from playwright.sync_api import expect, Page
 from constants.constants import NEED_SCREENSHOT
 
 
@@ -120,21 +120,25 @@ class BasePage(PageAction): #
         self.wait_element(self.enter)
 
     @allure.step("Контрольные проверки успешных действий")
-    def success_check(self, success_path: str | None = None, success_locator: ElementLocator | None = None):
-        if success_path:
+    def success_check(self, path: str | None = None, locator: ElementLocator | None = None):
+        if path:
             with allure.step("Проверка перехода на страницу после успешных действий"):
-                self.wait_redirect_for_url(success_path)
+                self.wait_redirect_for_url(path)
         self.make_screenshot_and_attach_to_allure()
-        if success_locator:
+        if locator:
             with allure.step("Проверка появления сообщения об успешном действии"):
-                self.wait_element(elements=success_locator)
+                self.wait_element(elements=locator)
 
     @allure.step("Контрольные проверки отказа")
-    def error_check(self, error_path: str | None = None, error_locator: ElementLocator | None = None):
-        if error_path:
+    def error_check(self, path: str | None = None, locator: ElementLocator | None = None,
+                    error: str | None = None):
+        if path:
             with allure.step("Проверка нахождения на той же странице"):
-                expect(self.page).to_have_url(error_path)
+                expect(self.page).to_have_url(path)
         self.make_screenshot_and_attach_to_allure()
-        if error_locator:
+        if locator:
             with allure.step("Проверка появления сообщения об ошибке"):
-                self.wait_element(elements=error_locator)
+                self.wait_element(elements=locator)
+        if error:
+            with allure.step("Проверка появления сообщения об ошибке"):
+                expect(self.page.locator("form")).to_contain_text(error)
