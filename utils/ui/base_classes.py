@@ -47,17 +47,20 @@ class PageAction:
         placeholder = elements.placeholder
         find_text = elements.find_text
 
-        match True:
-            case _ if locator:
-                return self.page.locator(locator)
-            case _ if role and name:
-                return self.page.locator("form").get_by_role(role, name=name)
-            case _ if placeholder:
-                return self.page.locator("form").get_by_placeholder(placeholder)
-            case _ if find_text:
-                return self.page.get_by_text(find_text)
-            case _:
-                raise ValueError("Передайте данные для поиска элемента")
+        if locator:
+            return self.page.locator(locator)
+
+        if role and name:
+            return self.page.locator("form").get_by_role(role, name=name)
+
+        if placeholder:
+            return self.page.locator("form").get_by_placeholder(placeholder)
+
+        if find_text:
+            return self.page.get_by_text(find_text)
+
+        raise ValueError("Передайте данные для поиска элемента")
+
 
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
@@ -125,7 +128,7 @@ class BasePage(PageAction): #
                 expect(self.page).to_have_url(checks.path)
         if checks.locator:
             with allure.step("Ожидание появления элемента"):
-                self.expect_visible(elements=checks.locator)
+                self.expect_visible(checks.locator)
         if checks.text:
             with allure.step("Ожидание появления текста"):
                 expect(self.page.locator("form")).to_contain_text(checks.text)
