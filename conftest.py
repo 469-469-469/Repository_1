@@ -306,7 +306,7 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
 
 
 @pytest.fixture(scope="function")
-def page(context: BrowserContext) -> Generator[UIManager, Any, None]:
+def ui(context: BrowserContext) -> Generator[UIManager, Any, None]:
     """
     Фикстура, которая
     :param context:

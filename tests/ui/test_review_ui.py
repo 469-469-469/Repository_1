@@ -22,19 +22,16 @@ class TestReviewUIHappyPath:
      @pytest.mark.review
      @pytest.mark.positive
      @pytest.mark.regression
-     def test_create_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
+     def test_create_review_ui(self, registered_user: User, ui: UIManager, movie: ResponseTestMovie):
          logger.info("Позитивный тест. Оставление отзыва")
 
-         review = page.review_ui
-         login = page.login_ui
-
          with allure.step("Авторизация на сайте"):
-             login.login(registered_user.email, registered_user.password)
-             login.final_checks(FinalChecks(path=login.success_path, locator=login.success_locator))
+             ui.login.login(registered_user.email, registered_user.password)
+             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
 
          text_review = fake_ru.sentence(nb_words=10)
-         review.create_review(movie.id, text_review)
-         review.final_checks(FinalChecks(locator=review.created_locator))
+         ui.review.create_review(movie.id, text_review)
+         ui.review.final_checks(FinalChecks(locator=ui.review.created_locator))
 
      @allure.title("Позитивный тест. Удаление отзыва")
      @allure.tag("regression", "review", "fluky")
@@ -43,18 +40,15 @@ class TestReviewUIHappyPath:
      @pytest.mark.positive
      @pytest.mark.regression
      @pytest.mark.fluky
-     def test_delete_review_ui(self, super_admin: User, page: UIManager, movie_with_review: ResponseTestMovie):
+     def test_delete_review_ui(self, super_admin: User, ui: UIManager, movie_with_review: ResponseTestMovie):
          logger.info("Позитивный тест. Удаление отзыва")
 
-         review = page.review_ui
-         login = page.login_ui
-
          with allure.step("Авторизация на сайте"):
-             login.login(super_admin.email, super_admin.password)
-             login.final_checks(FinalChecks(path=login.success_path, locator=login.success_locator))
+             ui.login.login(super_admin.email, super_admin.password)
+             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
 
-         review.delete_review(movie_with_review.id)
-         review.final_checks(FinalChecks(locator=review.deleted_locator))
+         ui.review.delete_review(movie_with_review.id)
+         ui.review.final_checks(FinalChecks(locator=ui.review.deleted_locator))
 
 
 @allure.epic("Cinescop")
@@ -68,20 +62,18 @@ class TestReviewUINegative:
     @pytest.mark.review
     @pytest.mark.negative
     @pytest.mark.regression
-    def test_empty_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
+    def test_empty_review_ui(self, registered_user: User, ui: UIManager, movie: ResponseTestMovie):
         logger.info("Негативный тест. Оставление пустого отзыва")
 
         error_locator = ElementLocator(find_text="Поле отзыва обязательно к заполнению")
-        review = page.review_ui
-        login =  page.login_ui
 
         with allure.step("Авторизация на сайте"):
-            login.login(registered_user.email, registered_user.password)
-            login.final_checks(FinalChecks(path=login.success_path, locator=login.success_locator))
+            ui.login.login(registered_user.email, registered_user.password)
+            ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
 
         text_review = ""
-        review.create_review(movie.id, text_review)
-        review.final_checks(FinalChecks(locator=error_locator))
+        ui.review.create_review(movie.id, text_review)
+        ui.review.final_checks(FinalChecks(locator=error_locator))
 
 
     @allure.title("Негативный тест. Удаление отзыва без аутентификации")
@@ -90,13 +82,13 @@ class TestReviewUINegative:
     @pytest.mark.review
     @pytest.mark.negative
     @pytest.mark.regression
-    def test_delete_review_ui(self, super_admin: User, page: UIManager, movie_with_review: ResponseTestMovie):
+    def test_delete_review_ui(self, super_admin: User, ui: UIManager, movie_with_review: ResponseTestMovie):
         logger.info("Негативный тест. Удаление отзыва без аутентификации")
 
+
         error_locator = ElementLocator(find_text="Произошла ошибка")
-        review = page.review_ui
-        review.delete_review(movie_with_review.id)
-        review.final_checks(FinalChecks(locator=error_locator))
+        ui.review.delete_review(movie_with_review.id)
+        ui.review.final_checks(FinalChecks(locator=error_locator))
 
 
 

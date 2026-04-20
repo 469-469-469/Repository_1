@@ -18,13 +18,12 @@ class TestAuthUIHappyPath:
      @pytest.mark.user
      @pytest.mark.positive
      @pytest.mark.smoke
-     def test_register_ui(self, page: UIManager, creation_user_data: RequestTestUser):
+     def test_register_ui(self, ui: UIManager, creation_user_data: RequestTestUser):
          logger.info("Позитивный тест. Регистрация")
 
-         register = page.register_ui
-         register.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
+         ui.register.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
 
-         register.final_checks(FinalChecks(path=register.success_path, locator=register.success_locator))
+         ui.register.final_checks(FinalChecks(path=ui.register.success_path, locator=ui.register.success_locator))
 
 
      @allure.title("Позитивный тест. Авторизация пользователя")
@@ -33,12 +32,11 @@ class TestAuthUIHappyPath:
      @pytest.mark.user
      @pytest.mark.positive
      @pytest.mark.smoke
-     def test_login_ui(self, page: UIManager, registered_user: RequestTestUser):
+     def test_login_ui(self, ui: UIManager, registered_user: RequestTestUser):
          logger.info("Позитивный тест. Авторизация пользователя")
 
-         login = page.login_ui
-         login.login(registered_user.email, registered_user.password)
-         login.final_checks(FinalChecks(path=login.success_path, locator=login.success_locator))
+         ui.login.login(registered_user.email, registered_user.password)
+         ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
 
 
 @allure.epic("Cinescop")
@@ -59,18 +57,17 @@ class TestAuthUINegative:
             ("fullName", "", None),
         ]
     )
-    def test_register_ui(self, page: UIManager, creation_user_data: RequestTestUser, field: str,
+    def test_register_ui(self, ui: UIManager, creation_user_data: RequestTestUser, field: str,
                                value: str, expected_error: str | None):
         logger.info(f"Негативный тест. Регистрация. Проверка поля {field}={value}")
 
-        register = page.register_ui
         data = {"email": creation_user_data.email, "password": creation_user_data.password, field: value}
         full_name = data.get("fullName", creation_user_data.fullName)
         email = data.get("email", creation_user_data.email)
         password = data.get("password", creation_user_data.password)
 
-        register.register(full_name, email, password)
-        register.final_checks(FinalChecks(path=register.url, error=expected_error))
+        ui.register.register(full_name, email, password)
+        ui.register.final_checks(FinalChecks(path=ui.register.url, error=expected_error))
 
 
     @allure.title("Негативный тест. Авторизация")
@@ -87,11 +84,10 @@ class TestAuthUINegative:
             ("password", "1", None) # Неверный пароль
         ]
     )
-    def test_login_ui(self, page: UIManager, registered_user: RequestTestUser, field: str, value: str,
+    def test_login_ui(self, ui: UIManager, registered_user: RequestTestUser, field: str, value: str,
                       expected_error: str | None):
         logger.info(f"Негативный тест. Авторизация. Проверка поля {field}={value}")
 
-        login = page.login_ui
         login_data = {"email": registered_user.email, "password": registered_user.password, field: value}
-        login.login(login_data["email"], login_data["password"])
-        login.final_checks(FinalChecks(path=login.url, error=expected_error))
+        ui.login.login(login_data["email"], login_data["password"])
+        ui.login.final_checks(FinalChecks(path=ui.login.url, error=expected_error))
