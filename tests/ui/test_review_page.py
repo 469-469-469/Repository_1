@@ -5,6 +5,8 @@ import logging
 from entities.user import User
 from models.movies_base_models import ResponseTestMovie
 from faker import Faker
+
+from utils.ui.base_classes import ElementLocator
 from utils.ui.ui_manager import UIManager
 
 faker = Faker()
@@ -25,20 +27,15 @@ class TestReviewUIHappyPath:
      def test_leaving_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
          logger.info("Позитивный тест. Оставление отзыва")
 
-         success_text = "Отзыв успешно удален"
          review = page.review_ui
          login = page.login_ui
 
          login.login(registered_user.email, registered_user.password)
-         login.success_check(success_path=login.success_path, success_text=login.success_text)
+         login.success_check(success_path=login.success_path, success_locator=login.success_locator)
 
-         link_to_movie = f"{review.home_url}movies/{movie.id}"
          text_review = fake_ru.sentence(nb_words=10)
-         review.open_url(link_to_movie)
-         review.wait_redirect_for_url(link_to_movie)
-         review.fill(review.review_input, text=text_review)
-         review.click(review.review_send_button)
-         review.success_check()
+         review.leaving_review(movie.id, text_review)
+         review.success_check(success_locator=review.leaved_locator)
 
      @allure.title("Позитивный тест. Удаление отзыва")
      @allure.tag("regression", "review", "fluky")
@@ -50,15 +47,14 @@ class TestReviewUIHappyPath:
      def test_delete_review_ui(self, super_admin: User, page: UIManager, movie_with_review: ResponseTestMovie):
          logger.info("Позитивный тест. Удаление отзыва")
 
-         success_text = "Отзыв успешно удален"
          review = page.review_ui
          login = page.login_ui
 
          login.login(super_admin.email, super_admin.password)
-         login.success_check(success_path=login.success_path, success_text=login.success_text)
+         login.success_check(success_path=login.success_path, success_locator=login.success_locator)
 
          review.delete_review(movie_with_review.id)
-         review.success_check(success_text=success_text)
+         review.success_check(success_locator=review.deleted_locator)
 
 
 @allure.epic("Cinescop")
@@ -75,20 +71,16 @@ class TestReviewUINegative:
     def test_empty_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
         logger.info("Негативный тест. Оставление пустого отзыва")
 
-        error_text = "Поле отзыва обязательно к заполнению"
+        error_locator = ElementLocator(find_text="Поле отзыва обязательно к заполнению")
         review = page.review_ui
         login =  page.login_ui
 
         login.login(registered_user.email, registered_user.password)
-        login.success_check(success_path=login.success_path, success_text=login.success_text)
+        login.success_check(success_path=login.success_path, success_locator=login.success_locator)
 
-        link_to_movie = f"{review.home_url}movies/{movie.id}"
-        review.open_url(link_to_movie)
-        review.wait_redirect_for_url(link_to_movie)
-        review.fill(review.review_input, text="")
-        review.click(review.review_send_button)
-        review.error_check(error_text=error_text)
-        sleep(3)
+        text_review = ""
+        review.leaving_review(movie.id, text_review)
+        review.error_check(error_locator=error_locator)
 
 
     @allure.title("Негативный тест. Удаление отзыва без аутентификации")
@@ -100,10 +92,10 @@ class TestReviewUINegative:
     def test_delete_review_ui(self, super_admin: User, page: UIManager, movie_with_review: ResponseTestMovie):
         logger.info("Негативный тест. Удаление отзыва без аутентификации")
 
-        error_text = "Произошла ошибка"
+        error_locator = ElementLocator(find_text="Произошла ошибка")
         review = page.review_ui
         review.delete_review(movie_with_review.id)
-        review.error_check(error_text=error_text)
+        review.error_check(error_locator=error_locator)
 
 
 
