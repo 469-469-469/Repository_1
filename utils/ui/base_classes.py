@@ -8,13 +8,25 @@ from constants.constants import NEED_SCREENSHOT
 @dataclasses.dataclass
 class ElementLocator:
     """
-    Класс для хранения атрибутов поиска локатора
+    Класс для хранения атрибутов поиска элемента
     """
     locator: str | None = None
+    path: str | None = None
     role: str | None = None
     name: str | None = None
     placeholder: str | None = None
     find_text: str | None = None
+
+
+@dataclasses.dataclass
+class FinalChecks:
+    """
+    Класс для хранения атрибутов финальных проверок
+    """
+    path: str | None = None
+    locator: ElementLocator | None = None
+    error: str | None = None
+    name: str | None = None
 
 
 class PageAction:
@@ -45,7 +57,7 @@ class PageAction:
             case _ if find_text:
                 return self.page.get_by_text(find_text)
             case _:
-                raise ValueError("Передай данные для поиска")
+                raise ValueError("Передайте данные для поиска элемента")
 
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
@@ -106,26 +118,15 @@ class BasePage(PageAction): #
         self.click(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
 
-    @allure.step("Контрольные проверки успешных действий")
-    def success_check(self, path: str | None = None, locator: ElementLocator | None = None):
-        if path:
-            with allure.step("Проверка перехода на страницу после успешных действий"):
-                self.wait_redirect_for_url(path)
-        if locator:
-            with allure.step("Проверка появления сообщения об успешном действии"):
-                self.expect_visible(elements=locator)
-        self.make_screenshot_and_attach_to_allure()
-
-    @allure.step("Контрольные проверки отказа")
-    def error_check(self, path: str | None = None, locator: ElementLocator | None = None,
-                    error: str | None = None):
-        if path:
-            with allure.step("Проверка нахождения на той же странице"):
-                expect(self.page).to_have_url(path)
-        if locator:
-            with allure.step("Проверка появления сообщения об ошибке"):
-                self.expect_visible(elements=locator)
-        if error:
-            with allure.step("Проверка появления сообщения об ошибке"):
-                expect(self.page.locator("form")).to_contain_text(error)
+    @allure.step("Контрольные проверки")
+    def final_checks(self, elements: FinalChecks):
+        if elements.path:
+            with allure.step("Проверка нахождения на корректной странице"):
+                expect(self.page).to_have_url(elements.path)
+        if elements.locator:
+            with allure.step("Проверка появления элемента с сообщением об ошибке"):
+                self.expect_visible(elements=elements.locator)
+        if elements.error:
+            with allure.step("Проверка появления текста сообщения об ошибке"):
+                expect(self.page.locator("form")).to_contain_text(elements.error)
         self.make_screenshot_and_attach_to_allure()

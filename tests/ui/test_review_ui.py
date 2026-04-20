@@ -4,7 +4,7 @@ import logging
 from entities.user import User
 from models.movies_base_models import ResponseTestMovie
 from faker import Faker
-from utils.ui.base_classes import ElementLocator
+from utils.ui.base_classes import ElementLocator, FinalChecks
 from utils.ui.ui_manager import UIManager
 
 faker = Faker()
@@ -30,11 +30,11 @@ class TestReviewUIHappyPath:
 
          with allure.step("Авторизация на сайте"):
              login.login(registered_user.email, registered_user.password)
-             login.success_check(path=login.success_path, locator=login.success_locator)
+             login.final_checks(FinalChecks(path=login.success_path, locator=login.success_locator))
 
          text_review = fake_ru.sentence(nb_words=10)
          review.create_review(movie.id, text_review)
-         review.success_check(locator=review.created_locator)
+         review.final_checks(FinalChecks(locator=review.created_locator))
 
      @allure.title("Позитивный тест. Удаление отзыва")
      @allure.tag("regression", "review", "fluky")
@@ -51,10 +51,10 @@ class TestReviewUIHappyPath:
 
          with allure.step("Авторизация на сайте"):
              login.login(super_admin.email, super_admin.password)
-             login.success_check(path=login.success_path, locator=login.success_locator)
+             login.final_checks(FinalChecks(path=login.success_path, locator=login.success_locator))
 
          review.delete_review(movie_with_review.id)
-         review.success_check(locator=review.deleted_locator)
+         review.final_checks(FinalChecks(locator=review.deleted_locator))
 
 
 @allure.epic("Cinescop")
@@ -77,11 +77,11 @@ class TestReviewUINegative:
 
         with allure.step("Авторизация на сайте"):
             login.login(registered_user.email, registered_user.password)
-            login.success_check(path=login.success_path, locator=login.success_locator)
+            login.final_checks(FinalChecks(path=login.success_path, locator=login.success_locator))
 
         text_review = ""
         review.create_review(movie.id, text_review)
-        review.error_check(locator=error_locator)
+        review.final_checks(FinalChecks(locator=error_locator))
 
 
     @allure.title("Негативный тест. Удаление отзыва без аутентификации")
@@ -96,7 +96,7 @@ class TestReviewUINegative:
         error_locator = ElementLocator(find_text="Произошла ошибка")
         review = page.review_ui
         review.delete_review(movie_with_review.id)
-        review.error_check(locator=error_locator)
+        review.final_checks(FinalChecks(locator=error_locator))
 
 
 
