@@ -1,7 +1,8 @@
+from typing import Any, Iterable, Mapping, Union
 import allure
 from pprint import pformat
 
-def assert_equal(actual, expected, name=""):
+def assert_equal(actual: Any, expected: Any, name: str =""):
     with allure.step(f"ASSERT EQUAL: {name}"):
 
         allure.attach(
@@ -25,7 +26,7 @@ def assert_equal(actual, expected, name=""):
 
         assert actual == expected
 
-def assert_in(member, container, name=""):
+def assert_in(member: Any, container: Union[Iterable[Any], Mapping[Any, Any]], name: str =""):
     with allure.step(f"ASSERT IN: {name}"):
 
         allure.attach(

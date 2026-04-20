@@ -128,7 +128,7 @@ def movie(test_movie: RequestTestMovie, super_admin: User) -> Generator[Response
     yield pydantic_movie_response(response_data)
     with allure.step("Удаление тестового фильма"):
         try:
-            super_admin.api.movies_api.delete_movie(response_data.id, expected_status=(200, 404))
+            super_admin.api.movies_api.delete_movie(response_data["id"], expected_status=(200, 404))
         except Exception as e:
             logging.warning(f"Не удалось удалить тестовый фильм: {e}")
 
