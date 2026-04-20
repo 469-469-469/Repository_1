@@ -279,9 +279,11 @@ def browser(playwright: Playwright) -> Generator[Browser, None, None]:
     Фикстура, которая
     :param playwright:
     """
-    browser = playwright.chromium.launch(headless=False)
+    with allure.step("Запуск Chromium browser"):
+        browser = playwright.chromium.launch(headless=False)
     yield browser
-    browser.close()
+    with allure.step("Закрытие Chromium browser"):
+        browser.close()
 
 
 @pytest.fixture(scope="function")
@@ -290,7 +292,8 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
     Фикстура, которая
     :type browser: Browser
     """
-    context = browser.new_context()
+    with allure.step("Создание browser context"):
+        context = browser.new_context()
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
     context.set_default_timeout(DEFAULT_UI_TIMEOUT)
 
@@ -298,7 +301,8 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
     log_name = f"trace_{Tools.get_timestamp()}.zip"
     trace_path = Tools.files_dir('playwright_trace', log_name)
     context.tracing.stop(path=trace_path)
-    context.close()
+    with allure.step("Закрытие browser context"):
+        context.close()
 
 
 @pytest.fixture(scope="function")
@@ -307,7 +311,9 @@ def page(context: BrowserContext) -> Generator[UIManager, Any, None]:
     Фикстура, которая
     :param context:
     """
-    page = context.new_page()
+    with allure.step("Создание UI page"):
+        page = context.new_page()
     ui_manager = UIManager(page)
     yield ui_manager
-    page.close()
+    with allure.step("Закрытие UI page"):
+        page.close()

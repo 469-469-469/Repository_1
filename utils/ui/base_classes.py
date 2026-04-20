@@ -111,10 +111,10 @@ class BasePage(PageAction): #
         if path:
             with allure.step("Проверка перехода на страницу после успешных действий"):
                 self.wait_redirect_for_url(path)
-        self.make_screenshot_and_attach_to_allure()
         if locator:
             with allure.step("Проверка появления сообщения об успешном действии"):
                 self.expect_visible(elements=locator)
+        self.make_screenshot_and_attach_to_allure()
 
     @allure.step("Контрольные проверки отказа")
     def error_check(self, path: str | None = None, locator: ElementLocator | None = None,
@@ -122,10 +122,10 @@ class BasePage(PageAction): #
         if path:
             with allure.step("Проверка нахождения на той же странице"):
                 expect(self.page).to_have_url(path)
-        self.make_screenshot_and_attach_to_allure()
         if locator:
             with allure.step("Проверка появления сообщения об ошибке"):
                 self.expect_visible(elements=locator)
         if error:
             with allure.step("Проверка появления сообщения об ошибке"):
                 expect(self.page.locator("form")).to_contain_text(error)
+        self.make_screenshot_and_attach_to_allure()

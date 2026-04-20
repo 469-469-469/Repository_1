@@ -1,11 +1,9 @@
-from time import sleep
 import allure
 import pytest
 import logging
 from entities.user import User
 from models.movies_base_models import ResponseTestMovie
 from faker import Faker
-
 from utils.ui.base_classes import ElementLocator
 from utils.ui.ui_manager import UIManager
 

@@ -1,5 +1,3 @@
-from time import sleep
-
 from playwright.sync_api import Page
 from utils.ui.base_classes import BasePage, ElementLocator
 
