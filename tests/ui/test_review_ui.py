@@ -71,8 +71,7 @@ class TestReviewUINegative:
             ui.login.login(registered_user.email, registered_user.password)
             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
 
-        text_review = ""
-        ui.review.create_review(movie.id, text_review)
+        ui.review.create_review(movie.id, "")
         ui.review.final_checks(FinalChecks(locator=error_locator))
 
 
@@ -85,10 +84,8 @@ class TestReviewUINegative:
     def test_delete_review_ui(self, super_admin: User, ui: UIManager, movie_with_review: ResponseTestMovie):
         logger.info("Негативный тест. Удаление отзыва без аутентификации")
 
-
-        error_locator = ElementLocator(find_text="Произошла ошибка")
         ui.review.delete_review(movie_with_review.id)
-        ui.review.final_checks(FinalChecks(locator=error_locator))
+        ui.review.final_checks(FinalChecks(locator=ElementLocator(find_text="Произошла ошибка")))
 
 
 

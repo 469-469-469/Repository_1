@@ -22,7 +22,6 @@ class TestAuthUIHappyPath:
          logger.info("Позитивный тест. Регистрация")
 
          ui.register.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
-
          ui.register.final_checks(FinalChecks(path=ui.register.success_path, locator=ui.register.success_locator))
 
 
