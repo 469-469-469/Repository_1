@@ -276,7 +276,7 @@ def db_helper(db_session: Session) -> DBHelper:
 @pytest.fixture(scope="function")
 def browser(playwright: Playwright) -> Generator[Browser, None, None]:
     """
-    Фикстура, которая
+    Создаёт браузер Chromium и закрывает его после выполнения теста
     :param playwright:
     """
     with allure.step("Запуск Chromium browser"):
@@ -289,7 +289,7 @@ def browser(playwright: Playwright) -> Generator[Browser, None, None]:
 @pytest.fixture(scope="function")
 def context(browser: Browser) -> Generator[BrowserContext, None, None]:
     """
-    Фикстура, которая
+    Создаёт новый BrowserContext и закрывает его после выполнения теста
     :type browser: Browser
     """
     with allure.step("Создание browser context"):
@@ -308,7 +308,7 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
 @pytest.fixture(scope="function")
 def ui(context: BrowserContext) -> Generator[UIManager, Any, None]:
     """
-    Фикстура, которая
+    Создаёт UIManager с новой страницей браузера и закрывает после выполнения теста
     :param context:
     """
     with allure.step("Создание UI page"):
