@@ -66,7 +66,7 @@ class TestAuthUINegative:
         password = data.get("password", creation_user_data.password)
 
         ui.register.register(full_name, email, password)
-        ui.register.final_checks(FinalChecks(path=ui.register.url, error=expected_error))
+        ui.register.final_checks(FinalChecks(path=ui.register.url, text=expected_error))
 
 
     @allure.title("Негативный тест. Авторизация")
@@ -89,4 +89,4 @@ class TestAuthUINegative:
 
         login_data = {"email": registered_user.email, "password": registered_user.password, field: value}
         ui.login.login(login_data["email"], login_data["password"])
-        ui.login.final_checks(FinalChecks(path=ui.login.url, error=expected_error))
+        ui.login.final_checks(FinalChecks(path=ui.login.url, text=expected_error))

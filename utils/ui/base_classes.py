@@ -25,7 +25,7 @@ class FinalChecks:
     """
     path: str | None = None
     locator: ElementLocator | None = None
-    error: str | None = None
+    text: str | None = None
     name: str | None = None
 
 
@@ -126,7 +126,7 @@ class BasePage(PageAction): #
         if checks.locator:
             with allure.step("Ожидание появления элемента"):
                 self.expect_visible(elements=checks.locator)
-        if checks.error:
+        if checks.text:
             with allure.step("Ожидание появления текста"):
-                expect(self.page.locator("form")).to_contain_text(checks.error)
+                expect(self.page.locator("form")).to_contain_text(checks.text)
         self.make_screenshot_and_attach_to_allure()
