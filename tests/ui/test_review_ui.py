@@ -24,7 +24,7 @@ class TestReviewUIHappyPath:
      @pytest.mark.review
      @pytest.mark.positive
      @pytest.mark.regression
-     def test_leaving_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
+     def test_create_review_ui(self, registered_user: User, page: UIManager, movie: ResponseTestMovie):
          logger.info("Позитивный тест. Оставление отзыва")
 
          review = page.review_ui
@@ -34,8 +34,8 @@ class TestReviewUIHappyPath:
          login.success_check(path=login.success_path, locator=login.success_locator)
 
          text_review = fake_ru.sentence(nb_words=10)
-         review.leaving_review(movie.id, text_review)
-         review.success_check(locator=review.leaved_locator)
+         review.create_review(movie.id, text_review)
+         review.success_check(locator=review.created_locator)
 
      @allure.title("Позитивный тест. Удаление отзыва")
      @allure.tag("regression", "review", "fluky")
@@ -79,7 +79,7 @@ class TestReviewUINegative:
         login.success_check(path=login.success_path, locator=login.success_locator)
 
         text_review = ""
-        review.leaving_review(movie.id, text_review)
+        review.create_review(movie.id, text_review)
         review.error_check(locator=error_locator)
 
 

@@ -61,8 +61,7 @@ class TestAuthUINegative:
                                value: str, expected_error: str | None):
         logger.info(f"Негативный тест. Регистрация. Проверка поля {field}={value}")
 
-        data = {"email": creation_user_data.email, "password": creation_user_data.password,
-                      field: value}
+        data = {"email": creation_user_data.email, "password": creation_user_data.password, field: value}
         full_name = data.get("fullName", creation_user_data.fullName)
         email = data.get("email", creation_user_data.email)
         password = data.get("password", creation_user_data.password)

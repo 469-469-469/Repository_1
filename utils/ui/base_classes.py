@@ -25,7 +25,6 @@ class PageAction:
         self.home_url = "https://dev-cinescope.coconutqa.ru/"
         self.page = page
 
-    @allure.step("Поиск элемента")
     def locator(self, elements: ElementLocator):
         """
         Универсальный метод-локатор
@@ -68,7 +67,7 @@ class PageAction:
     def get_element_text(self,elements: ElementLocator) -> Optional[str]:
         return self.locator(elements).text_content()
 
-    @allure.step("Ожидание появления или исчезновения элемента")
+    @allure.step("Ожидание появления элемента")
     def expect_visible(self, elements: ElementLocator):
         expect(self.locator(elements)).to_be_visible()
 
@@ -77,11 +76,6 @@ class PageAction:
         if NEED_SCREENSHOT:
             screenshot = self.page.screenshot(full_page=True)
             allure.attach(screenshot, name="Screenshot", attachment_type=allure.attachment_type.PNG)
-
-    @allure.step("Ожидание появления элемента с текстом")
-    def wait_element(self,elements: ElementLocator):
-        locator = self.locator(elements)
-        expect(locator).to_be_visible()
 
     @allure.step("Проверка наличия элемента с текстом")
     def check_element(self, elements: ElementLocator):
@@ -112,13 +106,6 @@ class BasePage(PageAction): #
         self.click(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
 
-    @allure.step("Выход из аккаунта")
-    def logout(self):
-        self.click(self.profile)
-        self.wait_redirect_for_url(f"{self.home_url}profile")
-        self.click(self.exit)
-        self.wait_element(self.enter)
-
     @allure.step("Контрольные проверки успешных действий")
     def success_check(self, path: str | None = None, locator: ElementLocator | None = None):
         if path:
@@ -127,7 +114,7 @@ class BasePage(PageAction): #
         self.make_screenshot_and_attach_to_allure()
         if locator:
             with allure.step("Проверка появления сообщения об успешном действии"):
-                self.wait_element(elements=locator)
+                self.expect_visible(elements=locator)
 
     @allure.step("Контрольные проверки отказа")
     def error_check(self, path: str | None = None, locator: ElementLocator | None = None,
@@ -138,7 +125,7 @@ class BasePage(PageAction): #
         self.make_screenshot_and_attach_to_allure()
         if locator:
             with allure.step("Проверка появления сообщения об ошибке"):
-                self.wait_element(elements=locator)
+                self.expect_visible(elements=locator)
         if error:
             with allure.step("Проверка появления сообщения об ошибке"):
                 expect(self.page.locator("form")).to_contain_text(error)
