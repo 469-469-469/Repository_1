@@ -7,7 +7,7 @@ class Tools:
     _project_dir: Optional[Path] = None
 
     @staticmethod
-    def project_dir(_project_dir=None) -> Path:
+    def project_dir(_project_dir: Path | None = None) -> Path:
         if _project_dir is None:
             _project_dir = Path(__file__).resolve().parents[1]
         return _project_dir

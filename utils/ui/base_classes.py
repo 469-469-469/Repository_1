@@ -64,7 +64,7 @@ class PageAction:
         expect(self.page).to_have_url(url)
 
     @allure.step("Получение текста элемента")
-    def get_element_text(self,elements: ElementLocator) -> Optional[str]:
+    def get_element_text(self, elements: ElementLocator) -> Optional[str]:
         return self.locator(elements).text_content()
 
     @allure.step("Ожидание появления элемента")
@@ -78,7 +78,7 @@ class PageAction:
             allure.attach(screenshot, name="Screenshot", attachment_type=allure.attachment_type.PNG)
 
     @allure.step("Проверка наличия элемента с текстом")
-    def check_element(self, elements: ElementLocator):
+    def check_element(self, elements: ElementLocator) -> bool:
         return self.locator(elements).is_visible()
 
 

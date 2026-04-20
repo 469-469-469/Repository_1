@@ -30,8 +30,9 @@ class TestReviewUIHappyPath:
          review = page.review_ui
          login = page.login_ui
 
-         login.login(registered_user.email, registered_user.password)
-         login.success_check(path=login.success_path, locator=login.success_locator)
+         with allure.step("Авторизация на сайте"):
+             login.login(registered_user.email, registered_user.password)
+             login.success_check(path=login.success_path, locator=login.success_locator)
 
          text_review = fake_ru.sentence(nb_words=10)
          review.create_review(movie.id, text_review)
@@ -50,8 +51,9 @@ class TestReviewUIHappyPath:
          review = page.review_ui
          login = page.login_ui
 
-         login.login(super_admin.email, super_admin.password)
-         login.success_check(path=login.success_path, locator=login.success_locator)
+         with allure.step("Авторизация на сайте"):
+             login.login(super_admin.email, super_admin.password)
+             login.success_check(path=login.success_path, locator=login.success_locator)
 
          review.delete_review(movie_with_review.id)
          review.success_check(locator=review.deleted_locator)
@@ -75,8 +77,9 @@ class TestReviewUINegative:
         review = page.review_ui
         login =  page.login_ui
 
-        login.login(registered_user.email, registered_user.password)
-        login.success_check(path=login.success_path, locator=login.success_locator)
+        with allure.step("Авторизация на сайте"):
+            login.login(registered_user.email, registered_user.password)
+            login.success_check(path=login.success_path, locator=login.success_locator)
 
         text_review = ""
         review.create_review(movie.id, text_review)

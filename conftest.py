@@ -22,7 +22,7 @@ from utils.api.api_manager import ApiManager
 from utils.data_generator import DataGenerator
 from constants.constants import DEFAULT_UI_TIMEOUT
 from utils.ui.my_trace import Tools
-from playwright.sync_api import Playwright, Browser, BrowserContext, Page
+from playwright.sync_api import Playwright, Browser, BrowserContext
 
 from utils.ui.ui_manager import UIManager
 
@@ -46,7 +46,7 @@ def session() -> Generator[requests.Session, None, None]:
 
 
 @pytest.fixture(scope="session")
-def user_session(session: requests.Session):
+def user_session(session: requests.Session) -> Generator[Callable[[], ApiManager], Any, None]:
     """Фабрика сессий пользователей."""
     with allure.step("Инициализация фабрики API-клиентов пользователей"):
         user_pool = []
@@ -134,7 +134,8 @@ def movie(test_movie: RequestTestMovie, super_admin: User) -> Generator[Response
 
 
 @pytest.fixture()
-def movie_with_review(movie: ResponseTestMovie, super_admin: User, user_session: Callable[..., ApiManager]):
+def movie_with_review(movie: ResponseTestMovie, super_admin: User,
+                      user_session: Callable[..., ApiManager]) -> ResponseTestMovie:
     """Создание отзыва для использования в тесте."""
     rating = random.randint(1, 5)
     text = fake_ru.sentence(nb_words=10)
@@ -293,11 +294,6 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
     context.set_default_timeout(DEFAULT_UI_TIMEOUT)
 
-    # token = super_admin.api.auth_api.authenticate(super_admin.creds)
-    # context.set_extra_http_headers({
-    #     "Authorization": f"Bearer {token}"
-    # })
-
     yield context
     log_name = f"trace_{Tools.get_timestamp()}.zip"
     trace_path = Tools.files_dir('playwright_trace', log_name)
@@ -305,21 +301,10 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
     context.close()
 
 
-# @pytest.fixture(scope="function")
-# def get_ui_manager(page)-> UIManager:
-#     """
-#     Фикстура, которая
-#     :param context:
-#     """
-#     page = UIManager
-#     uimanager = UiManager(page)
-#     return page
-
 @pytest.fixture(scope="function")
-def page(context: BrowserContext):
+def page(context: BrowserContext) -> Generator[UIManager, Any, None]:
     """
     Фикстура, которая
-    :param UIManager:
     :param context:
     """
     page = context.new_page()
