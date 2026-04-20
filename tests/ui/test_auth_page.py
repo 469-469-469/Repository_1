@@ -2,6 +2,7 @@ import allure
 import pytest
 import logging
 from models.users_base_models import RequestTestUser
+from utils.ui.base_classes import ElementLocator
 from utils.ui.ui_manager import UIManager
 
 logger = logging.getLogger(__name__)
@@ -20,11 +21,10 @@ class TestAuthUIHappyPath:
      def test_register_ui(self, page: UIManager, creation_user_data: RequestTestUser):
          logger.info("Позитивный тест. Регистрация")
 
-         success_text = "Подтвердите свою почту"
-         success_path = page.register_ui.success_path
-         page.register_ui.register(creation_user_data.fullName,creation_user_data.email,
-                                creation_user_data.password)
-         page.register_ui.success_check(success_path=success_path, success_text=success_text)
+         register = page.register_ui
+         register.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
+         register.success_check(success_path=register.success_path, success_locator=register.success_locator)
+
 
      @allure.title("Позитивный тест. Авторизация пользователя")
      @allure.tag("smoke", "user")
@@ -35,10 +35,9 @@ class TestAuthUIHappyPath:
      def test_login_ui(self, page: UIManager, registered_user: RequestTestUser):
          logger.info("Позитивный тест. Авторизация пользователя")
 
-         success_text =  page.login_ui.success_text
-         success_path = page.login_ui.success_path
-         page.login_ui.login(registered_user.email, registered_user.password)
-         page.login_ui.success_check(success_path=success_path, success_text=success_text)
+         login = page.login_ui
+         login.login(registered_user.email, registered_user.password)
+         login.success_check(success_path=login.success_path, success_locator=login.success_locator)
 
 
 @allure.epic("Cinescop")

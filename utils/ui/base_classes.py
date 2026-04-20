@@ -11,8 +11,8 @@ class ElementLocator:
     Класс для хранения атрибутов поиска локатора
     """
     locator: str | None = None
-    role: str|None = None
-    name: str|None = None
+    role: str | None = None
+    name: str | None = None
     placeholder: str | None = None
     find_text: str | None = None
 
@@ -120,21 +120,21 @@ class BasePage(PageAction): #
         self.wait_element(self.enter)
 
     @allure.step("Контрольные проверки успешных действий")
-    def success_check(self, success_path: str| None = None, success_text: str| None = None):
+    def success_check(self, success_path: str | None = None, success_locator: ElementLocator | None = None):
         if success_path:
             with allure.step("Проверка перехода на страницу после успешных действий"):
                 self.wait_redirect_for_url(success_path)
         self.make_screenshot_and_attach_to_allure()
-        if success_text:
+        if success_locator:
             with allure.step("Проверка появления сообщения об успешном действии"):
-                self.wait_element(elements=ElementLocator(find_text=success_text))
+                self.wait_element(elements=success_locator)
 
     @allure.step("Контрольные проверки отказа")
-    def error_check(self, error_path: str| None = None, error_text: str| None = None):
+    def error_check(self, error_path: str | None = None, error_locator: ElementLocator | None = None):
         if error_path:
             with allure.step("Проверка нахождения на той же странице"):
                 expect(self.page).to_have_url(error_path)
         self.make_screenshot_and_attach_to_allure()
-        if error_text:
+        if error_locator:
             with allure.step("Проверка появления сообщения об ошибке"):
-                self.wait_element(elements=ElementLocator(find_text=error_text))
+                self.wait_element(elements=error_locator)
