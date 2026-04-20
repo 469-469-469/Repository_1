@@ -119,14 +119,14 @@ class BasePage(PageAction): #
         self.wait_redirect_for_url(f"{self.home_url}movies")
 
     @allure.step("Контрольные проверки")
-    def final_checks(self, elements: FinalChecks):
-        if elements.path:
+    def final_checks(self, checks: FinalChecks):
+        if checks.path:
             with allure.step("Проверка нахождения на корректной странице"):
-                expect(self.page).to_have_url(elements.path)
-        if elements.locator:
+                expect(self.page).to_have_url(checks.path)
+        if checks.locator:
             with allure.step("Ожидание появления элемента"):
-                self.expect_visible(elements=elements.locator)
-        if elements.error:
+                self.expect_visible(elements=checks.locator)
+        if checks.error:
             with allure.step("Ожидание появления текста"):
-                expect(self.page.locator("form")).to_contain_text(elements.error)
+                expect(self.page.locator("form")).to_contain_text(checks.error)
         self.make_screenshot_and_attach_to_allure()
