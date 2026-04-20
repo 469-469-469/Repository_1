@@ -20,7 +20,7 @@ from models.users_base_models import pydantic_user_request, RequestTestUser, pyd
 from resources.user_creds import SuperAdminCreds
 from utils.api.api_manager import ApiManager
 from utils.data_generator import DataGenerator
-from constants.constants import DEFAULT_UI_TIMEOUT
+from constants.constants import DEFAULT_UI_TIMEOUT, UI_HEADLESS
 from utils.ui.my_trace import Tools
 from playwright.sync_api import Playwright, Browser, BrowserContext
 
@@ -280,7 +280,7 @@ def browser(playwright: Playwright) -> Generator[Browser, None, None]:
     :param playwright:
     """
     with allure.step("Запуск Chromium browser"):
-        browser = playwright.chromium.launch(headless=False)
+        browser = playwright.chromium.launch(headless=UI_HEADLESS)
     yield browser
     with allure.step("Закрытие Chromium browser"):
         browser.close()

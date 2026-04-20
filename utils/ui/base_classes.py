@@ -45,7 +45,7 @@ class PageAction:
             case _ if find_text:
                 return self.page.get_by_text(find_text)
             case _:
-                raise ValueError("Передай locator или role+name")
+                raise ValueError("Передай данные для поиска")
 
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
@@ -96,12 +96,12 @@ class BasePage(PageAction): #
         self.profile = ElementLocator(locator="button:has-text('Профиль')")
         self.exit = ElementLocator(locator="button:has-text('Выход')")
 
-    @allure.step("Переход на главную страницу из шапки сайта")
+    @allure.step("Переход на главную страницу из хедера сайта")
     def go_to_home_page(self):
         self.click(self.home_button)
         self.wait_redirect_for_url(self.home_url)
 
-    @allure.step("Переход на страницу 'Все фильмы из шапки сайта'")
+    @allure.step("Переход на страницу 'Все фильмы из хедера сайта'")
     def go_to_all_movies(self):
         self.click(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
