@@ -1,1 +1,0 @@
-{'headers': {'Content-Type': 'application/json', 'Accept': 'application/json'}, 'json': {'email': 'api1@gmail.com', 'password': 'asdqwe123Q'}}
