@@ -20,9 +20,11 @@ class TestAuthUIHappyPath:
      def test_register_ui(self, page: UIManager, creation_user_data: RequestTestUser):
          logger.info("Позитивный тест. Регистрация")
 
+         success_text = "Подтвердите свою почту"
+         success_path = page.register_ui.success_path
          page.register_ui.register(creation_user_data.fullName,creation_user_data.email,
                                 creation_user_data.password)
-         page.register_ui.success_check(success_path=True, success_popup=True)
+         page.register_ui.success_check(success_path=success_path, success_text=success_text)
 
      @allure.title("Позитивный тест. Авторизация пользователя")
      @allure.tag("smoke", "user")
@@ -33,8 +35,10 @@ class TestAuthUIHappyPath:
      def test_login_ui(self, page: UIManager, registered_user: RequestTestUser):
          logger.info("Позитивный тест. Авторизация пользователя")
 
+         success_text =  page.login_ui.success_text
+         success_path = page.login_ui.success_path
          page.login_ui.login(registered_user.email, registered_user.password)
-         page.login_ui.success_check(success_path=True, success_popup=True)
+         page.login_ui.success_check(success_path=success_path, success_text=success_text)
 
 
 @allure.epic("Cinescop")
@@ -64,7 +68,7 @@ class TestAuthUINegative:
         password = data.get("password", creation_user_data.password)
 
         page.register_ui.register(full_name, email, password)
-        page.register_ui.error_check(error_path=True, error_popup=False)
+        page.register_ui.error_check(error_path=page.register_ui.url)
 
 
     @allure.title("Негативный тест. Авторизация пользователя")
@@ -84,4 +88,4 @@ class TestAuthUINegative:
 
         login_data = {"email": registered_user.email, "password": registered_user.password, field_auth: value_auth}
         page.login_ui.login(login_data["email"], login_data["password"])
-        page.login_ui.error_check(error_path=True, error_popup=False)
+        page.login_ui.error_check(error_path=page.login_ui.url)

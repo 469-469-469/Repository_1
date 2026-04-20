@@ -36,16 +36,17 @@ class PageAction:
         placeholder = elements.placeholder
         find_text = elements.find_text
 
-        if locator:
-            return self.page.locator(locator)
-        elif role and name:
-            return self.page.locator("form").get_by_role(role, name=name)
-        elif placeholder:
-            return self.page.locator("form").get_by_placeholder(placeholder)
-        elif find_text:
-            return self.page.get_by_text(find_text)
-        else:
-            raise ValueError("Передай locator или role+name")
+        match True:
+            case _ if locator:
+                return self.page.locator(locator)
+            case _ if role and name:
+                return self.page.locator("form").get_by_role(role, name=name)
+            case _ if placeholder:
+                return self.page.locator("form").get_by_placeholder(placeholder)
+            case _ if find_text:
+                return self.page.get_by_text(find_text)
+            case _:
+                raise ValueError("Передай locator или role+name")
 
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
@@ -119,21 +120,21 @@ class BasePage(PageAction): #
         self.wait_element(self.enter)
 
     @allure.step("Контрольные проверки успешных действий")
-    def success_check(self, success_path: bool = True, success_popup: bool = True):
+    def success_check(self, success_path: str| None = None, success_text: str| None = None):
         if success_path:
             with allure.step("Проверка перехода на страницу после успешных действий"):
-                self.wait_redirect_for_url(f"{self.home_url}{self.check_success_path}")
+                self.wait_redirect_for_url(success_path)
         self.make_screenshot_and_attach_to_allure()
-        if success_popup:
+        if success_text:
             with allure.step("Проверка появления сообщения об успешном действии"):
-                self.wait_element(elements=ElementLocator(find_text=self.success_popup))
+                self.wait_element(elements=ElementLocator(find_text=success_text))
 
     @allure.step("Контрольные проверки отказа")
-    def error_check(self, error_path: bool = True, error_popup: bool = True):
+    def error_check(self, error_path: str| None = None, error_text: str| None = None):
         if error_path:
             with allure.step("Проверка нахождения на той же странице"):
-                expect(self.page).to_have_url(f"{self.url}")
+                expect(self.page).to_have_url(error_path)
         self.make_screenshot_and_attach_to_allure()
-        if error_popup:
+        if error_text:
             with allure.step("Проверка появления сообщения об ошибке"):
-                self.wait_element(elements=ElementLocator(find_text=self.error_popup))
+                self.wait_element(elements=ElementLocator(find_text=error_text))
