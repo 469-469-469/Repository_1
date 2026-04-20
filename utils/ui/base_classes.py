@@ -124,9 +124,9 @@ class BasePage(PageAction): #
             with allure.step("Проверка нахождения на корректной странице"):
                 expect(self.page).to_have_url(elements.path)
         if elements.locator:
-            with allure.step("Проверка появления элемента с сообщением об ошибке"):
+            with allure.step("Ожидание появления элемента"):
                 self.expect_visible(elements=elements.locator)
         if elements.error:
-            with allure.step("Проверка появления текста сообщения об ошибке"):
+            with allure.step("Ожидание появления текста"):
                 expect(self.page.locator("form")).to_contain_text(elements.error)
         self.make_screenshot_and_attach_to_allure()

@@ -29,8 +29,7 @@ class TestReviewUIHappyPath:
              ui.login.login(registered_user.email, registered_user.password)
              ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
 
-         text_review = fake_ru.sentence(nb_words=10)
-         ui.review.create_review(movie.id, text_review)
+         ui.review.create_review(movie.id, fake_ru.sentence(nb_words=10))
          ui.review.final_checks(FinalChecks(locator=ui.review.created_locator))
 
      @allure.title("Позитивный тест. Удаление отзыва")
