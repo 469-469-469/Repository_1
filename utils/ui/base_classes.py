@@ -61,6 +61,18 @@ class PageAction:
 
         raise ValueError("Передайте данные для поиска элемента")
 
+    @allure.step("Финальные проверки")
+    def final_checks(self, checks: FinalChecks):
+        if checks.path:
+            with allure.step("Проверка нахождения на корректной странице"):
+                expect(self.page).to_have_url(checks.path)
+        if checks.locator:
+            with allure.step("Ожидание появления элемента"):
+                self.expect_visible(checks.locator)
+        if checks.text:
+            with allure.step("Ожидание появления текста"):
+                expect(self.page.locator("form")).to_contain_text(checks.text)
+        self.make_screenshot_and_attach_to_allure()
 
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
@@ -119,16 +131,3 @@ class BasePage(PageAction): #
     def go_to_all_movies(self):
         self.click(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
-
-    @allure.step("Финальные проверки")
-    def final_checks(self, checks: FinalChecks):
-        if checks.path:
-            with allure.step("Проверка нахождения на корректной странице"):
-                expect(self.page).to_have_url(checks.path)
-        if checks.locator:
-            with allure.step("Ожидание появления элемента"):
-                self.expect_visible(checks.locator)
-        if checks.text:
-            with allure.step("Ожидание появления текста"):
-                expect(self.page.locator("form")).to_contain_text(checks.text)
-        self.make_screenshot_and_attach_to_allure()
