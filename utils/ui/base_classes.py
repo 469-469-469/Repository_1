@@ -63,16 +63,30 @@ class PageAction:
 
     @allure.step("Финальные проверки")
     def final_checks(self, checks: FinalChecks):
+        errors = []
         if checks.path:
             with allure.step("Проверка нахождения на корректной странице"):
-                expect(self.page).to_have_url(checks.path)
+                try:
+                    expect(self.page).to_have_url(checks.path)
+                except AssertionError as e:
+                    errors.append(str(e))
         if checks.locator:
             with allure.step("Ожидание появления элемента"):
-                self.expect_visible(checks.locator)
+                try:
+                    self.expect_visible(checks.locator)
+                except AssertionError as e:
+                    errors.append(str(e))
         if checks.text:
             with allure.step("Ожидание появления текста"):
-                expect(self.page.locator("form")).to_contain_text(checks.text)
+                try:
+                    expect(self.page.locator("form")).to_contain_text(checks.text)
+                except AssertionError as e:
+                    errors.append(str(e))
+
         self.make_screenshot_and_attach_to_allure()
+
+        if errors:
+            raise AssertionError("\n".join(errors))
 
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
