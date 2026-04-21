@@ -62,7 +62,7 @@ class MoviesAPI(CustomRequester):
         """
         Редактирование фильма.
         :param id_movie:  Id фильма.
-        :param data_movie: ОНовые данные фильма.
+        :param data_movie: Новые данные фильма.
         :param expected_status: Ожидаемый статус-код.
         """
         return self.requester.send_request(

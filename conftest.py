@@ -277,7 +277,7 @@ def db_helper(db_session: Session) -> DBHelper:
 def browser(playwright: Playwright) -> Generator[Browser, None, None]:
     """
     Создаёт браузер Chromium и закрывает его после выполнения теста
-    :param playwright:
+    :param playwright: Playwright
     """
     with allure.step("Запуск Chromium browser"):
         browser = playwright.chromium.launch(headless=UI_HEADLESS)
@@ -309,7 +309,7 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
 def ui(context: BrowserContext) -> Generator[UIManager, Any, None]:
     """
     Создаёт UIManager с новой страницей браузера и закрывает после выполнения теста
-    :param context:
+    :param context: BrowserContext
     """
     with allure.step("Создание UI page"):
         page = context.new_page()

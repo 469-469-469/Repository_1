@@ -8,7 +8,7 @@ from constants.constants import NEED_SCREENSHOT
 @dataclasses.dataclass
 class ElementLocator:
     """
-    Класс для хранения атрибутов поиска элемента
+    Объект с атрибутами поиска элемента
     """
     locator: str | None = None
     path: str | None = None
@@ -21,7 +21,7 @@ class ElementLocator:
 @dataclasses.dataclass
 class FinalChecks:
     """
-    Класс для хранения атрибутов финальных проверок
+    Объект с атрибутами финальной проверки
     """
     path: str | None = None
     locator: ElementLocator | None = None
@@ -61,6 +61,18 @@ class PageAction:
 
         raise ValueError("Передайте данные для поиска элемента")
 
+    @allure.step("Финальные проверки")
+    def final_checks(self, checks: FinalChecks):
+        if checks.path:
+            with allure.step("Проверка нахождения на корректной странице"):
+                expect(self.page).to_have_url(checks.path)
+        if checks.locator:
+            with allure.step("Ожидание появления элемента"):
+                self.expect_visible(checks.locator)
+        if checks.text:
+            with allure.step("Ожидание появления текста"):
+                expect(self.page.locator("form")).to_contain_text(checks.text)
+        self.make_screenshot_and_attach_to_allure()
 
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
@@ -86,11 +98,10 @@ class PageAction:
     def expect_visible(self, elements: ElementLocator):
         expect(self.locator(elements)).to_be_visible()
 
-    @allure.step("Скриншот текущей страницы")
     def make_screenshot_and_attach_to_allure(self):
         if NEED_SCREENSHOT:
             screenshot = self.page.screenshot(full_page=True)
-            allure.attach(screenshot, name="Screenshot", attachment_type=allure.attachment_type.PNG)
+            allure.attach(screenshot, name="Скриншот текущей страницы", attachment_type=allure.attachment_type.PNG)
 
     @allure.step("Проверка наличия элемента с текстом")
     def check_element(self, elements: ElementLocator) -> bool:
@@ -99,7 +110,7 @@ class PageAction:
 
 class BasePage(PageAction): #
     """
-    Базовая логика допустимая для всех страниц на сайте
+    Базовая логика, допустимая для всех страниц на сайте
     """
     def __init__(self, page: Page):
         super().__init__(page)
@@ -120,16 +131,3 @@ class BasePage(PageAction): #
     def go_to_all_movies(self):
         self.click(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
-
-    @allure.step("Контрольные проверки")
-    def final_checks(self, checks: FinalChecks):
-        if checks.path:
-            with allure.step("Проверка нахождения на корректной странице"):
-                expect(self.page).to_have_url(checks.path)
-        if checks.locator:
-            with allure.step("Ожидание появления элемента"):
-                self.expect_visible(checks.locator)
-        if checks.text:
-            with allure.step("Ожидание появления текста"):
-                expect(self.page.locator("form")).to_contain_text(checks.text)
-        self.make_screenshot_and_attach_to_allure()

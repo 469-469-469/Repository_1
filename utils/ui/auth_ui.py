@@ -13,9 +13,7 @@ class RegisterPage(BasePage):
         self.email_placeholder = ElementLocator(placeholder="Email")
         self.password_input = ElementLocator(locator="input[name='password']")
         self.repeat_password_input = ElementLocator(locator="input[name='passwordRepeat']")
-        self.button_role = "button"
-        self.button_name = "Зарегистрироваться"
-        self.button_get_by_role = ElementLocator(role=self.button_role, name=self.button_name)
+        self.button_register = ElementLocator(role="button", name="Зарегистрироваться")
 
     def register(self, full_name: str, email: str, password: str):
         self.open_url(self.url)
@@ -23,7 +21,7 @@ class RegisterPage(BasePage):
         self.fill(self.email_placeholder,     text=email)
         self.fill(self.password_input,        text=password)
         self.fill(self.repeat_password_input, text=password)
-        self.click(self.button_get_by_role)
+        self.click(self.button_register)
 
 
 class LoginPage(BasePage):
@@ -35,14 +33,12 @@ class LoginPage(BasePage):
 
         self.email_input = ElementLocator(locator="input[name='email']")
         self.password_input = ElementLocator(locator="input[name='password']")
-        self.button_role = "button"
-        self.button_name = "Войти"
-        self.button_get_by_role = ElementLocator(role=self.button_role, name=self.button_name)
+        self.button_login = ElementLocator(role="button", name="Войти")
 
     def login(self, email: str, password: str):
         self.open_url(self.url)
         self.fill(self.email_input,    text=email)
         self.fill(self.password_input, text=password)
-        self.click(self.button_get_by_role)
+        self.click(self.button_login)
 
 
