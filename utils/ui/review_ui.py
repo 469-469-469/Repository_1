@@ -7,7 +7,6 @@ fake_ru = Faker("ru_RU")
 class ReviewPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-
         self.deleted_locator = ElementLocator(find_text="Отзыв успешно удален")
         self.created_locator = ElementLocator(find_text="Отзыв успешно создан")
         self.review_input = ElementLocator(role="textbox", name="Написать отзыв")
