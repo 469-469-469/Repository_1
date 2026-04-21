@@ -1,0 +1,90 @@
+import allure
+import pytest
+import logging
+from entities.user import User
+from models.movies_base_models import ResponseTestMovie
+from faker import Faker
+from utils.ui.base_classes import ElementLocator, FinalChecks
+from utils.ui.ui_manager import UIManager
+
+faker = Faker()
+fake_ru = Faker("ru_RU")
+logger = logging.getLogger(__name__)
+
+@allure.epic("Cinescop")
+@allure.feature("review_ui")
+@allure.tag("positive")
+class TestReviewUIHappyPath:
+
+     @allure.title("Позитивный тест. Оставление отзыва")
+     @allure.tag("regression", "review")
+     @pytest.mark.ui
+     @pytest.mark.review
+     @pytest.mark.positive
+     @pytest.mark.regression
+     def test_create_review_ui(self, registered_user: User, ui: UIManager, movie: ResponseTestMovie):
+         logger.info("Позитивный тест. Оставление отзыва")
+
+         with allure.step("Авторизация на сайте"):
+             ui.login.login(registered_user.email, registered_user.password)
+             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
+
+         ui.review.create_review(movie.id, fake_ru.sentence(nb_words=10))
+         ui.review.final_checks(FinalChecks(locator=ui.review.created_locator))
+
+     @allure.title("Позитивный тест. Удаление отзыва")
+     @allure.tag("regression", "review", "fluky")
+     @pytest.mark.ui
+     @pytest.mark.review
+     @pytest.mark.positive
+     @pytest.mark.regression
+     @pytest.mark.fluky
+     def test_delete_review_ui(self, super_admin: User, ui: UIManager, movie_with_review: ResponseTestMovie):
+         logger.info("Позитивный тест. Удаление отзыва")
+
+         with allure.step("Авторизация на сайте"):
+             ui.login.login(super_admin.email, super_admin.password)
+             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
+
+         ui.review.delete_review(movie_with_review.id)
+         ui.review.final_checks(FinalChecks(locator=ui.review.deleted_locator))
+
+
+@allure.epic("Cinescop")
+@allure.feature("review_ui")
+@allure.tag("negative")
+class TestReviewUINegative:
+
+    @allure.title("Негативный тест. Оставление пустого отзыва")
+    @allure.tag("regression", "review")
+    @pytest.mark.ui
+    @pytest.mark.review
+    @pytest.mark.negative
+    @pytest.mark.regression
+    def test_empty_review_ui(self, registered_user: User, ui: UIManager, movie: ResponseTestMovie):
+        logger.info("Негативный тест. Оставление пустого отзыва")
+
+        error_locator = ElementLocator(find_text="Поле отзыва обязательно к заполнению")
+
+        with allure.step("Авторизация на сайте"):
+            ui.login.login(registered_user.email, registered_user.password)
+            ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
+
+        ui.review.create_review(movie.id, "")
+        ui.review.final_checks(FinalChecks(locator=error_locator))
+
+
+    @allure.title("Негативный тест. Удаление отзыва без аутентификации")
+    @allure.tag("regression", "review")
+    @pytest.mark.ui
+    @pytest.mark.review
+    @pytest.mark.negative
+    @pytest.mark.regression
+    def test_delete_review_ui(self, super_admin: User, ui: UIManager, movie_with_review: ResponseTestMovie):
+        logger.info("Негативный тест. Удаление отзыва без аутентификации")
+
+        ui.review.delete_review(movie_with_review.id)
+        ui.review.final_checks(FinalChecks(locator=ElementLocator(find_text="Произошла ошибка")))
+
+
+

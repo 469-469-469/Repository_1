@@ -12,6 +12,7 @@ HEADERS = {
 LOGIN_ENDPOINT = "/login"
 REGISTER_ENDPOINT = "/register"
 LOGOUT_ENDPOINT = "/logout"
+REVIEW_ENDPOINT = "/reviews"
 
 MOVIE_ENDPOINT = "/movies"
 USER_ENDPOINT = "/user"
@@ -21,3 +22,9 @@ PAYMENT_CREATE_ENDPOINT = "/create"
 GREEN = '\033[32m'
 RED = '\033[31m'
 RESET = '\033[0m'
+
+
+DEFAULT_UI_TIMEOUT = 30000  # 30 секунд
+
+UI_HEADLESS = True
+NEED_SCREENSHOT = True

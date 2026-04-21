@@ -2,7 +2,7 @@ from typing import Iterable
 
 import requests
 from requests import Session
-from constants.constants import MOVIE_ENDPOINT, BASE_URL_MOVIES
+from constants.constants import MOVIE_ENDPOINT, BASE_URL_MOVIES, REVIEW_ENDPOINT
 from custom_requester.custom_requester import CustomRequester
 from models.movies_base_models import RequestTestMovie
 from models.posters_base_models import RequestTestPoster
@@ -82,5 +82,25 @@ class MoviesAPI(CustomRequester):
         return self.requester.send_request(
             method="DELETE",
             endpoint=f"{MOVIE_ENDPOINT}/{id_movie}",
+            expected_status=expected_status
+        )
+
+    def create_review(self, id_movie: int, rating: int, text: str,
+                     expected_status: Iterable[int] = (201,)) -> requests.Response:
+        """
+        Создание отзыва.
+        :param rating:
+        :param text:
+        :param id_movie:  Id фильма.
+        :param expected_status: Ожидаемый статус-код.
+        """
+        data_review = {
+            "rating": rating,
+            "text": text
+        }
+        return self.requester.send_request(
+            method="POST",
+            endpoint=f"{MOVIE_ENDPOINT}/{id_movie}{REVIEW_ENDPOINT}",
+            data=data_review,
             expected_status=expected_status
         )

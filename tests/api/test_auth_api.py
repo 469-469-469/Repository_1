@@ -131,13 +131,13 @@ class TestAuthAPIHappyPath:
 @allure.feature("auth_api")
 @allure.tag("negative")
 class TestAuthNegative:
+
     @allure.title("Негативный тест. Регистрация пользователя")
     @allure.tag("regression", "user")
     @pytest.mark.api
     @pytest.mark.user
     @pytest.mark.negative
     @pytest.mark.regression
-    @allure.tag("critical", "user")
     @pytest.mark.parametrize("field_register, value_register", [
         ("email", "abc"),         # некорректный email
         ("fullName", "")         # пустая строка
@@ -153,10 +153,12 @@ class TestAuthNegative:
 
 
     @allure.title("Негативный тест. Авторизация пользователя")
-    @allure.tag("user")
+    @allure.tag("user", "critical", "rbac")
     @pytest.mark.api
     @pytest.mark.user
     @pytest.mark.negative
+    @pytest.mark.critical
+    @pytest.mark.rbac
     @pytest.mark.parametrize("field_auth, value_auth", [
         pytest.param("email", "abc", marks=[pytest.mark.regression]),               # некорректный email
         pytest.param("email", "", marks=[pytest.mark.regression]),                  # пустая строка
@@ -170,9 +172,7 @@ class TestAuthNegative:
         login_data = {"email": registered_user.email, "password": registered_user.password,
                       field_auth: value_auth}
 
-        expected_status = (401,)
-
-        super_admin.api.auth_api.login_user(login_data, expected_status)
+        super_admin.api.auth_api.login_user(login_data, expected_status=(401,))
 
 
     @allure.title("Негативный тест. Регистрация пользователя")

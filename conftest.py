@@ -16,11 +16,15 @@ from entities.user import User
 from models.movies_base_models import pydantic_movie_request, RequestTestMovie, pydantic_movie_response, \
     ResponseTestMovie
 from models.posters_base_models import RequestTestPoster, pydantic_poster_request
-from models.users_base_models import pydantic_user_request, RequestTestUser, pydantic_user_response
+from models.users_base_models import pydantic_user_request, RequestTestUser, pydantic_user_response, ResponseTestUser
 from resources.user_creds import SuperAdminCreds
 from utils.api.api_manager import ApiManager
 from utils.data_generator import DataGenerator
+from constants.constants import DEFAULT_UI_TIMEOUT, UI_HEADLESS
+from utils.ui.my_trace import Tools
+from playwright.sync_api import Playwright, Browser, BrowserContext
 
+from utils.ui.ui_manager import UIManager
 
 faker = Faker()
 fake_ru = Faker("ru_RU")
@@ -42,7 +46,7 @@ def session() -> Generator[requests.Session, None, None]:
 
 
 @pytest.fixture(scope="session")
-def user_session(session: requests.Session):
+def user_session(session: requests.Session) -> Generator[Callable[[], ApiManager], Any, None]:
     """Фабрика сессий пользователей."""
     with allure.step("Инициализация фабрики API-клиентов пользователей"):
         user_pool = []
@@ -124,9 +128,20 @@ def movie(test_movie: RequestTestMovie, super_admin: User) -> Generator[Response
     yield pydantic_movie_response(response_data)
     with allure.step("Удаление тестового фильма"):
         try:
-            super_admin.api.movies_api.delete_movie(response_data.id, expected_status=(200, 404))
+            super_admin.api.movies_api.delete_movie(response_data["id"], expected_status=(200, 404))
         except Exception as e:
             logging.warning(f"Не удалось удалить тестовый фильм: {e}")
+
+
+@pytest.fixture()
+def movie_with_review(movie: ResponseTestMovie, super_admin: User,
+                      user_session: Callable[..., ApiManager]) -> ResponseTestMovie:
+    """Создание отзыва для использования в тесте."""
+    rating = random.randint(1, 5)
+    text = fake_ru.sentence(nb_words=10)
+
+    super_admin.api.movies_api.create_review(movie.id, rating, text)
+    return movie
 
 
 # ----------------------------
@@ -193,15 +208,15 @@ def common_user(user_session: Callable[..., ApiManager], super_admin: User,
     return common_user
 
 
-@pytest.fixture(scope="session")
-def authorized_user(super_admin: User, registered_user: RequestTestUser) -> RequestTestUser:
+@pytest.fixture(scope="function")
+def authorized_user(super_admin: User, registered_user: ResponseTestUser) -> str:
     """Аутентификация зарегистрированного пользователя."""
     with allure.step("Аутентификация зарегистрированного пользователя"):
-        super_admin.api.auth_api.authenticate(
-            registered_user.email,
-            registered_user.password
-        )
-    return registered_user
+        token= super_admin.api.auth_api.authenticate({
+            "email": registered_user.email,
+            "password": registered_user.password
+        })
+    return token
 
 
 # ----------------------------
@@ -251,3 +266,54 @@ def db_helper(db_session: Session) -> DBHelper:
     """
     db_helper = DBHelper(db_session)
     return db_helper
+    
+
+# ----------------------------
+# Тестирование UI
+# ----------------------------
+
+
+@pytest.fixture(scope="function")
+def browser(playwright: Playwright) -> Generator[Browser, None, None]:
+    """
+    Создаёт браузер Chromium и закрывает его после выполнения теста
+    :param playwright:
+    """
+    with allure.step("Запуск Chromium browser"):
+        browser = playwright.chromium.launch(headless=UI_HEADLESS)
+    yield browser
+    with allure.step("Закрытие Chromium browser"):
+        browser.close()
+
+
+@pytest.fixture(scope="function")
+def context(browser: Browser) -> Generator[BrowserContext, None, None]:
+    """
+    Создаёт новый BrowserContext и закрывает его после выполнения теста
+    :type browser: Browser
+    """
+    with allure.step("Создание browser context"):
+        context = browser.new_context()
+    context.tracing.start(screenshots=True, snapshots=True, sources=True)
+    context.set_default_timeout(DEFAULT_UI_TIMEOUT)
+
+    yield context
+    log_name = f"trace_{Tools.get_timestamp()}.zip"
+    trace_path = Tools.files_dir('playwright_trace', log_name)
+    context.tracing.stop(path=trace_path)
+    with allure.step("Закрытие browser context"):
+        context.close()
+
+
+@pytest.fixture(scope="function")
+def ui(context: BrowserContext) -> Generator[UIManager, Any, None]:
+    """
+    Создаёт UIManager с новой страницей браузера и закрывает после выполнения теста
+    :param context:
+    """
+    with allure.step("Создание UI page"):
+        page = context.new_page()
+    ui_manager = UIManager(page)
+    yield ui_manager
+    with allure.step("Закрытие UI page"):
+        page.close()
