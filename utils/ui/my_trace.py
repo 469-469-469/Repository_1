@@ -15,8 +15,7 @@ class Tools:
     @staticmethod
     def files_dir(nested_directory: Optional[str] = None, filename: Optional[str] = None) -> Path:
         """
-        Возвращает путь к директории `files` (или её поддиректории).
-        Если директория не существует, она создается.
+        Создает и возвращает путь к директории files или её поддиректории.
         Если указан `filename`, возвращает полный путь к файлу.
         """
         files_path = Tools.project_dir() / "files"
@@ -33,7 +32,4 @@ class Tools:
 
     @staticmethod
     def get_timestamp() -> str:
-        """
-        Возвращает текущую временную метку в формате YYYY-MM-DD_HH-MM-SS.
-        """
         return datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S_UTC")
