@@ -120,7 +120,7 @@ class BasePage(PageAction): #
         self.click(self.all_movies_button)
         self.wait_redirect_for_url(f"{self.home_url}movies")
 
-    @allure.step("Контрольные проверки")
+    @allure.step("Финальные проверки")
     def final_checks(self, checks: FinalChecks):
         if checks.path:
             with allure.step("Проверка нахождения на корректной странице"):
