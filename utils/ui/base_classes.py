@@ -86,11 +86,10 @@ class PageAction:
     def expect_visible(self, elements: ElementLocator):
         expect(self.locator(elements)).to_be_visible()
 
-    @allure.step("Скриншот текущей страницы")
     def make_screenshot_and_attach_to_allure(self):
         if NEED_SCREENSHOT:
             screenshot = self.page.screenshot(full_page=True)
-            allure.attach(screenshot, name="Screenshot", attachment_type=allure.attachment_type.PNG)
+            allure.attach(screenshot, name="Скриншот текущей страницы", attachment_type=allure.attachment_type.PNG)
 
     @allure.step("Проверка наличия элемента с текстом")
     def check_element(self, elements: ElementLocator) -> bool:
@@ -99,7 +98,7 @@ class PageAction:
 
 class BasePage(PageAction): #
     """
-    Базовая логика допустимая для всех страниц на сайте
+    Базовая логика, допустимая для всех страниц на сайте
     """
     def __init__(self, page: Page):
         super().__init__(page)
