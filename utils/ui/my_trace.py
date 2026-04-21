@@ -16,7 +16,7 @@ class Tools:
     def files_dir(nested_directory: Optional[str] = None, filename: Optional[str] = None) -> Path:
         """
         Создает и возвращает путь к директории files или её поддиректории.
-        Если указан `filename`, возвращает полный путь к файлу.
+        Если указан filename, возвращает полный путь к файлу.
         """
         files_path = Tools.project_dir() / "files"
 
