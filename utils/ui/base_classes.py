@@ -67,7 +67,7 @@ class PageAction:
         if checks.path:
             with allure.step("Проверка нахождения на корректной странице"):
                 try:
-                    expect(self.page).to_have_url(checks.path)
+                    self.wait_redirect_for_url(checks.path)
                 except AssertionError as e:
                     errors.append(str(e))
         if checks.locator:
@@ -79,11 +79,11 @@ class PageAction:
         if checks.text:
             with allure.step("Ожидание появления текста"):
                 try:
-                    expect(self.page.locator("form")).to_contain_text(checks.text)
+                    self.check_contain_text(checks.text)
                 except AssertionError as e:
                     errors.append(str(e))
 
-        self.make_screenshot_and_attach_to_allure()
+        self.make_screenshot_to_allure()
 
         if errors:
             raise AssertionError("\n".join(errors))
@@ -100,6 +100,10 @@ class PageAction:
     def click(self, elements: Locator):
         self.locator(elements).click()
 
+    @allure.step("Проверка наличия элемента с текстом")
+    def check_element(self, elements: Locator) -> bool:
+        return self.locator(elements).is_visible()
+
     @allure.step("Ожидание загрузки страницы")
     def wait_redirect_for_url(self, url: str):
         expect(self.page).to_have_url(url)
@@ -112,11 +116,11 @@ class PageAction:
     def expect_visible(self, elements: Locator):
         expect(self.locator(elements)).to_be_visible()
 
-    @allure.step("Проверка наличия элемента с текстом")
-    def check_element(self, elements: Locator) -> bool:
-        return self.locator(elements).is_visible()
+    @allure.step("Ожидание появления элемента, содержащего текст")
+    def check_contain_text(self, text) -> bool:
+        return expect(self.page.locator("form")).to_contain_text(text)
 
-    def make_screenshot_and_attach_to_allure(self):
+    def make_screenshot_to_allure(self):
         if NEED_SCREENSHOT:
             screenshot = self.page.screenshot(full_page=True)
             allure.attach(screenshot, name="Скриншот текущей страницы", attachment_type=allure.attachment_type.PNG)
