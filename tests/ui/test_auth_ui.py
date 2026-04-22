@@ -21,8 +21,8 @@ class TestAuthUIHappyPath:
      def test_register_ui(self, ui: UIManager, creation_user_data: RequestTestUser):
          logger.info("Позитивный тест. Регистрация")
 
-         ui.register.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
-         ui.register.checks(Checks(path=ui.register.success_path, locator=ui.register.success_locator))
+         ui.reg.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
+         ui.reg.checks(Checks(path=ui.reg.success_path, locator=ui.reg.success_locator))
 
 
      @allure.title("Позитивный тест. Авторизация пользователя")
@@ -65,8 +65,8 @@ class TestAuthUINegative:
         email = data.get("email", creation_user_data.email)
         password = data.get("password", creation_user_data.password)
 
-        ui.register.register(full_name, email, password)
-        ui.register.checks(Checks(path=ui.register.url, text=expected_error))
+        ui.reg.register(full_name, email, password)
+        ui.reg.checks(Checks(path=ui.reg.url, text=expected_error))
 
 
     @allure.title("Негативный тест. Авторизация")
