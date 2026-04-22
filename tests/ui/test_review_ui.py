@@ -73,7 +73,6 @@ class TestReviewUINegative:
         ui.review.checks(Checks(locator=Locator(text="Поле отзыва обязательно к заполнению")))
 
 
-
     @allure.title("Негативный тест. Удаление отзыва без аутентификации")
     @allure.tag("regression", "review")
     @pytest.mark.ui
