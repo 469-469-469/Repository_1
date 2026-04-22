@@ -2,7 +2,7 @@ import allure
 import pytest
 import logging
 from models.users_base_models import RequestTestUser
-from utils.ui.base_classes import FinalChecks
+from utils.ui.base_classes import Checks
 from utils.ui.ui_manager import UIManager
 
 logger = logging.getLogger(__name__)
@@ -21,8 +21,8 @@ class TestAuthUIHappyPath:
      def test_register_ui(self, ui: UIManager, creation_user_data: RequestTestUser):
          logger.info("Позитивный тест. Регистрация")
 
-         ui.register.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
-         ui.register.final_checks(FinalChecks(path=ui.register.success_path, locator=ui.register.success_locator))
+         ui.reg.register(creation_user_data.fullName, creation_user_data.email, creation_user_data.password)
+         ui.reg.checks(Checks(path=ui.reg.success_path, locator=ui.reg.success_locator))
 
 
      @allure.title("Позитивный тест. Авторизация пользователя")
@@ -35,13 +35,14 @@ class TestAuthUIHappyPath:
          logger.info("Позитивный тест. Авторизация пользователя")
 
          ui.login.login(registered_user.email, registered_user.password)
-         ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
+         ui.login.checks(Checks(path=ui.login.success_path, locator=ui.login.success_locator))
 
 
 @allure.epic("Cinescop")
 @allure.feature("auth_ui")
 @allure.tag("negative")
 class TestAuthUINegative:
+
     @allure.title("Негативный тест. Регистрация")
     @allure.tag("regression", "user")
     @pytest.mark.ui
@@ -65,8 +66,8 @@ class TestAuthUINegative:
         email = data.get("email", creation_user_data.email)
         password = data.get("password", creation_user_data.password)
 
-        ui.register.register(full_name, email, password)
-        ui.register.final_checks(FinalChecks(path=ui.register.url, text=expected_error))
+        ui.reg.register(full_name, email, password)
+        ui.reg.checks(Checks(path=ui.reg.url, text=expected_error))
 
 
     @allure.title("Негативный тест. Авторизация")
@@ -89,4 +90,4 @@ class TestAuthUINegative:
 
         login_data = {"email": registered_user.email, "password": registered_user.password, field: value}
         ui.login.login(login_data["email"], login_data["password"])
-        ui.login.final_checks(FinalChecks(path=ui.login.url, text=expected_error))
+        ui.login.checks(Checks(path=ui.login.url, text=expected_error))

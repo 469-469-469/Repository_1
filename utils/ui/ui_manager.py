@@ -6,5 +6,5 @@ from playwright.sync_api import Page
 class UIManager:
     def __init__(self, page: Page):
         self.login = LoginPage(page)
-        self.register = RegisterPage(page)
+        self.reg = RegisterPage(page)
         self.review = ReviewPage(page)

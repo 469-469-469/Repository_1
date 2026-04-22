@@ -1,5 +1,5 @@
 from playwright.sync_api import Page
-from utils.ui.base_classes import BasePage, ElementLocator
+from utils.ui.base_classes import BasePage, Locator
 from faker import Faker
 faker = Faker()
 fake_ru = Faker("ru_RU")
@@ -7,12 +7,12 @@ fake_ru = Faker("ru_RU")
 class ReviewPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.deleted_locator = ElementLocator(find_text="Отзыв успешно удален")
-        self.created_locator = ElementLocator(find_text="Отзыв успешно создан")
-        self.review_input = ElementLocator(role="textbox", name="Написать отзыв")
-        self.review_send_button = ElementLocator(role="button", name="Отправить")
-        self.button_option = ElementLocator(locator="div:has(h4:has-text('Жмышенко Валерий Альбертович')) button")
-        self.button_delete = ElementLocator(locator="[role='menuitem']:has-text('Удалить')")
+        self.deleted_locator = Locator(text="Отзыв успешно удален")
+        self.created_locator = Locator(text="Отзыв успешно создан")
+        self.review_input = Locator(role="textbox", name="Написать отзыв")
+        self.review_send_button = Locator(role="button", name="Отправить")
+        self.button_option = Locator(locator="div:has(h4:has-text('Жмышенко Валерий Альбертович')) button")
+        self.button_delete = Locator(locator="[role='menuitem']:has-text('Удалить')")
 
     def create_review(self, movie_id: int, text_review: str):
         link_to_movie = f"{self.home_url}movies/{movie_id}"
