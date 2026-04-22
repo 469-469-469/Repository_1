@@ -85,6 +85,7 @@ class PageAction:
         if errors:
             raise AssertionError("\n".join(errors))
 
+
     @allure.step("Переход на страницу")
     def open_url(self, url: str):
         self.page.goto(url)
