@@ -8,7 +8,7 @@ from constants.constants import NEED_SCREENSHOT
 @dataclasses.dataclass
 class Locator:
     """
-    Класс с атрибутами поиска элемента (для универсального локатора)
+    Класс с атрибутами поиска элемента (для универсального метода-локатора)
     """
     locator: str | None = None
     path: str | None = None
