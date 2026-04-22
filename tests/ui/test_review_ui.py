@@ -64,14 +64,12 @@ class TestReviewUINegative:
     def test_empty_review_ui(self, registered_user: User, ui: UIManager, movie: ResponseTestMovie):
         logger.info("Негативный тест. Оставление пустого отзыва")
 
-        error_locator = ElementLocator(find_text="Поле отзыва обязательно к заполнению")
-
         with allure.step("Авторизация на сайте"):
             ui.login.login(registered_user.email, registered_user.password)
             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
 
         ui.review.create_review(movie.id, "")
-        ui.review.final_checks(FinalChecks(locator=error_locator))
+        ui.review.final_checks(FinalChecks(locator=ElementLocator(find_text="Поле отзыва обязательно к заполнению")))
 
 
     @allure.title("Негативный тест. Удаление отзыва без аутентификации")
