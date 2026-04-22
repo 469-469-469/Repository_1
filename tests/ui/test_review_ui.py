@@ -4,7 +4,7 @@ import logging
 from entities.user import User
 from models.movies_base_models import ResponseTestMovie
 from faker import Faker
-from utils.ui.base_classes import ElementLocator, FinalChecks
+from utils.ui.base_classes import Locator, Checks
 from utils.ui.ui_manager import UIManager
 
 faker = Faker()
@@ -27,10 +27,10 @@ class TestReviewUIHappyPath:
 
          with allure.step("Авторизация на сайте"):
              ui.login.login(registered_user.email, registered_user.password)
-             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
+             ui.login.checks(Checks(path=ui.login.success_path, locator=ui.login.success_locator))
 
          ui.review.create_review(movie.id, fake_ru.sentence(nb_words=10))
-         ui.review.final_checks(FinalChecks(locator=ui.review.created_locator))
+         ui.review.checks(Checks(locator=ui.review.created_locator))
 
      @allure.title("Позитивный тест. Удаление отзыва")
      @allure.tag("regression", "review", "fluky")
@@ -44,10 +44,10 @@ class TestReviewUIHappyPath:
 
          with allure.step("Авторизация на сайте"):
              ui.login.login(super_admin.email, super_admin.password)
-             ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
+             ui.login.checks(Checks(path=ui.login.success_path, locator=ui.login.success_locator))
 
          ui.review.delete_review(movie_with_review.id)
-         ui.review.final_checks(FinalChecks(locator=ui.review.deleted_locator))
+         ui.review.checks(Checks(locator=ui.review.deleted_locator))
 
 
 @allure.epic("Cinescop")
@@ -66,10 +66,10 @@ class TestReviewUINegative:
 
         with allure.step("Авторизация на сайте"):
             ui.login.login(registered_user.email, registered_user.password)
-            ui.login.final_checks(FinalChecks(path=ui.login.success_path, locator=ui.login.success_locator))
+            ui.login.checks(Checks(path=ui.login.success_path, locator=ui.login.success_locator))
 
         ui.review.create_review(movie.id, "")
-        ui.review.final_checks(FinalChecks(locator=ElementLocator(find_text="Поле отзыва обязательно к заполнению")))
+        ui.review.checks(Checks(locator=Locator(text="Поле отзыва обязательно к заполнению")))
 
 
     @allure.title("Негативный тест. Удаление отзыва без аутентификации")
@@ -82,7 +82,7 @@ class TestReviewUINegative:
         logger.info("Негативный тест. Удаление отзыва без аутентификации")
 
         ui.review.delete_review(movie_with_review.id)
-        ui.review.final_checks(FinalChecks(locator=ElementLocator(find_text="Произошла ошибка")))
+        ui.review.checks(Checks(locator=Locator(text="Произошла ошибка")))
 
 
 

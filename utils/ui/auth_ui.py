@@ -1,5 +1,5 @@
 from playwright.sync_api import Page
-from utils.ui.base_classes import BasePage, ElementLocator
+from utils.ui.base_classes import BasePage, Locator
 
 
 class RegisterPage(BasePage):
@@ -8,12 +8,12 @@ class RegisterPage(BasePage):
         self.url = f"{self.home_url}register"
         self.success_path = f"{self.home_url}login"
 
-        self.success_locator = ElementLocator(find_text="Подтвердите свою почту")
-        self.full_name_input = ElementLocator(locator="input[name='fullName']")
-        self.email_placeholder = ElementLocator(placeholder="Email")
-        self.password_input = ElementLocator(locator="input[name='password']")
-        self.repeat_password_input = ElementLocator(locator="input[name='passwordRepeat']")
-        self.button_register = ElementLocator(role="button", name="Зарегистрироваться")
+        self.success_locator = Locator(text="Подтвердите свою почту")
+        self.full_name_input = Locator(locator="input[name='fullName']")
+        self.email_placeholder = Locator(placeholder="Email")
+        self.password_input = Locator(locator="input[name='password']")
+        self.repeat_password_input = Locator(locator="input[name='passwordRepeat']")
+        self.button_register = Locator(role="button", name="Зарегистрироваться")
 
     def register(self, full_name: str, email: str, password: str):
         self.open_url(self.url)
@@ -28,12 +28,12 @@ class LoginPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         self.url = f"{self.home_url}login"
-        self.success_locator = ElementLocator(find_text="Вы вошли в аккаунт")
+        self.success_locator = Locator(text="Вы вошли в аккаунт")
         self.success_path = self.home_url
 
-        self.email_input = ElementLocator(locator="input[name='email']")
-        self.password_input = ElementLocator(locator="input[name='password']")
-        self.button_login = ElementLocator(role="button", name="Войти")
+        self.email_input = Locator(locator="input[name='email']")
+        self.password_input = Locator(locator="input[name='password']")
+        self.button_login = Locator(role="button", name="Войти")
 
     def login(self, email: str, password: str):
         self.open_url(self.url)
