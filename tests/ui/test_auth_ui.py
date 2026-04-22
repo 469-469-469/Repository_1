@@ -42,6 +42,7 @@ class TestAuthUIHappyPath:
 @allure.feature("auth_ui")
 @allure.tag("negative")
 class TestAuthUINegative:
+
     @allure.title("Негативный тест. Регистрация")
     @allure.tag("regression", "user")
     @pytest.mark.ui
