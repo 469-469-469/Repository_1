@@ -65,23 +65,20 @@ class PageAction:
     def checks(self, checks: Checks):
         errors = []
         if checks.path:
-            with allure.step("Проверка нахождения на корректной странице"):
-                try:
-                    self.wait_redirect_for_url(checks.path)
-                except AssertionError as e:
-                    errors.append(str(e))
+            try:
+                self.wait_redirect_for_url(checks.path)
+            except AssertionError as e:
+                errors.append(str(e))
         if checks.locator:
-            with allure.step("Ожидание появления элемента"):
-                try:
-                    self.expect_visible(checks.locator)
-                except AssertionError as e:
-                    errors.append(str(e))
+            try:
+                self.expect_visible(checks.locator)
+            except AssertionError as e:
+                errors.append(str(e))
         if checks.text:
-            with allure.step("Ожидание появления текста"):
-                try:
-                    self.check_contain_text(checks.text)
-                except AssertionError as e:
-                    errors.append(str(e))
+            try:
+                self.check_contain_text(checks.text)
+            except AssertionError as e:
+                errors.append(str(e))
 
         self.make_screenshot_to_allure()
 
