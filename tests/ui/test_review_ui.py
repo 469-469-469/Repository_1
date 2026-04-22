@@ -84,6 +84,3 @@ class TestReviewUINegative:
 
         ui.review.delete_review(movie_with_review.id)
         ui.review.checks(Checks(locator=Locator(text="Произошла ошибка")))
-
-
-
