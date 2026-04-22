@@ -32,7 +32,7 @@ class TestReviewUIHappyPath:
          ui.review.create_review(movie.id, fake_ru.sentence(nb_words=10))
          ui.review.checks(Checks(locator=ui.review.created_locator))
 
-     @pytest.mark.skip(reason="временно отключено из-за нестабильности локатора элемента")
+     @pytest.mark.skip(reason="Временно отключено из-за нестабильности локатора элемента")
      @allure.title("Позитивный тест. Удаление отзыва")
      @allure.tag("regression", "review", "fluky")
      @pytest.mark.ui

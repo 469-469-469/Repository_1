@@ -126,7 +126,7 @@ class PageAction:
 
 class BasePage(PageAction): #
     """
-    Базовая логика, допустимая для всех страниц на сайте
+    Базовая логика для всех страниц на сайте
     """
     def __init__(self, page: Page):
         super().__init__(page)

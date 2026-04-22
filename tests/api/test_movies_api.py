@@ -113,8 +113,7 @@ class TestMoviesAPIHappyPath:
         ("maxPrice", 2),    # Граничное значение
         ("genreId", 1)      # Граничное значение
     ])
-    def test_get_poster(self, super_admin: User, test_poster: RequestTestPoster, field_get: str,
-                        value_get: str):
+    def test_get_poster(self, super_admin: User, test_poster: RequestTestPoster, field_get: str, value_get: str):
         logger.info(f"Позитивный тест. Получение афиши. Проверка поля {field_get}={value_get}")
 
         if field_get == "Default": # Передаем пустой словарь, тест значений по умолчанию,
@@ -158,7 +157,7 @@ class TestMoviesAPINegative:
     @pytest.mark.negative
     @pytest.mark.regression
     @pytest.mark.parametrize("field_create_negative, value_create_negative, expected_status_cr_neg", [
-        pytest.param("Unauthorized",True,(401,),marks=[pytest.mark.rbac,pytest.mark.critical]), # тест без доступа
+        pytest.param("Unauthorized",True,(401,),marks=[pytest.mark.rbac,pytest.mark.critical]),
         pytest.param("name", "", (400,), marks=pytest.mark.regression)  # пустое поле name
     ])
     def test_create_movie(
