@@ -101,7 +101,7 @@ class PageAction:
         self.locator(elements).click()
 
     @allure.step("Проверка наличия элемента с текстом")
-    def check_element(self, elements: Locator) -> bool:
+    def check_visible(self, elements: Locator) -> bool:
         return self.locator(elements).is_visible()
 
     @allure.step("Ожидание загрузки страницы")
