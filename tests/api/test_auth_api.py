@@ -29,6 +29,9 @@ class TestAuthAPIHappyPath:
 
         with allure.step("Проверка на соответствие из базы данных"):
             db_user = db_helper.get_user_by_id(response['id'])
+
+            assert db_user is not None, f"User not found in DB: {response['id']}"
+
             assert_equal(
                 db_user.email,
                 response['email'],
@@ -104,11 +107,14 @@ class TestAuthAPIHappyPath:
         with allure.step("Проверка на соответствие из базы данных"):
             db_user = db_helper.get_user_by_id(registered_user.id)
 
+            assert db_user is not None, f"User not found in DB: {registered_user.id}"
+
             assert_equal(
                 db_user.verified,
                 new_verified,
                 name="Проверка соответствия статуса verified в базе данных"
             )
+
             assert_equal(
                 db_user.banned,
                 new_banned,
