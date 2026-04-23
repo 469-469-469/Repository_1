@@ -93,7 +93,13 @@ jobs:
         path: allure-results/
         # Сколько дней хранить артефакт (максимум 90)
         retention-days: 5
-
+    # 7.1
+    - name: Upload Allure report
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report/
+        
     # Шаг 8: Генерация Allure-отчета
     - name: Generate Allure report
       # Выполнять всегда, даже если предыдущие шаги завершились с ошибкой
