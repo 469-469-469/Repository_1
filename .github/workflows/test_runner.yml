@@ -45,15 +45,6 @@ jobs:
           pip install -r requirements.txt
           pip install allure-pytest
 
-      - name: Install Allure CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y default-jre
-          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
-          tar -xvzf allure-2.29.0.tgz
-          sudo mv allure-2.29.0 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
-
       - name: Wait for Postgres
         run: |
           for i in {1..30}; do
@@ -63,21 +54,15 @@ jobs:
 
       - name: Run DB init
         run: |
-          if [ -f "./init.sql" ]; then
-            PGPASSWORD=postgres psql -h localhost -U postgres -d db_movies -f ./init.sql
-          else
-            echo "init.sql not found, skipping"
-          fi
+          PGPASSWORD=postgres psql -h localhost -U postgres -d db_movies -f init.sql
 
-      - name: Run tests with Allure
-        run: |
-          pytest --alluredir=allure-results
+      - name: Run tests
+        run: pytest --alluredir=allure-results
 
-      - name: Generate Allure report
-        run: |
-          allure generate allure-results -o allure-report --clean
+      - name: Generate report
+        run: allure generate allure-results -o allure-report --clean
 
-      - name: Upload report artifact
+      - name: Upload report
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
