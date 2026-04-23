@@ -32,7 +32,7 @@ jobs:
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     steps:
 
@@ -50,25 +50,21 @@ jobs:
         pip install -r requirements.txt
         pip install pytest allure-pytest psycopg2-binary
 
-    # 🔥 ВАЖНО: правильная задержка БД
-    - name: Wait for DB
+    - name: Wait for PostgreSQL
       run: |
         for i in {1..30}; do
           pg_isready -h localhost -p 5432 -U postgres && break
           sleep 2
         done
 
-    # 🔥 FIX: путь к init.sql
     - name: Init DB
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d db_movies -f ./init.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d db_movies -f init.sql
 
-    # 🔥 тесты сразу с allure-results
     - name: Run tests
       run: |
         pytest tests -v --alluredir=allure-results
 
-    # 🔥 FIX: установка allure CLI (СРАЗУ В PATH)
     - name: Install Allure CLI
       run: |
         sudo apt-get update
@@ -77,22 +73,21 @@ jobs:
         wget https://github.com/allure-framework/allure2/releases/download/2.24.1/allure-2.24.1.tgz
         tar -zxvf allure-2.24.1.tgz
         sudo mv allure-2.24.1 /opt/allure
-
         echo "/opt/allure/bin" >> $GITHUB_PATH
 
-    - name: Generate Allure report
+    - name: Generate Allure Report
       if: always()
       run: |
         mkdir -p allure-report
-        /opt/allure/bin/allure generate allure-results -o allure-report --clean
+        allure generate allure-results -o allure-report --clean
 
-    - name: Upload results
+    - name: Upload Allure Results
       uses: actions/upload-artifact@v4
       with:
         name: allure-results
         path: allure-results/
 
-    - name: Upload report
+    - name: Upload Allure Report
       uses: actions/upload-artifact@v4
       with:
         name: allure-report
