@@ -106,7 +106,9 @@ jobs:
       if: always()
       run: |
         # Генерация HTML-отчета из результатов тестов
+        mkdir -p allure-report
         allure generate allure-results -o allure-report --clean
+        ls -la allure-report
         # Выводим в лог инструкцию для локального использования:
         echo allure serve allure-results
         echo C:\Users\USER-PC\scoop\apps\allure\2.38.1\bin\allure.bat serve ./allure-results
