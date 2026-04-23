@@ -61,6 +61,7 @@ class TestMoviesAPIHappyPath:
     @pytest.mark.movies
     @pytest.mark.positive
     @pytest.mark.critical
+    @pytest.mark.db_check
     def test_change_movie(self, super_admin: User, movie: ResponseTestMovie, db_helper: DBHelper):
         logger.info("Позитивный тест. Редактирование фильма с проверкой изменений в БД")
 

@@ -20,6 +20,7 @@ class TestAuthAPIHappyPath:
     @pytest.mark.user
     @pytest.mark.positive
     @pytest.mark.critical
+    @pytest.mark.db_check
     def test_create_user(self, super_admin: User, creation_user_data: RequestTestUser, db_helper: DBHelper):
         logger.info("Позитивный тест. Создание пользователя")
 
@@ -92,6 +93,7 @@ class TestAuthAPIHappyPath:
     @pytest.mark.user
     @pytest.mark.positive
     @pytest.mark.critical
+    @pytest.mark.db_check
     def test_change_user(self, super_admin: User, registered_user: ResponseTestUser, db_helper: DBHelper):
         logger.info("Позитивный тест. Изменение пользователя с проверкой изменений в БД")
         user_id = registered_user.id
