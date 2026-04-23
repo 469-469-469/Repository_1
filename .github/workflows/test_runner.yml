@@ -65,7 +65,7 @@ jobs:
         run: sleep 3
 
       - name: Run tests
-        run: pytest -m "not db_check"--alluredir=allure-results
+        run: pytest -m "not db_check" --alluredir=allure-results
 
       - name: Generate report
         run: allure generate allure-results -o allure-report --clean
