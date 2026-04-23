@@ -23,7 +23,7 @@ class TestReviewUIHappyPath:
      @pytest.mark.positive
      @pytest.mark.regression
      def test_create_review_ui(self, registered_user: User, ui: UIManager, movie: ResponseTestMovie):
-         logger.info("Позитивный тест. Оставление отзыва")
+         logger.info(f"Позитивный тест. Оставление отзыва на фильм с id: {movie.id}")
 
          with allure.step("Авторизация на сайте"):
              ui.login.login(registered_user.email, registered_user.password)
@@ -41,7 +41,7 @@ class TestReviewUIHappyPath:
      @pytest.mark.regression
      @pytest.mark.fluky
      def test_delete_review_ui(self, super_admin: User, ui: UIManager, movie_with_review: ResponseTestMovie):
-         logger.info("Позитивный тест. Удаление отзыва")
+         logger.info(f"Позитивный тест. Удаление отзыва на фильм с id: {movie_with_review.id}")
 
          with allure.step("Авторизация на сайте"):
              ui.login.login(super_admin.email, super_admin.password)
@@ -63,7 +63,7 @@ class TestReviewUINegative:
     @pytest.mark.negative
     @pytest.mark.regression
     def test_empty_review_ui(self, registered_user: User, ui: UIManager, movie: ResponseTestMovie):
-        logger.info("Негативный тест. Оставление пустого отзыва")
+        logger.info(f"Негативный тест. Оставление пустого отзыва на фильм с id: {movie.id}")
 
         with allure.step("Авторизация на сайте"):
             ui.login.login(registered_user.email, registered_user.password)
@@ -80,7 +80,7 @@ class TestReviewUINegative:
     @pytest.mark.negative
     @pytest.mark.regression
     def test_delete_review_ui(self, super_admin: User, ui: UIManager, movie_with_review: ResponseTestMovie):
-        logger.info("Негативный тест. Удаление отзыва без аутентификации")
+        logger.info(f"Негативный тест. Удаление отзыва без аутентификации на фильм с id: {movie_with_review.id}")
 
         ui.review.delete_review(movie_with_review.id)
         ui.review.checks(Checks(locator=Locator(text="Произошла ошибка")))
