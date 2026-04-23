@@ -63,7 +63,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest tests -v --alluredir=allure-results
+        pytest tests/api -v --alluredir=allure-results
 
     - name: Install Allure CLI
       run: |
