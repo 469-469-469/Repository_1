@@ -2,7 +2,14 @@
 # Название workflow (отображается в интерфейсе GitHub Actions)
 name: Run Tests and Generate Report
 env:
+  DB_MOVIES_HOST: ${{ secrets.DB_MOVIES_HOST }}
   DB_MOVIES_PORT: ${{ secrets.DB_MOVIES_PORT }}
+  DB_MOVIES_NAME: ${{ secrets.DB_MOVIES_NAME }}
+  DB_MOVIES_USERNAME: ${{ secrets.DB_MOVIES_USERNAME }}
+  DB_MOVIES_PASSWORD: ${{ secrets.DB_MOVIES_PASSWORD }}
+
+  SUPER_ADMIN_EMAIL: ${{ secrets.SUPER_ADMIN_EMAIL }}
+  SUPER_ADMIN_PASSWORD: ${{ secrets.SUPER_ADMIN_PASSWORD }}
 # Триггеры запуска:
 on:
   # Запускать при любом push в репозиторий
