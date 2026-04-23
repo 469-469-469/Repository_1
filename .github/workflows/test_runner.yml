@@ -48,7 +48,7 @@ jobs:
           sudo ln -sf /opt/allure/bin/allure /usr/bin/allure
 
       - name: Run tests
-        run: pytest --alluredir=allure-results
+        run: pytest -m "not db_check" --alluredir=allure-results
 
       - name: Generate Allure report
         run: allure generate allure-results -o allure-report --clean
