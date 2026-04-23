@@ -26,7 +26,7 @@ class Counter:
 
 counter = Counter(1)
 print(counter.value)        # 1
-print(counter.history)      # [1]
+print(counter.history)      # [ 1]
 print(counter.change_count) # 0
 
 counter.value = 2
