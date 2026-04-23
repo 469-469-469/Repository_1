@@ -33,5 +33,5 @@ counter.value = 2
 counter.value = 2          # Не должно изменить историю
 counter.value = 3
 
-print(f"\n{counter.history}")      # [1, 2, 3]
+print(f"\n{counter.history}")      #  [1, 2, 3]
 print(counter.change_count) # 2
