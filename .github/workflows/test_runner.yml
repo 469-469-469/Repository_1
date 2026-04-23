@@ -11,6 +11,7 @@ jobs:
     env:
       API_SUPERADMIN_EMAIL: ${{ secrets.API_SUPERADMIN_EMAIL }}
       API_SUPERADMIN_PASSWORD: ${{ secrets.API_SUPERADMIN_PASSWORD }}
+
       DB_MOVIES_HOST: 127.0.0.1
       DB_MOVIES_PORT: 5432
       DB_MOVIES_NAME: db_movies
@@ -20,14 +21,17 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
           pip install allure-pytest pytest-playwright
           playwright install --with-deps
@@ -35,20 +39,27 @@ jobs:
       - name: Install Allure CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y default-jre
+          sudo apt-get install -y default-jre wget
+
           ALLURE_VERSION=2.24.0
           wget https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz
-          tar -zxvf allure-${ALLURE_VERSION}.tgz
+          tar -xzf allure-${ALLURE_VERSION}.tgz
           sudo mv allure-${ALLURE_VERSION} /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+          sudo ln -sf /opt/allure/bin/allure /usr/bin/allure
 
-      - name: Run tests (без БД)
-        run: pytest -m "not db_check" --alluredir=allure-results
+      - name: Run tests
+        run: pytest --alluredir=allure-results
 
-      - name: Generate report
+      - name: Generate Allure report
         run: allure generate allure-results -o allure-report --clean
 
-      - name: Upload report
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
+      - name: Upload Allure report
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
