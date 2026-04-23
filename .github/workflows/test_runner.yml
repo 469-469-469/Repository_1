@@ -28,6 +28,8 @@ jobs:
     services:
       postgres:
         image: postgres:15
+        volumes:
+          - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         env:
           POSTGRES_DB: db_movies
           POSTGRES_USER: postgres
