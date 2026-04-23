@@ -77,17 +77,16 @@ class TestAuthUINegative:
     @pytest.mark.negative
     @pytest.mark.critical
     @pytest.mark.parametrize(
-        "field, value, expected_error",
+        "field, value, error",
         [
             ("email", "", "Поле email не может быть пустым"),
             ("password", "", "Поле пароль не может быть пустым"),
             ("password", "1", None) # Неверный пароль
         ]
     )
-    def test_login_ui(self, ui: UIManager, registered_user: RequestTestUser, field: str, value: str,
-                      expected_error: str | None):
+    def test_login_ui(self, ui: UIManager, registered_user: RequestTestUser, field: str, value: str, error: str | None):
         logger.info(f"Негативный тест. Авторизация. Проверка поля {field}={value}")
 
         login_data = {"email": registered_user.email, "password": registered_user.password, field: value}
         ui.login.login(login_data["email"], login_data["password"])
-        ui.login.checks(Checks(path=ui.login.url, text=expected_error))
+        ui.login.checks(Checks(path=ui.login.url, text=error))
