@@ -1,8 +1,11 @@
-#test_runner.yml
-# Название workflow (отображается в интерфейсе GitHub Actions)
 name: Run Tests and Generate Report
+
+on:
+  push: {}
+  pull_request:
+    branches: [ main ]
+
 env:
-  HOST: localhost
   DB_MOVIES_HOST: localhost
   DB_MOVIES_PORT: 5432
   DB_MOVIES_NAME: db_movies
@@ -10,26 +13,14 @@ env:
   DB_MOVIES_PASSWORD: postgres
   SUPER_ADMIN_EMAIL: ${{ secrets.SUPER_ADMIN_EMAIL }}
   SUPER_ADMIN_PASSWORD: ${{ secrets.SUPER_ADMIN_PASSWORD }}
-# Триггеры запуска:
-on:
-  # Запускать при любом push в репозиторий
-  push: {} 
-  # Запускать при создании pull request в ветку main
-  pull_request:
-    branches: [ main ]
 
-# Определение jobs (заданий)
 jobs:
-  # Job с именем "test"
   test:
-    # Запуск на последней версии Ubuntu
     runs-on: ubuntu-latest
 
     services:
       postgres:
         image: postgres:15
-        volumes:
-          - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         env:
           POSTGRES_DB: db_movies
           POSTGRES_USER: postgres
@@ -37,97 +28,65 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U test_user"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-          
-    # Последовательность шагов
+
     steps:
-    # Шаг 1: Получение кода из репозитория
-    - name: Checkout code
-      # Используем стандартное действие для checkout (версия 4)
-      uses: actions/checkout@v4
+      # 1. Код
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # Шаг 2: Настройка Python окружения
-    - name: Set up Python
-      # Официальное действие для установки Python
-      uses: actions/setup-python@v4
-      with:
-        # Указываем конкретную версию Python (3.10)
-        python-version: '3.10'
+      # 2. Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    # Шаг 3: Установка зависимостей Python
-    - name: Install dependencies
-      run: |
-        # Обновляем pip до последней версии
-        python -m pip install --upgrade pip
-        # Устанавливаем зависимости из requirements.txt
-        pip install -r requirements.txt
-        # Устанавливаем дополнительные пакеты для тестирования
-        pip install pytest pytest-check allure-pytest
+      # 3. Dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-check allure-pytest flake8 psycopg2-binary
 
-    # Шаг 4: Установка Allure Commandline
-    - name: Install Allure Commandline
-      run: |
-        # Обновляем список пакетов Ubuntu
-        sudo apt-get update
-        # Устанавливаем Java Runtime (требование для Allure)
-        sudo apt-get install default-jre -y
-        # Скачиваем архив Allure версии 2.24.1
-        wget https://github.com/allure-framework/allure2/releases/download/2.24.1/allure-2.24.1.tgz
-        # Распаковываем архив в /opt/
-        tar -zxvf allure-2.24.1.tgz -C /opt/
-        # Создаем симлинк для доступа к allure из любой директории
-        sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
-        # Добавляем путь к Allure в переменную PATH
-        echo "/opt/allure-2.24.1/bin" >> $GITHUB_PATH
+      # 4. Wait DB
+      - name: Wait for PostgreSQL
+        run: sleep 5
 
-    # Шаг 5: Запуск линтера flake8
-    - name: Run linter
-      run: |
-        # Устанавливаем flake8
-        pip install flake8
-        # Запускаем flake8 с проверкой критических ошибок
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Закомментированная строка: расширенная проверка стиля кода
-        # flake8 . --count --exit-zero --max-complexity=10 --max-line-length=200 --statistics
+      # 5. Init DB schema
+      - name: Init database
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d db_movies -f init.sql
 
-    # Шаг 6: Запуск тестов
-    - name: Run tests
-      run: |
-        # Запуск конкретного теста с генерацией Allure-отчета
-        python -m pytest tests/api/test_auth_api.py::TestAuthAPIHappyPath::test_create_user -v --alluredir=allure-results
+      # 6. Lint
+      - name: Run linter
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    # Шаг 7: Генерация Allure-отчета
-    - name: Generate Allure report
-      # Выполнять всегда, даже если предыдущие шаги завершились с ошибкой
-      if: always()
-      run: |
-        # Генерация HTML-отчета из результатов тестов
-        mkdir -p allure-report
-        allure generate allure-results -o allure-report --clean
-        ls -la allure-report
-        # Выводим в лог инструкцию для локального использования:
-        echo allure serve allure-results
-        echo C:\Users\USER-PC\scoop\apps\allure\2.38.1\bin\allure.bat serve ./allure-results  
-        
-    # Шаг 8: Сохранение результатов тестов как артефакта
-    - name: Upload Allure results
-      # Используем действие для загрузки артефактов
-      uses: actions/upload-artifact@v4
-      with:
-        # Имя артефакта
-        name: allure-results
-        # Путь к файлам результатов
-        path: allure-results/
-        # Сколько дней хранить артефакт (максимум 90)
-        retention-days: 5
-    # 8.1
-    - name: Upload Allure report
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-report
-        path: allure-report/
-        
+      # 7. Tests with Allure results
+      - name: Run tests
+        run: |
+          pytest tests -v --alluredir=allure-results
 
+      # 8. Generate Allure report (always)
+      - name: Generate Allure report
+        if: always()
+        run: |
+          mkdir -p allure-report
+          allure generate allure-results -o allure-report --clean
+
+      # 9. Upload Allure results
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+
+      # 10. Upload Allure report
+      - name: Upload Allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
