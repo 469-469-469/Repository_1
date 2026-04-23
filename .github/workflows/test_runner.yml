@@ -45,7 +45,13 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install allure-pytest
+          pip install allure-pytest pytest-playwright
+          playwright install --with-deps
+
+      - name: Debug env (optional but useful)
+        run: |
+          echo "EMAIL is set: ${{ secrets.API_SUPERADMIN_EMAIL != '' }}"
+          echo "PASSWORD is set: ${{ secrets.API_SUPERADMIN_PASSWORD != '' }}"
 
       - name: Wait for Postgres
         run: |
