@@ -11,6 +11,12 @@ jobs:
     env:
       API_SUPERADMIN_EMAIL: ${{ secrets.API_SUPERADMIN_EMAIL }}
       API_SUPERADMIN_PASSWORD: ${{ secrets.API_SUPERADMIN_PASSWORD }}
+      DB_MOVIES_HOST: 127.0.0.1
+      DB_MOVIES_PORT: 5432
+      DB_MOVIES_NAME: db_movies
+      DB_MOVIES_USERNAME: postgres
+      DB_MOVIES_PASSWORD: postgres
+
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
 
     steps:
