@@ -27,3 +27,4 @@ allure-python-commons
 pytest-check
 playwright
 psycopg2-binary
+pydantic[email]
