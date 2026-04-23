@@ -81,26 +81,8 @@ jobs:
       run: |
         # Запуск конкретного теста с генерацией Allure-отчета
         python -m pytest tests/api/test_auth_api.py::TestAuthAPIHappyPath::test_create_user -v --alluredir=allure-results
-      
-    # Шаг 7: Сохранение результатов тестов как артефакта
-    - name: Upload Allure results
-      # Используем действие для загрузки артефактов
-      uses: actions/upload-artifact@v4
-      with:
-        # Имя артефакта
-        name: allure-results
-        # Путь к файлам результатов
-        path: allure-results/
-        # Сколько дней хранить артефакт (максимум 90)
-        retention-days: 5
-    # 7.1
-    - name: Upload Allure report
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-report
-        path: allure-report/
-        
-    # Шаг 8: Генерация Allure-отчета
+
+    # Шаг 7: Генерация Allure-отчета
     - name: Generate Allure report
       # Выполнять всегда, даже если предыдущие шаги завершились с ошибкой
       if: always()
@@ -111,4 +93,24 @@ jobs:
         ls -la allure-report
         # Выводим в лог инструкцию для локального использования:
         echo allure serve allure-results
-        echo C:\Users\USER-PC\scoop\apps\allure\2.38.1\bin\allure.bat serve ./allure-results
+        echo C:\Users\USER-PC\scoop\apps\allure\2.38.1\bin\allure.bat serve ./allure-results  
+        
+    # Шаг 8: Сохранение результатов тестов как артефакта
+    - name: Upload Allure results
+      # Используем действие для загрузки артефактов
+      uses: actions/upload-artifact@v4
+      with:
+        # Имя артефакта
+        name: allure-results
+        # Путь к файлам результатов
+        path: allure-results/
+        # Сколько дней хранить артефакт (максимум 90)
+        retention-days: 5
+    # 8.1
+    - name: Upload Allure report
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report/
+        
+
