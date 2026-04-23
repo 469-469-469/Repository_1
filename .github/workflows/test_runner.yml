@@ -8,32 +8,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: db_movies
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -h localhost -U postgres -d db_movies"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
-
     env:
       API_SUPERADMIN_EMAIL: ${{ secrets.API_SUPERADMIN_EMAIL }}
       API_SUPERADMIN_PASSWORD: ${{ secrets.API_SUPERADMIN_PASSWORD }}
-
-      DB_MOVIES_HOST: 127.0.0.1
-      DB_MOVIES_PORT: 5432
-      DB_MOVIES_NAME: db_movies
-      DB_MOVIES_USERNAME: postgres
-      DB_MOVIES_PASSWORD: postgres
-
-      PGPASSWORD: postgres
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
 
     steps:
@@ -53,27 +30,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y default-jre
-          wget https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
-          tar -zxvf allure-2.24.0.tgz
-          sudo mv allure-2.24.0 /opt/allure
+          ALLURE_VERSION=2.24.0
+          wget https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz
+          tar -zxvf allure-${ALLURE_VERSION}.tgz
+          sudo mv allure-${ALLURE_VERSION} /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
-      - name: Wait for Postgres
-        run: |
-          for i in {1..40}; do
-            pg_isready -h 127.0.0.1 -U postgres -d db_movies && break
-            sleep 2
-          done
-
-      - name: Run DB init
-        run: |
-          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d db_movies -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d db_movies -f init.sql
-
-      - name: Wait DB sync
-        run: sleep 3
-
-      - name: Run tests
+      - name: Run tests (без БД)
         run: pytest -m "not db_check" --alluredir=allure-results
 
       - name: Generate report
