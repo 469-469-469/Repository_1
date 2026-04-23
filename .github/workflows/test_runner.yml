@@ -2,12 +2,8 @@
 # Название workflow (отображается в интерфейсе GitHub Actions)
 name: Run Tests and Generate Report
 env:
-  DB_MOVIES_HOST: ${{ secrets.DB_MOVIES_HOST }}
-  DB_MOVIES_PORT: ${{ secrets.DB_MOVIES_PORT }}
-  DB_MOVIES_NAME: ${{ secrets.DB_MOVIES_NAME }}
-  DB_MOVIES_USERNAME: ${{ secrets.DB_MOVIES_USERNAME }}
-  DB_MOVIES_PASSWORD: ${{ secrets.DB_MOVIES_PASSWORD }}
-
+  HOST: localhost
+  DATABASE_NAME: movies_test
   SUPER_ADMIN_EMAIL: ${{ secrets.SUPER_ADMIN_EMAIL }}
   SUPER_ADMIN_PASSWORD: ${{ secrets.SUPER_ADMIN_PASSWORD }}
 # Триггеры запуска:
@@ -24,7 +20,22 @@ jobs:
   test:
     # Запуск на последней версии Ubuntu
     runs-on: ubuntu-latest
-    
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: movies_test
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U test_user"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+          
     # Последовательность шагов
     steps:
     # Шаг 1: Получение кода из репозитория
