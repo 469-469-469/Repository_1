@@ -116,7 +116,7 @@ class TestMoviesAPIHappyPath:
     def test_get_poster(self, super_admin: User, test_poster: RequestTestPoster, field_get: str, value_get: str):
         logger.info(f"Позитивный тест. Получение афиши. Проверка поля {field_get}={value_get}")
 
-        if field_get == "Default": # Передаем пустой словарь, тест значений по умолчанию,
+        if field_get == "Default": # Передаем пустой словарь, тест значений по умолчанию
             data = {}
         else:
             data = test_poster.model_copy(update={field_get: value_get})
