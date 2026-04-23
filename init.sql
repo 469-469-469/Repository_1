@@ -9,3 +9,16 @@ CREATE TABLE users (
     banned BOOLEAN,
     roles TEXT
 );
+
+CREATE TABLE movies (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    price NUMERIC,
+    description TEXT,
+    image_url TEXT,
+    location TEXT,
+    published BOOLEAN,
+    genre_id INT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP
+);
