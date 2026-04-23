@@ -11,4 +11,4 @@ __pycache__/
 .token
 .env
 files/
-/allure-result*/
+/allure-*/
