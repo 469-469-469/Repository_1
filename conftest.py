@@ -156,8 +156,8 @@ def super_admin(user_session: Callable[..., ApiManager]) -> User:
         new_session = user_session()
 
         super_admin = User(
-            SuperAdminCreds.USERNAME,
-            SuperAdminCreds.PASSWORD,
+            SuperAdminCreds.username(),
+            SuperAdminCreds.password(),
             [Roles.SUPER_ADMIN.value],
             new_session
         )

@@ -1,5 +1,11 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255),
-    password VARCHAR(255)
+    id UUID PRIMARY KEY,
+    email TEXT NOT NULL,
+    full_name TEXT,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    verified BOOLEAN,
+    banned BOOLEAN,
+    roles TEXT
 );
