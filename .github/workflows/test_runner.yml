@@ -1,7 +1,8 @@
 #test_runner.yml
 # Название workflow (отображается в интерфейсе GitHub Actions)
 name: Run Tests and Generate Report
-
+env:
+  DB_MOVIES_PORT: ${{ secrets.DB_MOVIES_PORT }}
 # Триггеры запуска:
 on:
   # Запускать при любом push в репозиторий
