@@ -23,6 +23,13 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+    env:
+      DB_MOVIES_HOST: localhost
+      DB_MOVIES_PORT: 5432
+      DB_MOVIES_NAME: db_movies
+      DB_MOVIES_USERNAME: postgres
+      DB_MOVIES_PASSWORD: postgres
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -38,7 +45,6 @@ jobs:
           pip install -r requirements.txt
           pip install allure-pytest
 
-      # 🔥 ВАЖНО: ставим Allure CLI
       - name: Install Allure CLI
         run: |
           sudo apt-get update
@@ -48,14 +54,13 @@ jobs:
           sudo mv allure-2.29.0 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
-      - name: Wait for DB
+      - name: Wait for Postgres
         run: |
           for i in {1..30}; do
             pg_isready -h localhost -U postgres && break
             sleep 2
           done
 
-      # ❗ фикс твоей ошибки init.sql
       - name: Run DB init
         run: |
           if [ -f "./init.sql" ]; then
