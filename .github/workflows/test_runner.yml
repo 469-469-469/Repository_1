@@ -26,18 +26,21 @@ jobs:
     env:
       API_SUPERADMIN_EMAIL: ${{ secrets.API_SUPERADMIN_EMAIL }}
       API_SUPERADMIN_PASSWORD: ${{ secrets.API_SUPERADMIN_PASSWORD }}
+
       DB_MOVIES_HOST: localhost
       DB_MOVIES_PORT: 5432
       DB_MOVIES_NAME: db_movies
       DB_MOVIES_USERNAME: postgres
       DB_MOVIES_PASSWORD: postgres
 
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -47,11 +50,6 @@ jobs:
           pip install -r requirements.txt
           pip install allure-pytest pytest-playwright
           playwright install --with-deps
-
-      - name: Debug env (optional but useful)
-        run: |
-          echo "EMAIL is set: ${{ secrets.API_SUPERADMIN_EMAIL != '' }}"
-          echo "PASSWORD is set: ${{ secrets.API_SUPERADMIN_PASSWORD != '' }}"
 
       - name: Wait for Postgres
         run: |
