@@ -24,6 +24,8 @@ jobs:
           --health-retries=5
 
     env:
+      API_SUPERADMIN_EMAIL: ${{ secrets.API_SUPERADMIN_EMAIL }}
+      API_SUPERADMIN_PASSWORD: ${{ secrets.API_SUPERADMIN_PASSWORD }}
       DB_MOVIES_HOST: localhost
       DB_MOVIES_PORT: 5432
       DB_MOVIES_NAME: db_movies
