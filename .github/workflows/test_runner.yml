@@ -3,7 +3,11 @@
 name: Run Tests and Generate Report
 env:
   HOST: localhost
-  DATABASE_NAME: movies_test
+  DB_MOVIES_HOST: localhost
+  DB_MOVIES_PORT: 5432
+  DB_MOVIES_NAME: db_movies
+  DB_MOVIES_USERNAME: postgres
+  DB_MOVIES_PASSWORD: postgres
   SUPER_ADMIN_EMAIL: ${{ secrets.SUPER_ADMIN_EMAIL }}
   SUPER_ADMIN_PASSWORD: ${{ secrets.SUPER_ADMIN_PASSWORD }}
 # Триггеры запуска:
