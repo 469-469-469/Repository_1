@@ -50,15 +50,14 @@ class TestAuthUINegative:
     @pytest.mark.negative
     @pytest.mark.regression
     @pytest.mark.parametrize(
-        "field, value, expected_error",
+        "field, value, err",
         [
             ("password", "0123456789", "Пароль не соответствует требованиям"),
             ("email", "", "Неверная почта"),
             ("fullName", "", None),
         ]
     )
-    def test_register_ui(self, ui: UIManager, creation_user_data: RequestTestUser, field: str,
-                               value: str, expected_error: str | None):
+    def test_reg_ui(self, ui: UIManager, creation_user_data: RequestTestUser, field: str, value: str, err: str | None):
         logger.info(f"Негативный тест. Регистрация. Проверка поля {field}={value}")
 
         data = {"email": creation_user_data.email, "password": creation_user_data.password, field: value}
@@ -67,7 +66,7 @@ class TestAuthUINegative:
         password = data.get("password", creation_user_data.password)
 
         ui.reg.register(full_name, email, password)
-        ui.reg.checks(Checks(path=ui.reg.url, text=expected_error))
+        ui.reg.checks(Checks(path=ui.reg.url, text=err))
 
 
     @allure.title("Негативный тест. Авторизация")
