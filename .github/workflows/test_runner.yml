@@ -29,9 +29,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_DB: movies_test
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: db_movies
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
