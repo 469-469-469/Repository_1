@@ -103,4 +103,4 @@ jobs:
         allure generate allure-results -o allure-report --clean
         # Выводим в лог инструкцию для локального использования:
         echo allure serve allure-results
-        echo C:\Users\Квадрат\scoop\apps\allure\current\bin\allure.bat serve ./allure-results
+        echo C:\Users\USER-PC\scoop\apps\allure\2.38.1\bin\allure.bat serve ./allure-results
