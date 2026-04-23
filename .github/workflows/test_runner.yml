@@ -1,19 +1,8 @@
 name: Run Tests and Generate Report
 
 on:
-  push: {}
+  push:
   pull_request:
-    branches: [ main ]
-
-env:
-  HOST: localhost
-  DB_MOVIES_HOST: localhost
-  DB_MOVIES_PORT: 5432
-  DB_MOVIES_NAME: db_movies
-  DB_MOVIES_USERNAME: postgres
-  DB_MOVIES_PASSWORD: postgres
-  SUPER_ADMIN_EMAIL: ${{ secrets.SUPER_ADMIN_EMAIL }}
-  SUPER_ADMIN_PASSWORD: ${{ secrets.SUPER_ADMIN_PASSWORD }}
 
 jobs:
   test:
@@ -32,63 +21,59 @@ jobs:
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=10
+          --health-retries=5
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install allure-pytest
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest allure-pytest psycopg2-binary
+      # 🔥 ВАЖНО: ставим Allure CLI
+      - name: Install Allure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
+          tar -xvzf allure-2.29.0.tgz
+          sudo mv allure-2.29.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
-    - name: Wait for PostgreSQL
-      run: |
-        for i in {1..30}; do
-          pg_isready -h localhost -p 5432 -U postgres && break
-          sleep 2
-        done
+      - name: Wait for DB
+        run: |
+          for i in {1..30}; do
+            pg_isready -h localhost -U postgres && break
+            sleep 2
+          done
 
-    - name: Init DB
-      run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d db_movies -f init.sql
+      # ❗ фикс твоей ошибки init.sql
+      - name: Run DB init
+        run: |
+          if [ -f "./init.sql" ]; then
+            PGPASSWORD=postgres psql -h localhost -U postgres -d db_movies -f ./init.sql
+          else
+            echo "init.sql not found, skipping"
+          fi
 
-    - name: Run tests
-      run: |
-        pytest tests/api -v --alluredir=allure-results
+      - name: Run tests with Allure
+        run: |
+          pytest --alluredir=allure-results
 
-    - name: Install Allure CLI
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y default-jre wget
+      - name: Generate Allure report
+        run: |
+          allure generate allure-results -o allure-report --clean
 
-        wget https://github.com/allure-framework/allure2/releases/download/2.24.1/allure-2.24.1.tgz
-        tar -zxvf allure-2.24.1.tgz
-        sudo mv allure-2.24.1 /opt/allure
-        echo "/opt/allure/bin" >> $GITHUB_PATH
-
-    - name: Generate Allure Report
-      if: always()
-      run: |
-        mkdir -p allure-report
-        allure generate allure-results -o allure-report --clean
-
-    - name: Upload Allure Results
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-results
-        path: allure-results/
-
-    - name: Upload Allure Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-report
-        path: allure-report/
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
